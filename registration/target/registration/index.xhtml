@@ -3,11 +3,40 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui">
-    <h:head>
-        <title>Registration Example</title>
+     <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />  
+        <script src="${facesContext.externalContext.requestContextPath}/js/jquery.min.js"></script>
+	<script src="${facesContext.externalContext.requestContextPath}/js/jquery.dropotron.min.js"></script>
+	<script src="${facesContext.externalContext.requestContextPath}/js/skel.min.js"></script>
+	<script src="${facesContext.externalContext.requestContextPath}/js/skel-layers.min.js"></script>
+	<script src="${facesContext.externalContext.requestContextPath}/js/init.js"></script>
+	<noscript>
+		<link rel="stylesheet" href="${facesContext.externalContext.requestContextPath}/css/skel.css" />
+		<link rel="stylesheet" href="${facesContext.externalContext.requestContextPath}/css/style.css" />
+	</noscript>
     </h:head>
-    <h:body>
-        <p:link outcome="user/home" value="Go to your personal home page"/><br/>
+    <h:body >
+         <!-- Header -->
+            <div id="header">
+                <div class="container">
+                    <!-- Logo -->
+                    <h1><a href="#" id="logo">MeteoCal</a></h1>
+                    
+                    <!-- Banner -->
+                    <div id="banner">
+                        <div class="container">
+                            <section>
+				<header class="major">
+                                    <h2>Welcome to MeteoCal online calendar and weather tool!</h2>
+				</header>
+                                
+                                <p:link class="button alt" outcome="login" value="Sign In"/>
+                                <p:link class="button alt" outcome="register" value="Register"/><br/>
+                            </section>			
+			</div>
+                    </div>
+                </div>
+            </div>
     </h:body>
 </html>
 
