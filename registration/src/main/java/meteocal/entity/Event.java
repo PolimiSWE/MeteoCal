@@ -13,7 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
-import org.apache.derby.client.am.DateTime;
+import java.sql.Timestamp;
 
 /**
  *
@@ -38,13 +38,13 @@ public class Event implements Serializable {
     @NotNull(message = "May not be empty")
     private String city;    
     @NotNull(message = "May not be empty")
-    private DateTime date;    
+    private Timestamp date;    
     @NotNull(message = "May not be empty")
-    private DateTime dateCreated;    
+    private Timestamp dateCreated;    
     @NotNull(message = "May not be empty")
-    private DateTime dateModified;    
+    private Timestamp dateModified;    
     @NotNull(message = "May not be empty")
-    private DateTime dateRescheduled;    
+    private Timestamp dateRescheduled;    
     @NotNull(message = "May not be empty")
     private Integer duration;        
     @NotNull(message = "May not be empty")
@@ -88,37 +88,39 @@ public class Event implements Serializable {
         this.city = city;
     }
 
-    public DateTime getDate() {
+    public Timestamp getDate() {
         return date;
     }
 
-    public void setDate(DateTime date) {
+    public void setDate(Timestamp date) {
         this.date = date;
     }
 
-    public DateTime getDateCreated() {
+    public Timestamp getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(DateTime dateCreated) {
+    public void setDateCreated(Timestamp dateCreated) {
         this.dateCreated = dateCreated;
     }
 
-    public DateTime getDateModified() {
+    public Timestamp getDateModified() {
         return dateModified;
     }
 
-    public void setDateModified(DateTime dateModified) {
+    public void setDateModified(Timestamp dateModified) {
         this.dateModified = dateModified;
     }
 
-    public DateTime getDateRescheduled() {
+    public Timestamp getDateRescheduled() {
         return dateRescheduled;
     }
 
-    public void setDateRescheduled(DateTime dateRescheduled) {
+    public void setDateRescheduled(Timestamp dateRescheduled) {
         this.dateRescheduled = dateRescheduled;
     }
+
+    
 
     public Integer getDuration() {
         return duration;
