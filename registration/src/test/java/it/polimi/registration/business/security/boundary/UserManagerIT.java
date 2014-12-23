@@ -6,7 +6,7 @@
 package it.polimi.registration.business.security.boundary;
 
 import it.polimi.registration.business.security.control.PasswordEncrypter;
-import it.polimi.registration.business.security.entity.User;
+import meteocal.entity.User;
 import javax.ejb.EJB;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

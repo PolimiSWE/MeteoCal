@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.polimi.registration.business.security.entity;
+package meteocal.entity;
 
 import it.polimi.registration.business.security.control.PasswordEncrypter;
 import java.io.Serializable;
@@ -30,7 +30,6 @@ public class User implements Serializable {
     private String password;
     @NotNull(message = "May not be empty")
     private String groupName;
-    
     @NotNull(message = "May not be empty")
     private String name;
     

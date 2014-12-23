@@ -5,7 +5,7 @@
  */
 package it.polimi.registration.business.security.control;
 
-import it.polimi.registration.business.security.entity.User;
+import meteocal.entity.User;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;

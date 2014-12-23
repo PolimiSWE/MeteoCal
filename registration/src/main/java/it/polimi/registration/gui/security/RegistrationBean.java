@@ -6,7 +6,7 @@
 package it.polimi.registration.gui.security;
 
 import it.polimi.registration.business.security.boundary.UserManager;
-import it.polimi.registration.business.security.entity.User;
+import meteocal.entity.User;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;

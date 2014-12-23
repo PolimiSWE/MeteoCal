@@ -5,8 +5,8 @@
  */
 package it.polimi.registration.business.security.boundary;
 
-import it.polimi.registration.business.security.entity.Group;
-import it.polimi.registration.business.security.entity.User;
+import meteocal.entity.Group;
+import meteocal.entity.User;
 import java.security.Principal;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
