@@ -6,54 +6,21 @@
 package meteocal.entity;
 
 import java.io.Serializable;
-import java.util.Collection;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.validation.constraints.NotNull;
 
 /**
  *
  * @author Milos
  */
 @Entity
-public class PrivacyType implements Serializable {
+public class EventList implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_privacy_type")
     private Long id;
-    
-    @NotNull(message = "May not be empty")
-    @Column(name = "privacy")
-    private Boolean privacy;
-    
-    
-    //Relationship Entities
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "eventPrivacy", orphanRemoval = true)
-    private Collection<Event> eventList;
-
-    
-    //Getters and Setters 
-    public Collection<Event> getEventList() {
-        return eventList;
-    }
-
-    public void setEventList(Collection<Event> eventList) {
-        this.eventList = eventList;
-    }
-
-    public Boolean getPrivacy() {
-        return privacy;
-    }
-
-    public void setPrivacy(Boolean privacy) {
-        this.privacy = privacy;
-    }
 
     public Long getId() {
         return id;
@@ -73,10 +40,10 @@ public class PrivacyType implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof PrivacyType)) {
+        if (!(object instanceof EventList)) {
             return false;
         }
-        PrivacyType other = (PrivacyType) object;
+        EventList other = (EventList) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -85,7 +52,7 @@ public class PrivacyType implements Serializable {
 
     @Override
     public String toString() {
-        return "it.polimi.registration.business.security.entity.Privacy[ id=" + id + " ]";
+        return "meteocal.entity.EventList[ id=" + id + " ]";
     }
     
 }

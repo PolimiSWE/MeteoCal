@@ -13,46 +13,47 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotNull;
+import javax.persistence.OneToOne;
 
 /**
  *
  * @author Milos
  */
 @Entity
-public class PrivacyType implements Serializable {
+public class WeatherDataList implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_privacy_type")
+    @GeneratedValue(strategy = GenerationType.AUTO) 
+    @Column(name = "id_weather_data_list")
     private Long id;
-    
-    @NotNull(message = "May not be empty")
-    @Column(name = "privacy")
-    private Boolean privacy;
     
     
     //Relationship Entities
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "eventPrivacy", orphanRemoval = true)
-    private Collection<Event> eventList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ownerList", orphanRemoval = true)
+    private Collection<WeatherData> weatherDataList;
+    
+    @OneToOne(optional = false)
+    @JoinColumn(name="event", referencedColumnName = "id_event")
+    private Event event;
 
     
     //Getters and Setters 
-    public Collection<Event> getEventList() {
-        return eventList;
+    public Event getEvent() {
+        return event;
     }
 
-    public void setEventList(Collection<Event> eventList) {
-        this.eventList = eventList;
+    public void setEvent(Event event) {
+        this.event = event;
     }
 
-    public Boolean getPrivacy() {
-        return privacy;
+    public Collection<WeatherData> getWeatherDataList() {
+        return weatherDataList;
     }
 
-    public void setPrivacy(Boolean privacy) {
-        this.privacy = privacy;
+    public void setWeatherDataList(Collection<WeatherData> weatherDataList) {
+        this.weatherDataList = weatherDataList;
     }
 
     public Long getId() {
@@ -73,10 +74,10 @@ public class PrivacyType implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof PrivacyType)) {
+        if (!(object instanceof WeatherDataList)) {
             return false;
         }
-        PrivacyType other = (PrivacyType) object;
+        WeatherDataList other = (WeatherDataList) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -85,7 +86,7 @@ public class PrivacyType implements Serializable {
 
     @Override
     public String toString() {
-        return "it.polimi.registration.business.security.entity.Privacy[ id=" + id + " ]";
+        return "meteocal.entity.WeatherDataList[ id=" + id + " ]";
     }
     
 }

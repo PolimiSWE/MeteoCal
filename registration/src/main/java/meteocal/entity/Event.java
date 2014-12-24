@@ -14,6 +14,14 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
+import java.util.Collection;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 /**
  *
@@ -24,60 +32,112 @@ public class Event implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id_event")
     private Long id;
     
-    @ManyToOne
-    private EventStatus status; 
-    @ManyToOne
-    private EventType eventType;
-    @ManyToOne
-    private PrivacyType privacy; 
+    @NotNull(message = "May not be empty")
+    @Column(name = "begin_hour")
+    private Integer beginHour;    
     
     @NotNull(message = "May not be empty")
-    private Integer beginHour;    
+    @Column(name = "city")
+    private String city; 
+    
     @NotNull(message = "May not be empty")
-    private String city;    
+    @Column(name = "date")
+    private Timestamp date;
+    
     @NotNull(message = "May not be empty")
-    private Timestamp date;    
+    @Column(name = "date_created")
+    private Timestamp dateCreated; 
+    
     @NotNull(message = "May not be empty")
-    private Timestamp dateCreated;    
+    @Column(name = "date_modified")
+    private Timestamp dateModified; 
+    
     @NotNull(message = "May not be empty")
-    private Timestamp dateModified;    
+    @Column(name = "date_rescheduled")
+    private Timestamp dateRescheduled; 
+    
     @NotNull(message = "May not be empty")
-    private Timestamp dateRescheduled;    
+    @Column(name = "duration")
+    private Integer duration;            
+    
     @NotNull(message = "May not be empty")
-    private Integer duration;        
+    @Column(name = "modified")
+    private Boolean modified;  
+    
     @NotNull(message = "May not be empty")
-    private Integer includedInCalendar; // to be changed    
+    @Column(name = "name")
+    private String name;  
+    
     @NotNull(message = "May not be empty")
-    private List<User> invited;    
-    @NotNull(message = "May not be empty")
-    private Boolean modified;    
-    @NotNull(message = "May not be empty")
-    private String name;    
-    @NotNull(message = "May not be empty")
-    private User owner;    
-    @NotNull(message = "May not be empty")
-    private List<User> participants;       
-    @NotNull(message = "May not be empty")
+    @Column(name = "street_and_number")
     private String streetAndNumber;    
+    
+    
+    //Relationship Entities
+    
+    
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "event_type", referencedColumnName = "id_event_type")
+    private EventType eventType;
+    
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "event_privacy", referencedColumnName = "id_privacy_type")
+    private PrivacyType eventPrivacy;
+    
     @NotNull(message = "May not be empty")
-    private Integer weatherDataList; // to be changed
-
-    public EventStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(EventStatus status) {
-        this.status = status;
-    }
-
+    @OneToOne(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private WeatherDataList weatherDataList;
+    
+    @NotNull(message = "May not be empty")
+    @OneToOne(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private InvitationList invitationList;
+    
+    @NotNull(message = "May not be empty")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "owner_event", referencedColumnName = "id_user")
+    private User owner;  
+    
+    @NotNull(message = "May not be empty")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "event_calendar", referencedColumnName = "id_calendar")
+    private Calendar includedInCalendar; 
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "event", orphanRemoval = true)
+    private Collection<Invitation> invitations;
+    
+    @NotNull(message = "May not be empty")
+    @OneToOne(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private InvitationList userList;
+    
+    
+    //Transiend attributes
+    @NotNull(message = "May not be empty")
+    @Transient 
+    private Collection<User> invited;
+    
+    @NotNull(message = "May not be empty")
+    @Transient
+    private Collection<User> participants;
+    
+    
+    //Getters and Setters 
     public Integer getBeginHour() {
         return beginHour;
     }
 
     public void setBeginHour(Integer beginHour) {
         this.beginHour = beginHour;
+    }
+
+    public InvitationList getUserList() {
+        return userList;
+    }
+
+    public void setUserList(InvitationList userList) {
+        this.userList = userList;
     }
 
     public String getCity() {
@@ -120,6 +180,22 @@ public class Event implements Serializable {
         this.dateRescheduled = dateRescheduled;
     }
 
+    public Collection<Invitation> getInvitations() {
+        return invitations;
+    }
+
+    public void setInvitations(Collection<Invitation> invitations) {
+        this.invitations = invitations;
+    }
+
+    public InvitationList getInvitationList() {
+        return invitationList;
+    }
+
+    public void setInvitationList(InvitationList invitationList) {
+        this.invitationList = invitationList;
+    }
+
     
 
     public Integer getDuration() {
@@ -138,19 +214,19 @@ public class Event implements Serializable {
         this.eventType = eventType;
     }
 
-    public Integer getIncludedInCalendar() {
+    public Calendar getIncludedInCalendar() {
         return includedInCalendar;
     }
 
-    public void setIncludedInCalendar(Integer includedInCalendar) {
+    public void setIncludedInCalendar(Calendar includedInCalendar) {
         this.includedInCalendar = includedInCalendar;
     }
 
-    public List<User> getInvited() {
+    public Collection<User> getInvited() {
         return invited;
     }
 
-    public void setInvited(List<User> invited) {
+    public void setInvited(Collection<User> invited) {
         this.invited = invited;
     }
 
@@ -178,20 +254,20 @@ public class Event implements Serializable {
         this.owner = owner;
     }
 
-    public List<User> getParticipants() {
+    public Collection<User> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(List<User> participants) {
+    public void setParticipants(Collection<User> participants) {
         this.participants = participants;
     }
 
-    public PrivacyType getPrivacy() {
-        return privacy;
+    public PrivacyType getEventPrivacy() {
+        return eventPrivacy;
     }
 
-    public void setPrivacy(PrivacyType privacy) {
-        this.privacy = privacy;
+    public void setEventPrivacy(PrivacyType eventPrivacy) {
+        this.eventPrivacy = eventPrivacy;
     }
 
     public String getStreetAndNumber() {
@@ -202,11 +278,11 @@ public class Event implements Serializable {
         this.streetAndNumber = streetAndNumber;
     }
 
-    public Integer getWeatherDataList() {
+    public WeatherDataList getWeatherDataList() {
         return weatherDataList;
     }
 
-    public void setWeatherDataList(Integer weatherDataList) {
+    public void setWeatherDataList(WeatherDataList weatherDataList) {
         this.weatherDataList = weatherDataList;
     }
     

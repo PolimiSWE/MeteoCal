@@ -7,6 +7,8 @@ package meteocal.entity;
 
 import java.io.Serializable;
 import java.util.Collection;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,12 +25,20 @@ public class EventType implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id_event_type")
     private Long id;
+    
     @NotNull(message = "May not be empty")
+    @Column(name = "type")
     private Boolean type;
-    @OneToMany(mappedBy="eventType")
+    
+    
+    //Relationship Entities
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "eventType", orphanRemoval = true)
     private Collection<Event> eventList;
 
+    
+    //Getters and Setters 
     public Collection<Event> getEventList() {
         return eventList;
     }

@@ -6,7 +6,7 @@ import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 import meteocal.entity.Event;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2014-12-23T15:31:16")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2014-12-23T19:13:17")
 @StaticMetamodel(EventType.class)
 public class EventType_ { 
 

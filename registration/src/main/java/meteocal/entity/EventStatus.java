@@ -7,11 +7,15 @@ package meteocal.entity;
 
 import java.io.Serializable;
 import java.util.Collection;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -23,20 +27,26 @@ public class EventStatus implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id_event_status")
     private Long id;
     
     @NotNull(message = "May not be empty")
+    @Column(name = "status")
     private Integer status;
     
-    @OneToMany(mappedBy="status")
-    private Collection<Event> eventList;
+    
+    //Relationship Entities
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "eventStatus", orphanRemoval = true)
+    private Collection<Invitation> invitationList;
 
-    public Collection<Event> getEventList() {
-        return eventList;
+    
+    //Getters and Setters 
+    public Collection<Invitation> getInvitationList() {
+        return invitationList;
     }
 
-    public void setEventList(Collection<Event> eventList) {
-        this.eventList = eventList;
+    public void setInvitationList(Collection<Invitation> invitationList) {
+        this.invitationList = invitationList;
     }
 
     public Integer getStatus() {
