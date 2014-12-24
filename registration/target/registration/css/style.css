@@ -25,7 +25,8 @@
         
         //color of form is changed through j_idt6 and ui-widget-content background attribute
         .j_idt6 {background: rgba(54, 25, 25, .3);}
-        .ui-widget-content {background: rgba(54, 25, 25, .3);}
+        .ui-widget-content {background: rgba(54, 25, 25, .3); color: #ffffff;}
+        td, label  { vertical-align: middle; }
         
         .container:before, .container:after {
             display:table;
