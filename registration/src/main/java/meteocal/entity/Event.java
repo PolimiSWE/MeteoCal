@@ -21,6 +21,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Transient;
 
 /**
@@ -44,8 +45,8 @@ public class Event implements Serializable {
     private String city; 
     
     @NotNull(message = "May not be empty")
-    @Column(name = "date")
-    private Timestamp date;
+    @Column(name = "dateOfEvent")
+    private Timestamp dateOfEvent;
     
     @NotNull(message = "May not be empty")
     @Column(name = "date_created")
@@ -74,8 +75,13 @@ public class Event implements Serializable {
     @NotNull(message = "May not be empty")
     @Column(name = "street_and_number")
     private String streetAndNumber;    
-    
-    
+    ///////////////////////////////////////////
+    //added field for mapping
+    @NotNull(message = "May not be empty")
+    @Column(name = "event_calendar")
+    private long eventCalendar;  
+    //source http://www.javaworld.com/article/2077819/java-se/understanding-jpa-part-2-relationships-the-jpa-way.html
+    /////////////////////////////////////////
     //Relationship Entities
     
     
@@ -102,7 +108,7 @@ public class Event implements Serializable {
     
     @NotNull(message = "May not be empty")
     @ManyToOne(optional = false)
-    @JoinColumn(name = "event_calendar", referencedColumnName = "id_calendar")
+    @PrimaryKeyJoinColumn(name = "event_calendar", referencedColumnName = "id_calendar")
     private Calendar includedInCalendar; 
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "event", orphanRemoval = true)
@@ -113,7 +119,7 @@ public class Event implements Serializable {
     private InvitationList userList;
     
     
-    //Transiend attributes
+    //Transient attributes
     @NotNull(message = "May not be empty")
     @Transient 
     private Collection<User> invited;
@@ -148,12 +154,12 @@ public class Event implements Serializable {
         this.city = city;
     }
 
-    public Timestamp getDate() {
-        return date;
+    public Timestamp getDateOfEvent() {
+        return dateOfEvent;
     }
 
-    public void setDate(Timestamp date) {
-        this.date = date;
+    public void setDateOfEvent(Timestamp dateOfEvent) {
+        this.dateOfEvent = dateOfEvent;
     }
 
     public Timestamp getDateCreated() {
@@ -317,7 +323,7 @@ public class Event implements Serializable {
 
     @Override
     public String toString() {
-        return "it.polimi.registration.business.security.entity.Event[ id=" + id + " ]";
+        return "meteocal.entity.Event[ id=" + id + " ]";
     }
     
 }
