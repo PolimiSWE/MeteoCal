@@ -41,7 +41,7 @@ public class User implements Serializable {
     @Pattern(regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
             message = "invalid email")
     @NotNull(message = "May not be empty")
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
     
     @NotNull(message = "May not be empty")
@@ -55,6 +55,14 @@ public class User implements Serializable {
     @NotNull(message = "May not be empty")
     @Column(name = "name")
     private String name;
+    
+    @NotNull(message = "May not be empty")
+    @Column(name = "surname")
+    private String surname;
+    
+    @NotNull(message = "May not be empty")
+    @Column(name = "username", unique = true)
+    private String username;
     
     
     //Relationship Entities
@@ -85,6 +93,12 @@ public class User implements Serializable {
     @Transient
     private EventList otherEvents;
     
+    @Transient
+    private InvitationList acceptedInvitations;
+    
+    @Transient
+    private InvitationList pendingInvitations;
+    
     //Getters and Setters 
     public String getName() {
         return name;
@@ -92,6 +106,38 @@ public class User implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public InvitationList getAcceptedInvitations() {
+        return acceptedInvitations;
+    }
+
+    public void setAcceptedInvitations(InvitationList acceptedInvitations) {
+        this.acceptedInvitations = acceptedInvitations;
+    }
+
+    public InvitationList getPendingInvitations() {
+        return pendingInvitations;
+    }
+
+    public void setPendingInvitations(InvitationList pendingInvitations) {
+        this.pendingInvitations = pendingInvitations;
     }
 
     public EventList getOtherEvents() {

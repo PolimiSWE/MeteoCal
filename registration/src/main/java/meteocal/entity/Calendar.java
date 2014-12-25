@@ -58,7 +58,8 @@ public class Calendar implements Serializable {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Long id) throws NullPointerException {
+        if(id == null) throw new NullPointerException();
         this.id = id;
     }
 
@@ -66,7 +67,8 @@ public class Calendar implements Serializable {
         return calendarPrivacy;
     }
 
-    public void setCalendarPrivacy(PrivacyType calendarPrivacy) {
+    public void setCalendarPrivacy(PrivacyType calendarPrivacy) throws NullPointerException {
+        if(calendarPrivacy == null) throw new NullPointerException();
         this.calendarPrivacy = calendarPrivacy;
     }
 
@@ -74,7 +76,8 @@ public class Calendar implements Serializable {
         return owner;
     }
 
-    public void setOwner(User owner) {
+    public void setOwner(User owner) throws NullPointerException {
+        if(owner == null) throw new NullPointerException();
         this.owner = owner;
     }
 
@@ -82,7 +85,8 @@ public class Calendar implements Serializable {
         return calendarList;
     }
 
-    public void setCalendarList(CalendarList calendarList) {
+    public void setCalendarList(CalendarList calendarList) throws NullPointerException {
+        if(calendarList == null) throw new NullPointerException();
         this.calendarList = calendarList;
     }
 
@@ -90,7 +94,8 @@ public class Calendar implements Serializable {
         return eventLists;
     }
 
-    public void setEventLists(Collection<EventList> eventLists) {
+    public void setEventLists(Collection<EventList> eventLists) throws NullPointerException {
+        if(eventLists == null) throw new NullPointerException();
         this.eventLists = eventLists;
     }
 
@@ -98,7 +103,8 @@ public class Calendar implements Serializable {
         return events;
     }
 
-    public void setEvents(Collection<Event> events) {
+    public void setEvents(Collection<Event> events) throws NullPointerException {
+        if(events == null) throw new NullPointerException();
         this.events = events;
     }
 
@@ -124,7 +130,7 @@ public class Calendar implements Serializable {
 
     @Override
     public String toString() {
-        return "meteocal.entity.Calendar[ id=" + id + " ]";
+        return "meteocal.entity.Calendar[ id=" + id.toString() + " ]";
     }
     
 }

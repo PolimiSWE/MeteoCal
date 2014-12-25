@@ -20,7 +20,7 @@ import javax.persistence.PersistenceContext;
 @Stateless
 public class UserManager {
 
-    @PersistenceContext
+    @PersistenceContext(unitName = "authPU")
     EntityManager em;
     
     @Inject

@@ -6,19 +6,21 @@ import javax.persistence.metamodel.CollectionAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 import meteocal.entity.Calendar;
+import meteocal.entity.EventList;
 import meteocal.entity.EventType;
 import meteocal.entity.Invitation;
 import meteocal.entity.InvitationList;
 import meteocal.entity.PrivacyType;
 import meteocal.entity.User;
+import meteocal.entity.UserList;
 import meteocal.entity.WeatherDataList;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2014-12-24T14:54:54")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2014-12-26T00:35:52")
 @StaticMetamodel(Event.class)
 public class Event_ { 
 
-    public static volatile SingularAttribute<Event, Long> eventCalendar;
     public static volatile SingularAttribute<Event, User> owner;
+    public static volatile SingularAttribute<Event, EventList> eventList;
     public static volatile SingularAttribute<Event, WeatherDataList> weatherDataList;
     public static volatile SingularAttribute<Event, Integer> beginHour;
     public static volatile SingularAttribute<Event, String> city;
@@ -30,7 +32,7 @@ public class Event_ {
     public static volatile SingularAttribute<Event, Integer> duration;
     public static volatile SingularAttribute<Event, String> streetAndNumber;
     public static volatile SingularAttribute<Event, Timestamp> dateCreated;
-    public static volatile SingularAttribute<Event, InvitationList> userList;
+    public static volatile SingularAttribute<Event, UserList> userList;
     public static volatile SingularAttribute<Event, Timestamp> dateOfEvent;
     public static volatile CollectionAttribute<Event, Invitation> invitations;
     public static volatile SingularAttribute<Event, Timestamp> dateRescheduled;
