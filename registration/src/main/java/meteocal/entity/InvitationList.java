@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
@@ -24,6 +25,7 @@ import javax.validation.constraints.NotNull;
  * @author Milos
  */
 @Entity
+@Table(name="INVITATION_LISTS")
 public class InvitationList implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -32,13 +34,16 @@ public class InvitationList implements Serializable {
     private Long id;
 
     //Relationship Entities
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, targetEntity = meteocal.entity.Event.class)
     @JoinColumn(name="event", referencedColumnName = "id_event")
     private Event event;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "invitationList", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "invitationList", orphanRemoval = true, targetEntity = meteocal.entity.Invitation.class)
     private Collection<Invitation> invitations;
     
+    @OneToOne(optional = false, targetEntity = meteocal.entity.User.class)
+    @JoinColumn(name="user_invitation_list", referencedColumnName = "id_user")
+    private User invitedUser;
     
     
     //Transient attributes
@@ -59,6 +64,14 @@ public class InvitationList implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public User getInvitedUser() {
+        return invitedUser;
+    }
+
+    public void setInvitedUser(User invitedUser) {
+        this.invitedUser = invitedUser;
     }
 
     public Collection<Invitation> getInvitations() {

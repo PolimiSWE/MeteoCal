@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
@@ -23,7 +24,8 @@ import javax.validation.constraints.NotNull;
  *
  * @author Milos
  */
-@Entity(name = "USERLIST")
+@Entity
+@Table(name="USER_LISTS")
 public class UserList implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -33,10 +35,10 @@ public class UserList implements Serializable {
 
     
     //Relationship Entities
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userList", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userList", orphanRemoval = true, targetEntity = meteocal.entity.User.class)
     private Collection<User> users;
     
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, targetEntity = meteocal.entity.Event.class)
     @JoinColumn(name="event", referencedColumnName = "id_event")
     private Event event;
     

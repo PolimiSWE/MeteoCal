@@ -6,28 +6,50 @@
 package meteocal.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  *
  * @author Milos
  */
 @Entity
+@Table(name="CALENDAR_LISTS")
 public class CalendarList implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id_calendar_list")
     private Long id;
+    
+    
+    //Relationship Entities
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "calendarList", orphanRemoval = true, targetEntity = meteocal.entity.Calendar.class)
+    private Collection<Calendar> calendarList;
 
+    
+    //Getters and Setters
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Collection<Calendar> getCalendarList() {
+        return calendarList;
+    }
+
+    public void setCalendarList(Collection<Calendar> calendarList) {
+        this.calendarList = calendarList;
     }
 
     @Override

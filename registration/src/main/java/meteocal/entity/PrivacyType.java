@@ -14,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -21,6 +22,7 @@ import javax.validation.constraints.NotNull;
  * @author Milos
  */
 @Entity
+@Table(name="PRIVACY_TYPES")
 public class PrivacyType implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -34,7 +36,7 @@ public class PrivacyType implements Serializable {
     
     
     //Relationship Entities
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "eventPrivacy", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "eventPrivacy", orphanRemoval = true, targetEntity = meteocal.entity.Event.class)
     private Collection<Event> eventList;
 
     

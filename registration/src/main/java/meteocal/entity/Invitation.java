@@ -13,12 +13,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  *
  * @author Milos
  */
 @Entity
+@Table(name="INVITATIONS")
 public class Invitation implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -28,19 +30,19 @@ public class Invitation implements Serializable {
 
     
     //Relationship Entities
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, targetEntity = meteocal.entity.EventStatus.class)
     @JoinColumn(name = "event_status", referencedColumnName = "id_event_status")
     private EventStatus eventStatus; 
     
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, targetEntity = meteocal.entity.Event.class)
     @JoinColumn(name = "owner_event", referencedColumnName = "id_event")
     private Event event;
     
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, targetEntity = meteocal.entity.User.class)
     @JoinColumn(name = "owner_user", referencedColumnName = "id_user")
     private User user;
     
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, targetEntity = meteocal.entity.InvitationList.class)
     @JoinColumn(name = "owner_invitation_list", referencedColumnName = "id_invitation_list")
     private InvitationList invitationList;
     

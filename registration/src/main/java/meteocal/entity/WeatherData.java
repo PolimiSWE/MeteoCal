@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -21,6 +22,7 @@ import javax.validation.constraints.NotNull;
  * @author Milos
  */
 @Entity
+@Table(name="WEATHER_DATA")
 public class WeatherData implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -50,7 +52,7 @@ public class WeatherData implements Serializable {
 
     
     //Relationship Entities
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, targetEntity = meteocal.entity.WeatherDataList.class)
     @JoinColumn(name = "owner_list", referencedColumnName = "id_weather_data_list")
     private WeatherDataList ownerList;
     

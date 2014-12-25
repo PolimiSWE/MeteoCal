@@ -18,6 +18,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -25,7 +27,8 @@ import javax.validation.constraints.Pattern;
  *
  * @author miglie
  */
-@Entity(name = "USERS")
+@Entity
+@Table(name="USERS")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -55,16 +58,32 @@ public class User implements Serializable {
     
     
     //Relationship Entities
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
-    private Collection<Invitation> invitationList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true, targetEntity = meteocal.entity.Invitation.class)
+    private Collection<Invitation> invitations;
     
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, targetEntity = meteocal.entity.UserList.class)
     @JoinColumn(name = "owner_user_list", referencedColumnName = "id_user_list")
     private UserList userList;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner", orphanRemoval = true, targetEntity = meteocal.entity.Event.class)
     private Collection<Event> ownedEvents;
-
+    
+    @NotNull(message = "May not be empty")
+    @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity =  meteocal.entity.EventList.class)
+    private EventList eventList;
+    
+    @NotNull(message = "May not be empty")
+    @OneToOne(mappedBy = "invitedUser", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity =  meteocal.entity.InvitationList.class)
+    private InvitationList invitationList;
+    
+    @NotNull(message = "May not be empty")
+    @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity =  meteocal.entity.Calendar.class)
+    private Calendar myCalendar;
+    
+    
+    //Transient attributes
+    @Transient
+    private EventList otherEvents;
     
     //Getters and Setters 
     public String getName() {
@@ -73,6 +92,30 @@ public class User implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public EventList getOtherEvents() {
+        return otherEvents;
+    }
+
+    public void setOtherEvents(EventList otherEvents) {
+        this.otherEvents = otherEvents;
+    }
+
+    public Calendar getMyCalendar() {
+        return myCalendar;
+    }
+
+    public void setMyCalendar(Calendar myCalendar) {
+        this.myCalendar = myCalendar;
+    }
+
+    public EventList getEventList() {
+        return eventList;
+    }
+
+    public void setEventList(EventList eventList) {
+        this.eventList = eventList;
     }
 
     public Collection<Event> getOwnedEvents() {
@@ -107,12 +150,20 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public Collection<Invitation> getInvitationList() {
+    public InvitationList getInvitationList() {
         return invitationList;
     }
 
-    public void setInvitationList(Collection<Invitation> invitationList) {
+    public void setInvitationList(InvitationList invitationList) {
         this.invitationList = invitationList;
+    }
+
+    public Collection<Invitation> getInvitations() {
+        return invitations;
+    }
+
+    public void setInvitations(Collection<Invitation> invitations) {
+        this.invitations = invitations;
     }
 
     public String getEmail() {

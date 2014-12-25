@@ -16,12 +16,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 /**
  *
  * @author Milos
  */
 @Entity
+@Table(name="WEATHER_DATA_LISTS")
 public class WeatherDataList implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -31,10 +33,10 @@ public class WeatherDataList implements Serializable {
     
     
     //Relationship Entities
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ownerList", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ownerList", orphanRemoval = true, targetEntity = meteocal.entity.WeatherData.class)
     private Collection<WeatherData> weatherDataList;
     
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, targetEntity = meteocal.entity.Event.class)
     @JoinColumn(name="event", referencedColumnName = "id_event")
     private Event event;
 

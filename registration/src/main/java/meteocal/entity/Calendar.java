@@ -13,13 +13,18 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 /**
  *
  * @author Milos
  */
 @Entity
+@Table(name="CALENDARS")
 public class Calendar implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -29,8 +34,23 @@ public class Calendar implements Serializable {
 
     
     //Relationship Entities
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "includedInCalendar", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "includedInCalendar", orphanRemoval = true, targetEntity = meteocal.entity.Event.class)
     private Collection<Event> events;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "includedInCalendar", orphanRemoval = true, targetEntity = meteocal.entity.EventList.class)
+    private Collection<EventList> eventLists;
+    
+    @OneToOne(optional = false, targetEntity = meteocal.entity.User.class)
+    @JoinColumn(name="owner_calendar", referencedColumnName = "id_user")
+    private User owner;
+    
+    @ManyToOne(optional = false, targetEntity = meteocal.entity.CalendarList.class)
+    @JoinColumn(name = "calendar_list", referencedColumnName = "id_calendar_list")
+    private CalendarList calendarList;
+    
+    @ManyToOne(optional = false, targetEntity = meteocal.entity.PrivacyType.class)
+    @JoinColumn(name = "calendar_privacy", referencedColumnName = "id_privacy_type")
+    private PrivacyType calendarPrivacy;
     
     
     //Getters and Setters
@@ -40,6 +60,38 @@ public class Calendar implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public PrivacyType getCalendarPrivacy() {
+        return calendarPrivacy;
+    }
+
+    public void setCalendarPrivacy(PrivacyType calendarPrivacy) {
+        this.calendarPrivacy = calendarPrivacy;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public CalendarList getCalendarList() {
+        return calendarList;
+    }
+
+    public void setCalendarList(CalendarList calendarList) {
+        this.calendarList = calendarList;
+    }
+
+    public Collection<EventList> getEventLists() {
+        return eventLists;
+    }
+
+    public void setEventLists(Collection<EventList> eventLists) {
+        this.eventLists = eventLists;
     }
 
     public Collection<Event> getEvents() {

@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -23,6 +24,7 @@ import javax.validation.constraints.NotNull;
  * @author Milos
  */
 @Entity
+@Table(name="EVENT_STATUSES")
 public class EventStatus implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -36,7 +38,7 @@ public class EventStatus implements Serializable {
     
     
     //Relationship Entities
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "eventStatus", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "eventStatus", orphanRemoval = true, targetEntity = meteocal.entity.Invitation.class)
     private Collection<Invitation> invitationList;
 
     

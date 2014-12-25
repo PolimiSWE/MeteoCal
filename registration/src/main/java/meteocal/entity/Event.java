@@ -22,6 +22,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
 /**
@@ -29,6 +30,7 @@ import javax.persistence.Transient;
  * @author Milos
  */
 @Entity
+@Table(name="EVENTS")
 public class Event implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -75,48 +77,46 @@ public class Event implements Serializable {
     @NotNull(message = "May not be empty")
     @Column(name = "street_and_number")
     private String streetAndNumber;    
-    ///////////////////////////////////////////
-    //added field for mapping
-    @NotNull(message = "May not be empty")
-    @Column(name = "event_calendar")
-    private long eventCalendar;  
-    //source http://www.javaworld.com/article/2077819/java-se/understanding-jpa-part-2-relationships-the-jpa-way.html
-    /////////////////////////////////////////
+    
+    
     //Relationship Entities
-    
-    
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, targetEntity = meteocal.entity.EventType.class)
     @JoinColumn(name = "event_type", referencedColumnName = "id_event_type")
     private EventType eventType;
     
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, targetEntity = meteocal.entity.PrivacyType.class)
     @JoinColumn(name = "event_privacy", referencedColumnName = "id_privacy_type")
     private PrivacyType eventPrivacy;
     
     @NotNull(message = "May not be empty")
-    @OneToOne(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = meteocal.entity.WeatherDataList.class)
     private WeatherDataList weatherDataList;
     
     @NotNull(message = "May not be empty")
-    @OneToOne(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity =  meteocal.entity.InvitationList.class)
     private InvitationList invitationList;
     
     @NotNull(message = "May not be empty")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, targetEntity = meteocal.entity.User.class)
     @JoinColumn(name = "owner_event", referencedColumnName = "id_user")
     private User owner;  
     
     @NotNull(message = "May not be empty")
-    @ManyToOne(optional = false)
-    @PrimaryKeyJoinColumn(name = "event_calendar", referencedColumnName = "id_calendar")
+    @ManyToOne(optional = false, targetEntity = meteocal.entity.Calendar.class)
+    @JoinColumn(name = "event_calendar", referencedColumnName = "id_calendar")
     private Calendar includedInCalendar; 
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "event", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "event", orphanRemoval = true, targetEntity = meteocal.entity.Invitation.class)
     private Collection<Invitation> invitations;
     
     @NotNull(message = "May not be empty")
-    @OneToOne(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
-    private InvitationList userList;
+    @OneToOne(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = meteocal.entity.UserList.class)
+    private UserList userList;
+    
+    @NotNull(message = "May not be empty")
+    @ManyToOne(optional = false, targetEntity = meteocal.entity.EventList.class)
+    @JoinColumn(name = "event_list", referencedColumnName = "id_event_list")
+    private EventList eventList;
     
     
     //Transient attributes
@@ -138,11 +138,19 @@ public class Event implements Serializable {
         this.beginHour = beginHour;
     }
 
-    public InvitationList getUserList() {
+    public EventList getEventList() {
+        return eventList;
+    }
+
+    public void setEventList(EventList eventList) {
+        this.eventList = eventList;
+    }
+
+    public UserList getUserList() {
         return userList;
     }
 
-    public void setUserList(InvitationList userList) {
+    public void setUserList(UserList userList) {
         this.userList = userList;
     }
 
