@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />  
+        <script src="${facesContext.externalContext.requestContextPath}/js/jquery.min.js"></script>
+	<script src="${facesContext.externalContext.requestContextPath}/js/jquery.dropotron.min.js"></script>
+	<script src="${facesContext.externalContext.requestContextPath}/js/skel.min.js"></script>
+	<script src="${facesContext.externalContext.requestContextPath}/js/skel-layers.min.js"></script>
+	<script src="${facesContext.externalContext.requestContextPath}/js/init.js"></script>
+	<noscript>
+		<link rel="stylesheet" href="${facesContext.externalContext.requestContextPath}/css/skel.css" />
+		<link rel="stylesheet" href="${facesContext.externalContext.requestContextPath}/css/style.css" />
+	</noscript>
+        <title>Registration</title>
+    </h:head>
+    <h:body>
+        <div class="container">
+            <div class="headerindent"></div>
+            <div class="mainbody">
+                <div class="column-center"> 
+                    <f:view>
+                        <h:form>
+                            <h1><h:outputText value="Create/Edit"/></h1>
+                            <h:panelGrid columns="2">
+                                <h:selectOneRadio id="myRadio" value="#{privacyTypeBean.pt.privacy}">
+                                    <f:selectItem itemValue="#{false}" itemLabel="Private"/>   
+                                    <f:selectItem itemValue="#{true}" itemLabel="Public"/>     
+                                </h:selectOneRadio>
+                                <h:outputLabel value="Id:" for="id" />
+                                <h:inputText id="id" value="#{privacyTypeBean.pt.id}" title="Id" />
+                                <p:commandButton id="submit" value="Save" class="button alt"
+                                             action="#{privacyTypeBean.save()}" />
+                            </h:panelGrid>
+                        </h:form>
+                    </f:view>
+                    <f:view>
+                        <h:form>
+                            <h1><h:outputText value="List"/></h1>
+                            <h:dataTable value="#{privacyTypeBean.dboutput}" var="item">
+                                <h:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="Privacy"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.privacy}"/>
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="Id"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.id}"/>
+                                </h:column>
+                            </h:dataTable>
+                        </h:form>
+                    </f:view>
+
+                </div>
+                <div class="column-left"></div>
+                <div class="column-right"></div>
+             </div>
+            <div class="footerrindent"></div>
+        </div>
+    </h:body>
+</html>

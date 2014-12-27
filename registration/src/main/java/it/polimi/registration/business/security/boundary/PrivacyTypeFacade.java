@@ -6,12 +6,14 @@
 package it.polimi.registration.business.security.boundary;
 
 import java.security.Principal;
+import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.transaction.UserTransaction;
 import meteocal.entity.PrivacyType;
 
@@ -23,32 +25,25 @@ import meteocal.entity.PrivacyType;
 public class PrivacyTypeFacade extends AbstractFacade<PrivacyType> {
 
     @PersistenceContext(unitName = "authPU")
-    private EntityManagerFactory emf;
     private EntityManager em;
-    @Resource
-    private UserTransaction utx;
-    @Inject
-    Principal principal;
+   
+    
+    public void save(PrivacyType pt) {
+        em.persist(pt);
+    }
 
     @Override
     public EntityManager getEntityManager() {
         return em;
     }
 
-    public EntityManagerFactory getEntityManagerFactory() {
-        return emf;
-    }
-
     public PrivacyTypeFacade() {
         super(PrivacyType.class);
     }
 
-    public UserTransaction getUserTransaction() {
-        return utx;
-    }
-
-    public void setUserTransaction(UserTransaction utx) {
-        this.utx = utx;
+    public List<PrivacyType> getDB_Table() {
+        TypedQuery<PrivacyType> query = em.createQuery("SELECT pt FROM PrivacyType AS pt", PrivacyType.class);
+        return query.getResultList();
     }
 
 }

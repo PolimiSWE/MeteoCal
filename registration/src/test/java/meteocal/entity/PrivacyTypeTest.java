@@ -61,7 +61,7 @@ public class PrivacyTypeTest {
     public void setUp() {
         ptf = new PrivacyTypeFacade();
         em = mock(EntityManager.class);
-        ptf.setUserTransaction(mock(UserTransaction.class));
+        //ptf.setUserTransaction(mock(UserTransaction.class));
     }
     
     @After
@@ -70,14 +70,7 @@ public class PrivacyTypeTest {
     
     @Test
     public void testAllOps(){
-        try {
-            // Start a transaction
-            ptf.getUserTransaction().begin();
-        } catch (NotSupportedException ex) {
-            Logger.getLogger(PrivacyTypeTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SystemException ex) {
-            Logger.getLogger(PrivacyTypeTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
          //------------  Create a Privacy Type = Public ---------
         PrivacyType pt1 = new PrivacyType();
         pt1.setPrivacy(Boolean.TRUE);
@@ -151,21 +144,7 @@ public class PrivacyTypeTest {
             System.out.println("Event e "+ counter +" Id : " + e2.getId());
             counter++;
         }
-        try {
-             ptf.getUserTransaction().commit();
-        } catch (RollbackException ex) {
-            Logger.getLogger(PrivacyTypeTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (HeuristicMixedException ex) {
-            Logger.getLogger(PrivacyTypeTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (HeuristicRollbackException ex) {
-            Logger.getLogger(PrivacyTypeTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
-            Logger.getLogger(PrivacyTypeTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalStateException ex) {
-            Logger.getLogger(PrivacyTypeTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SystemException ex) {
-            Logger.getLogger(PrivacyTypeTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
+       
     }
 
     //Default tests for getter and setter methods, set to be ignored by @Ignore annotation
