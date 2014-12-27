@@ -5,6 +5,7 @@
  */
 package it.polimi.registration.business.security.boundary;
 
+import static com.ctc.wstx.util.DataUtil.Integer;
 import java.security.Principal;
 import java.util.List;
 import javax.annotation.Resource;
@@ -29,7 +30,13 @@ public class PrivacyTypeFacade extends AbstractFacade<PrivacyType> {
    
     
     public void save(PrivacyType pt) {
-        em.persist(pt);
+        TypedQuery<PrivacyType> query = em.createQuery("SELECT pt FROM PrivacyType AS pt WHERE pt.id=:idParam", PrivacyType.class);
+        query.setParameter("idParam", pt.getId());
+        if(query.getResultList().iterator().hasNext()) 
+            em.merge(pt);
+        else
+            em.persist(pt);
+        
     }
 
     @Override
@@ -44,6 +51,26 @@ public class PrivacyTypeFacade extends AbstractFacade<PrivacyType> {
     public List<PrivacyType> getDB_Table() {
         TypedQuery<PrivacyType> query = em.createQuery("SELECT pt FROM PrivacyType AS pt", PrivacyType.class);
         return query.getResultList();
+    }
+
+    public void delete(int ptId) {
+        TypedQuery<PrivacyType> query = em.createQuery("SELECT pt FROM PrivacyType AS pt WHERE pt.id=:idParam", PrivacyType.class);
+        query.setParameter("idParam", ptId);
+        PrivacyType pt;
+        if(query.getResultList().iterator().hasNext()) 
+        {
+            pt = query.getResultList().iterator().next();
+            em.remove(pt);
+        }
+    }
+
+    public PrivacyType getPrivacyType(int ptId) {
+        TypedQuery<PrivacyType> query = em.createQuery("SELECT pt FROM PrivacyType AS pt WHERE pt.id=:idParam", PrivacyType.class);
+        query.setParameter("idParam", ptId);
+        if(query.getResultList().iterator().hasNext()) 
+            return query.getResultList().iterator().next();
+        else 
+            return new PrivacyType();
     }
 
 }

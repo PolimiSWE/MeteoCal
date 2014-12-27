@@ -23,31 +23,33 @@
             <div class="mainbody">
                 <div class="column-center"> 
                     <f:view>
-                        <h:form id="save_edit_output">
+                        <h:form>
                             <h1><h:outputText value="Create/Edit"/></h1>
                             <h:panelGrid columns="2">
-                                <h:selectOneRadio id="myRadio" value="#{privacyTypeBean.pt.privacy}">
-                                    <f:selectItem itemValue="#{false}" itemLabel="Private"/>   
-                                    <f:selectItem itemValue="#{true}" itemLabel="Public"/>     
+                                <h:selectOneRadio id="myRadio" value="#{eventTypeBean.et.type}">
+                                    <f:selectItem itemValue="#{false}" itemLabel="Outdoors"/>   
+                                    <f:selectItem itemValue="#{true}" itemLabel="Indoors"/>     
                                 </h:selectOneRadio>
                                 <h:outputLabel value="Id:" for="id" />
-                                <h:inputText id="id" value="#{privacyTypeBean.pt.id}" title="Id" />
+                                <h:inputText id="id" value="#{eventTypeBean.et.id}" title="Id" />
                                 <p:commandButton id="submit" value="Save" class="button alt"
-                                             action="#{privacyTypeBean.save()}" >
-                                    <f:ajax render="db_table_output" execute="@all" />
+                                             action="#{eventTypeBean.save()}" >
+                                    <f:ajax render="db_table_output"  />
                                 </p:commandButton>
                             </h:panelGrid>
                         </h:form>
                     </f:view>
                     <f:view>
+
+
                         <h:form id="db_table_output">
                             <h1><h:outputText value="List"/></h1>
-                            <h:dataTable value="#{privacyTypeBean.dboutput}" var="item">
+                            <h:dataTable value="#{eventTypeBean.dboutput}" var="item">
                                 <h:column>
                                     <f:facet name="header">
-                                        <h:outputText value="Privacy"/>
+                                        <h:outputText value="Type"/>
                                     </f:facet>
-                                    <h:outputText value="#{item.privacy}"/>
+                                    <h:outputText value="#{item.type}"/>
                                 </h:column>
                                 <h:column>
                                     <f:facet name="header">
@@ -55,29 +57,10 @@
                                     </f:facet>
                                     <h:outputText value="#{item.id}"/>
                                 </h:column>
-                                <h:column>
-                                    <f:facet name="header">
-                                        <h:outputText value="Edit"/>
-                                    </f:facet>
-                                    
-                                    <p:commandButton id="edit#{item.id}" value="Edit" class="button alt"
-                                                     action="#{privacyTypeBean.edit(item.id)}"  >
-                                        <f:ajax render="save_edit_output" execute="@all" />
-                                    </p:commandButton>
-                                </h:column>
-                                <h:column>
-                                    <f:facet name="header">
-                                        <h:outputText value="Delete"/>
-                                    </f:facet>
-                                    
-                                    <p:commandButton id="delete#{item.id}" value="Delete" class="button alt"
-                                             action="#{privacyTypeBean.delete(item.id)}" >
-                                        <f:ajax render="db_table_output" execute="@all" />
-                                    </p:commandButton>
-                                </h:column>
                             </h:dataTable>
                         </h:form>
                     </f:view>
+
 
                 </div>
                 <div class="column-left"></div>

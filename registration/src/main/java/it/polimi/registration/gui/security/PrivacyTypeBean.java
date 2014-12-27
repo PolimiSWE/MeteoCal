@@ -32,9 +32,16 @@ public class PrivacyTypeBean {
         if(pt == null) pt = new PrivacyType();
     }
     
-    public String save() {
+    public void save() {
         ptm.save(pt);
-        return "user/home?faces-redirect=true";
+    }
+    
+    public void edit(int ptId) {
+       pt = ptm.getPrivacyType(ptId);
+    }
+    
+    public void delete(int ptId) {
+        ptm.delete(ptId);
     }
 
     public PrivacyTypeFacade getPtm() {

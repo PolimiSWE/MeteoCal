@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: it.polimi.registration.business.security.boundary.UserManagerTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.368 sec - in it.polimi.registration.business.security.boundary.UserManagerTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.579 sec - in it.polimi.registration.business.security.boundary.UserManagerTest

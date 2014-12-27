@@ -15,7 +15,7 @@ import meteocal.entity.User;
 import meteocal.entity.UserList;
 import meteocal.entity.WeatherDataList;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2014-12-26T00:35:52")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2014-12-27T20:30:38")
 @StaticMetamodel(Event.class)
 public class Event_ { 
 
