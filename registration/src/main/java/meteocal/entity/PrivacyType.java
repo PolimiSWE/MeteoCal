@@ -39,6 +39,10 @@ public class PrivacyType implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "eventPrivacy", orphanRemoval = true, targetEntity = meteocal.entity.Event.class)
     private Collection<Event> eventList;
 
+    public PrivacyType() {
+        this.id = (long)-1;
+    }
+
     
     //Getters and Setters 
     public Collection<Event> getEventList() {
@@ -58,7 +62,10 @@ public class PrivacyType implements Serializable {
     }
 
     public Long getId() {
-        return id;
+        if(id!=null)
+            return id;
+        else 
+            return (long)-1;
     }
 
     public void setId(Long id) {
