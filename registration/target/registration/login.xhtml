@@ -16,18 +16,29 @@
 	</noscript>
     </h:head>
      <h:body >
-         <!-- Header -->
-         <div class="possition_center">
-                <h:form id="loginform" >
-                    <p:outputLabel for="username" value="Email"/>
-                    <p:inputText id="username" value="#{loginBean.username}" required="true" />
-                    <p:outputLabel for="pass" value="Password"/>
-                    <p:password id="pass" value="#{loginBean.password}" required="true" />
-                    <p:commandButton id="submit" class="button" action="#{loginBean.login()}" value="Login" ajax="true" update="@all"/>
-                    <p:link  outcome="register" value="Register"/><br/>
-                    <h:messages  style="color: red"/>
-                </h:form>
-         </div> 
+        <div class="container">
+            <div class="headerindent"></div>
+            <div class="mainbody">
+                <div class="column-center">
+                    <h:form id="loginform" >
+                        <p:panel>
+                            <h:panelGrid columns="2" id="logGrid">
+                                <p:outputLabel for="username" value="Email"/>
+                                <p:inputText id="username" value="#{loginBean.username}" required="true" />
+                                <p:outputLabel for="pass" value="Password"/>
+                                <p:password id="pass" value="#{loginBean.password}" required="true" />
+                            </h:panelGrid>
+                            <p:commandButton id="submit" class="button" action="#{loginBean.login()}" value="Login" ajax="true" update="@all"/>
+						</p:panel>
+                            <p:link  outcome="register" value="Register" class="button"/><br/>
+                            <h:messages  style="color: red"/>
+                    </h:form>
+                </div>
+                <div class="column-left"></div>
+                <div class="column-right"></div>
+            </div>
+            <div class="footerrindent"></div>
+        </div> 
     </h:body>
 </html>
 
