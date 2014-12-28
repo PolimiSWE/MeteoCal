@@ -26,9 +26,12 @@ public class PrivacyTypeFacade extends AbstractFacade<PrivacyType> {
     public void save(PrivacyType pt) {
         PrivacyType tmp = em.find(PrivacyType.class, (long)pt.getId());
         if(tmp != null) 
-            em.merge(tmp);
+            em.merge(pt);
         else
-            em.persist(pt);
+        {
+            tmp = new PrivacyType(pt);
+            em.persist(tmp);
+        }
         
     }
 

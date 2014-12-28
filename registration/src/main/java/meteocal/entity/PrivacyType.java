@@ -44,6 +44,12 @@ public class PrivacyType implements Serializable {
         this.privacy = false;
     }
 
+    public PrivacyType(PrivacyType tmp) {
+        this.id = tmp.id;
+        this.privacy = tmp.privacy;
+    }
+
+    
     
     //Getters and Setters 
     public Collection<Event> getEventList() {

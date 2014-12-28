@@ -45,12 +45,8 @@ public class PrivacyTypeBean implements Serializable {
         return "privacyTypeAdminPage?faces-redirect=true";
     }
     
-    public String edit(int ptId) {
-       if(pt!=null) {
-            if (pt.getId()!= ptId) {
-                pt = ptm.getPrivacyType(ptId);
-            }
-        }
+    public String edit(int ptId) { 
+       pt = ptm.getPrivacyType(ptId);
        return "privacyTypeAdminPage?faces-redirect=true";
     }
     
