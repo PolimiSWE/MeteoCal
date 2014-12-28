@@ -5,17 +5,11 @@
  */
 package it.polimi.registration.business.security.boundary;
 
-import static com.ctc.wstx.util.DataUtil.Integer;
-import java.security.Principal;
 import java.util.List;
-import javax.annotation.Resource;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.transaction.UserTransaction;
 import meteocal.entity.PrivacyType;
 
 /**
@@ -30,10 +24,9 @@ public class PrivacyTypeFacade extends AbstractFacade<PrivacyType> {
    
     
     public void save(PrivacyType pt) {
-        TypedQuery<PrivacyType> query = em.createQuery("SELECT pt FROM PrivacyType AS pt WHERE pt.id=:idParam", PrivacyType.class);
-        query.setParameter("idParam", pt.getId());
-        if(query.getResultList().iterator().hasNext()) 
-            em.merge(pt);
+        PrivacyType tmp = em.find(PrivacyType.class, (long)pt.getId());
+        if(tmp != null) 
+            em.merge(tmp);
         else
             em.persist(pt);
         
@@ -54,22 +47,20 @@ public class PrivacyTypeFacade extends AbstractFacade<PrivacyType> {
     }
 
     public void delete(int ptId) {
-        TypedQuery<PrivacyType> query = em.createQuery("SELECT pt FROM PrivacyType AS pt WHERE pt.id=:idParam", PrivacyType.class);
-        query.setParameter("idParam", ptId);
         PrivacyType pt;
-        if(query.getResultList().iterator().hasNext()) 
+        pt = em.find(PrivacyType.class, (long)ptId);
+        if(pt != null)
         {
-            pt = query.getResultList().iterator().next();
             em.remove(pt);
         }
     }
 
     public PrivacyType getPrivacyType(int ptId) {
-        TypedQuery<PrivacyType> query = em.createQuery("SELECT pt FROM PrivacyType AS pt WHERE pt.id=:idParam", PrivacyType.class);
-        query.setParameter("idParam", ptId);
-        if(query.getResultList().iterator().hasNext()) 
-            return query.getResultList().iterator().next();
-        else 
+        PrivacyType pt;
+        pt = em.find(PrivacyType.class, (long)ptId);
+        if(pt != null)
+            return pt;
+        else
             return new PrivacyType();
     }
 

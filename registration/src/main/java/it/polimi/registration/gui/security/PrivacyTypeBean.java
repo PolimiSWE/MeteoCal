@@ -6,11 +6,11 @@
 package it.polimi.registration.gui.security;
 
 import it.polimi.registration.business.security.boundary.PrivacyTypeFacade;
+import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
-import javax.enterprise.context.Dependent;
-import javax.enterprise.context.RequestScoped;
 import meteocal.entity.PrivacyType;
 
 /**
@@ -18,8 +18,8 @@ import meteocal.entity.PrivacyType;
  * @author Milos
  */
 @Named(value = "privacyTypeBean")
-@RequestScoped
-public class PrivacyTypeBean {
+@SessionScoped
+public class PrivacyTypeBean implements Serializable {
 
     @EJB
     PrivacyTypeFacade ptm;
@@ -32,16 +32,19 @@ public class PrivacyTypeBean {
         if(pt == null) pt = new PrivacyType();
     }
     
-    public void save() {
+    public String save() {
         ptm.save(pt);
+        return "privacyTypeAdminPage?faces-redirect=true";
     }
     
-    public void edit(int ptId) {
+    public String edit(int ptId) {
        pt = ptm.getPrivacyType(ptId);
+       return "privacyTypeAdminPage?faces-redirect=true";
     }
     
-    public void delete(int ptId) {
+    public String delete(int ptId) {
         ptm.delete(ptId);
+        return "privacyTypeAdminPage?faces-redirect=true";
     }
 
     public PrivacyTypeFacade getPtm() {

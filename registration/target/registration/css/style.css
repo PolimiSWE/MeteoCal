@@ -8,6 +8,24 @@
 
 /* Basic */
 
+#save_edit_output {
+    display: inline-block;
+    vertical-align: middle;
+    top: 50%;
+    width: 500px;
+    background: rgba(0, 0, 0, .5);
+    padding: 2em;
+    margin: 0 auto;
+}
+
+#db_table_output {
+    vertical-align: middle;
+    background: rgba(0, 0, 0, .8);
+    padding: 2em;
+    margin: 0 auto;
+}
+
+
         .possition_center {
                         position: relative;
                         transform: translateY(50%);

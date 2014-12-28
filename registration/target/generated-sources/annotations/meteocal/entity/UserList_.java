@@ -7,7 +7,7 @@ import javax.persistence.metamodel.StaticMetamodel;
 import meteocal.entity.Event;
 import meteocal.entity.User;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2014-12-27T20:30:38")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2014-12-28T18:50:51")
 @StaticMetamodel(UserList.class)
 public class UserList_ { 
 
