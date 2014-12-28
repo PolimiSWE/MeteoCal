@@ -8,6 +8,7 @@ package it.polimi.registration.gui.security;
 import it.polimi.registration.business.security.boundary.PrivacyTypeFacade;
 import java.io.Serializable;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
@@ -32,8 +33,15 @@ public class PrivacyTypeBean implements Serializable {
         if(pt == null) pt = new PrivacyType();
     }
     
+    @PostConstruct
+    public void init() {
+        // In @PostConstruct (will be invoked immediately after construction and dependency/property injection).
+        dboutput = ptm.getDB_Table();
+    }
+    
     public String save() {
         ptm.save(pt);
+        dboutput = ptm.getDB_Table();
         return "privacyTypeAdminPage?faces-redirect=true";
     }
     
@@ -48,6 +56,7 @@ public class PrivacyTypeBean implements Serializable {
     
     public String delete(int ptId) {
         ptm.delete(ptId);
+        dboutput = ptm.getDB_Table();
         return "privacyTypeAdminPage?faces-redirect=true";
     }
 
@@ -76,7 +85,6 @@ public class PrivacyTypeBean implements Serializable {
     }
 
     public List<PrivacyType> getDboutput() {
-        dboutput = ptm.getDB_Table();
         return dboutput;
     }
 

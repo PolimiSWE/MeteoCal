@@ -41,6 +41,7 @@ public class PrivacyType implements Serializable {
 
     public PrivacyType() {
         this.id = (long)-1;
+        this.privacy = false;
     }
 
     
