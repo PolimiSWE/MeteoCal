@@ -15,33 +15,36 @@
             <div class="mainbody">
                 <div class="column-center"> 
                     <f:view>
+
+
                         <h:form id="save_edit_output">
                             <h1><h:outputText value="Create/Edit"/></h1>
                             <h:panelGrid columns="2">
-                                <h:outputLabel value="Event Type" for="myRadio" />
-                                <h:selectOneRadio id="myRadio" value="#{eventTypeBean.et.type}">
-                                    <f:selectItem itemValue="#{false}" itemLabel="Outdoors"/>   
-                                    <f:selectItem itemValue="#{true}" itemLabel="Indoors"/>     
+                                <h:outputLabel value="Status:" for="status" />
+                                <h:selectOneRadio id="status" value="#{eventStatusBean.es.status}">
+                                    <f:selectItem itemValue="#{0}" itemLabel="Pending"/>
+                                    <f:selectItem itemValue="#{1}" itemLabel="Accepted"/>   
+                                    <f:selectItem itemValue="#{2}" itemLabel="Declined"/>     
                                 </h:selectOneRadio>
                                 <h:outputLabel value="Id:" for="id" />
-                                <h:inputText id="id" value="#{eventTypeBean.et.id}" title="Id" />
+                                <h:inputText id="id" value="#{eventStatusBean.es.id}" title="Id" />
                                 <p:commandButton id="submit" value="Save" class="button alt"
-                                             action="#{eventTypeBean.save()}" >
-                                    <f:ajax render="db_table_output"  />
+                                             action="#{eventStatusBean.save()}" >
+                                    <f:ajax render="db_table_output" execute="@all" immediate="true"/>
                                 </p:commandButton>
                             </h:panelGrid>
                         </h:form>
-                    
+                   
 
 
                         <h:form id="db_table_output">
                             <h1><h:outputText value="List"/></h1>
-                            <h:dataTable value="#{eventTypeBean.dboutput}" var="item">
+                            <h:dataTable value="#{eventStatusBean.dboutput}" var="item">
                                 <h:column>
                                     <f:facet name="header">
-                                        <h:outputText value="Type"/>
+                                        <h:outputText value="Status"/>
                                     </f:facet>
-                                    <h:outputText value="#{item.type}"/>
+                                    <h:outputText value="#{item.status}"/>
                                 </h:column>
                                 <h:column>
                                     <f:facet name="header">
@@ -55,8 +58,8 @@
                                     </f:facet>
                                     
                                     <p:commandButton id="edit#{item.id}" value="Edit" 
-                                                     action="#{privacyTypeBean.edit(item.id)}"  >
-                                        <f:ajax render="save_edit_output"  />
+                                                     action="#{eventStatusBean.edit(item.id)}"  >
+                                        <f:ajax render="save_edit_output" execute="@all" immediate="true"/>
                                     </p:commandButton>
                                 </h:column>
                                 <h:column>
@@ -65,8 +68,8 @@
                                     </f:facet>
                                     
                                     <p:commandButton id="delete#{item.id}" value="Delete" 
-                                             action="#{privacyTypeBean.delete(item.id)}" >
-                                       <f:ajax render="db_table_output"  />
+                                             action="#{eventStatusBean.delete(item.id)}" >
+                                        <f:ajax render="db_table_output"  execute="@all" immediate="true"/>
                                     </p:commandButton>
                                 </h:column>
                             </h:dataTable>

@@ -39,6 +39,17 @@ public class EventType implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "eventType", orphanRemoval = true, targetEntity = meteocal.entity.Event.class)
     private Collection<Event> eventList;
 
+    public EventType() {
+        this.id = (long)-1;
+        this.type = false;
+    }
+
+    public EventType(EventType tmp) {
+        this.id = tmp.id;
+        this.type = tmp.type;
+    }
+    
+    
     
     //Getters and Setters 
     public Collection<Event> getEventList() {
@@ -58,7 +69,10 @@ public class EventType implements Serializable {
     }
 
     public Long getId() {
-        return id;
+        if(id!=null)
+            return id;
+        else 
+            return (long)-1;
     }
 
     public void setId(Long id) {

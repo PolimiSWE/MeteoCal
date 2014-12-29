@@ -6,10 +6,12 @@
 package it.polimi.registration.gui.security;
 
 import it.polimi.registration.business.security.boundary.EventTypeFacade;
+import java.io.Serializable;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import meteocal.entity.EventType;
 
 /**
@@ -17,8 +19,8 @@ import meteocal.entity.EventType;
  * @author Milos
  */
 @Named(value = "eventTypeBean")
-@RequestScoped
-public class EventTypeBean {
+@SessionScoped
+public class EventTypeBean implements Serializable {
 
     @EJB
     EventTypeFacade etm;
@@ -32,16 +34,35 @@ public class EventTypeBean {
         if(et == null) et = new EventType();
     }
     
+    @PostConstruct
+    public void init() {
+        // In @PostConstruct (will be invoked immediately after construction and dependency/property injection).
+        dboutput = etm.getDB_Table();
+    }
+    
     public void save() {
         etm.save(et);
+        dboutput = etm.getDB_Table();
         //return "user/eventTypeAdminPage?faces-redirect=true";
     }
 
+    public void edit(int etId) { 
+       et = etm.getEventType(etId);
+       //return "privacyTypeAdminPage?faces-redirect=true";
+    }
+    
+    public void delete(int etId) {
+        etm.delete(etId);
+        dboutput = etm.getDB_Table();
+        //return "privacyTypeAdminPage?faces-redirect=true";
+    }
+    
+    //Getters and Setters
     public EventTypeFacade getEtm() {
         return etm;
     }
 
-    public void setEtm(EventTypeFacade ptm) {
+    public void setEtm(EventTypeFacade etm) {
         this.etm = etm;
     }
 
@@ -62,7 +83,6 @@ public class EventTypeBean {
     }
 
     public List<EventType> getDboutput() {
-        dboutput = etm.getDB_Table();
         return dboutput;
     }
 

@@ -56,6 +56,7 @@ public class PrivacyTypeBean implements Serializable {
         return "privacyTypeAdminPage?faces-redirect=true";
     }
 
+    //Getters and Setters
     public PrivacyTypeFacade getPtm() {
         return ptm;
     }

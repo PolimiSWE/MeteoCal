@@ -42,6 +42,17 @@ public class EventStatus implements Serializable {
     private Collection<Invitation> invitationList;
 
     
+    public EventStatus(EventStatus es) {
+        this.id = es.id;
+        this.status = es.status;
+    }
+    
+    public EventStatus() {
+        this.id = (long)-1;
+        this.status = 0;
+    }
+    
+    
     //Getters and Setters 
     public Collection<Invitation> getInvitationList() {
         return invitationList;
