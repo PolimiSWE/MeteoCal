@@ -9,79 +9,59 @@
         
         <title>Registration</title>
     </h:head>
-    <h:body>
-        <div class="container">
-            <div class="headerindent"></div>
-            <div class="mainbody">
-                <div class="column-center"> 
-                    <f:view>
-
-
-                        <h:form id="save_edit_output">
-                            <h1><h:outputText value="Create/Edit"/></h1>
-                            <h:panelGrid columns="2">
-                                <h:outputLabel value="Status:" for="status" />
-                                <h:selectOneRadio id="status" value="#{eventStatusBean.es.status}">
-                                    <f:selectItem itemValue="#{0}" itemLabel="Pending"/>
-                                    <f:selectItem itemValue="#{1}" itemLabel="Accepted"/>   
-                                    <f:selectItem itemValue="#{2}" itemLabel="Declined"/>     
-                                </h:selectOneRadio>
-                                <h:outputLabel value="Id:" for="id" />
-                                <h:inputText id="id" value="#{eventStatusBean.es.id}" title="Id" />
-                                <p:commandButton id="submit" value="Save" class="button alt"
-                                             action="#{eventStatusBean.save()}" >
-                                    <f:ajax render="db_table_output" execute="@this" immediate="true"/>
-                                </p:commandButton>
-                            </h:panelGrid>
-                        </h:form>
-                   
-
-
-                        <h:form id="db_table_output">
-                            <h1><h:outputText value="List"/></h1>
-                            <h:dataTable value="#{eventStatusBean.dboutput}" var="item">
-                                <h:column>
-                                    <f:facet name="header">
-                                        <h:outputText value="Status"/>
-                                    </f:facet>
-                                    <h:outputText value="#{item.status}"/>
-                                </h:column>
-                                <h:column>
-                                    <f:facet name="header">
-                                        <h:outputText value="Id"/>
-                                    </f:facet>
-                                    <h:outputText value="#{item.id}"/>
-                                </h:column>
-                                <h:column>
-                                    <f:facet name="header">
-                                        <h:outputText value="Edit"/>
-                                    </f:facet>
-                                    
-                                    <p:commandButton id="edit#{item.id}" value="Edit" 
-                                                     action="#{eventStatusBean.edit(item.id)}"  >
-                                        <f:ajax render="save_edit_output" execute="@this" immediate="true"/>
-                                    </p:commandButton>
-                                </h:column>
-                                <h:column>
-                                    <f:facet name="header">
-                                        <h:outputText value="Delete"/>
-                                    </f:facet>
-                                    
-                                    <p:commandButton id="delete#{item.id}" value="Delete" 
-                                             action="#{eventStatusBean.delete(item.id)}" >
-                                        <f:ajax render="db_table_output" execute="@this" immediate="true"/>
-                                    </p:commandButton>
-                                </h:column>
-                            </h:dataTable>
-                        </h:form>
-                    </f:view>
-
-
-                </div>
-                <div class="column-left"></div>
-                <div class="column-right"></div>
-             </div>
-            <div class="footerrindent"></div>
-        </div>
+    <h:body> 
+        <h:panelGroup id="parent_container">
+            <h:form id="parent_form">
+                <h1><h:outputText value="Create/Edit"/></h1>
+                <h:panelGrid id="save_edit_output" columns="2">
+                    <h:outputLabel value="Status:" for="status" />
+                    <h:selectOneRadio id="status" value="#{eventStatusBean.es.status}">
+                        <f:selectItem itemValue="#{0}" itemLabel="Pending"/>
+                        <f:selectItem itemValue="#{1}" itemLabel="Accepted"/>   
+                        <f:selectItem itemValue="#{2}" itemLabel="Declined"/>     
+                    </h:selectOneRadio>
+                    <h:outputLabel value="Id:" for="id" />
+                    <h:inputText id="id" value="#{eventStatusBean.es.id}" title="Id" />
+                    <p:commandButton id="submit" value="Save" class="button alt">
+                        <f:ajax render="@form :parent_container :parent_form parent_form :db_table_output" 
+                                execute="@form" listener="#{eventStatusBean.save()}"/>
+                    </p:commandButton>
+                </h:panelGrid>
+           
+                <h1><h:outputText value="List"/></h1>
+                <h:dataTable id="db_table_output" value="#{eventStatusBean.dboutput}" var="item">
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Status"/>
+                        </f:facet>
+                        <h:outputText value="#{item.status}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Id"/>
+                        </f:facet>
+                        <h:outputText value="#{item.id}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Edit"/>
+                        </f:facet>
+                        <p:commandButton id="edit#{item.id}" value="Edit" >
+                            <f:ajax render="@form :parent_container :parent_form :save_edit_output" 
+                                    execute="@form" listener="#{eventStatusBean.edit(item.id)}"/>
+                        </p:commandButton>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Delete"/>
+                        </f:facet>
+                        <p:commandButton id="delete#{item.id}" value="Delete" >
+                            <f:ajax render="@form :parent_container :parent_form parent_form :db_table_output" 
+                                execute="@form" listener="#{eventStatusBean.delete(item.id)}"/>
+                        </p:commandButton>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </h:panelGroup>
     </h:body>
 </html>

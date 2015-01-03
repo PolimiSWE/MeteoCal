@@ -6,7 +6,7 @@ import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 import meteocal.entity.WeatherDataList;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2015-01-02T20:24:30")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2015-01-03T19:02:42")
 @StaticMetamodel(WeatherData.class)
 public class WeatherData_ { 
 
