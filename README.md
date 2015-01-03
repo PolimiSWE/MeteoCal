@@ -1,6 +1,11 @@
 MeteoCal
 ========
 chola poslednje promene:
+-sredjen auto generate id ( za sad samo za privacy type, ali sljaka perfektno tako da cu sutra da odradim za jos neke entitete )
+-napravio sam ajax da radi
++treba da editujem eventType i eventStatus klase jer sad nisu kako treba u odnosu na promene vezane za ajax i auto generating id, i to kad sredim mogu da napravim admin stranice za ove komplikovanije entitete 
+
+chola promene 2:
 - dodata admin stranica za privacy type
     + treba da se doradi izgleda ( trenutno ocajan )
     + znam da je najprostiji objekat ali svi ostali mogu da se odrade na isti nacin
