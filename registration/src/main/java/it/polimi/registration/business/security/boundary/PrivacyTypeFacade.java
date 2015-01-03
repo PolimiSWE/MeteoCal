@@ -22,17 +22,25 @@ public class PrivacyTypeFacade extends AbstractFacade<PrivacyType> {
     @PersistenceContext(unitName = "authPU")
     private EntityManager em;
    
+    public PrivacyType createNew()
+    {
+       PrivacyType tmp = new PrivacyType();
+       em.persist(tmp);
+       em.flush();
+       return tmp;
+    }
     
     public void save(PrivacyType pt) {
-        PrivacyType tmp = em.find(PrivacyType.class, (long)pt.getId());
-        if(tmp != null) 
-            em.merge(pt);
-        else
+        PrivacyType tmp;
+        if(pt.getId() != null)
         {
-            tmp = new PrivacyType(pt);
-            em.persist(tmp);
+            tmp = em.find(PrivacyType.class, (long)pt.getId());
+            if(tmp != null) 
+            {
+                em.merge(pt);
+                em.flush();
+            }
         }
-        
     }
 
     @Override
@@ -56,6 +64,7 @@ public class PrivacyTypeFacade extends AbstractFacade<PrivacyType> {
         {
             em.remove(pt);
         }
+        em.flush();
     }
 
     public PrivacyType getPrivacyType(int ptId) {

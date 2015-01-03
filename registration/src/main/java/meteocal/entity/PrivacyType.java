@@ -14,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -23,10 +24,11 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name="PRIVACY_TYPES")
+@SequenceGenerator(name="sequence", sequenceName="sequence", initialValue=1, allocationSize=100)
 public class PrivacyType implements Serializable {
-    private static final long serialVersionUID = 1L;
+    
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "sequence" )
     @Column(name = "id_privacy_type")
     private Long id;
     
@@ -40,7 +42,7 @@ public class PrivacyType implements Serializable {
     private Collection<Event> eventList;
 
     public PrivacyType() {
-        this.id = (long)-1;
+        //this.id = (long)this.hashCode();
         this.privacy = false;
     }
 
@@ -69,10 +71,7 @@ public class PrivacyType implements Serializable {
     }
 
     public Long getId() {
-        if(id!=null)
-            return id;
-        else 
-            return (long)-1;
+        return this.id;
     }
 
     public void setId(Long id) {

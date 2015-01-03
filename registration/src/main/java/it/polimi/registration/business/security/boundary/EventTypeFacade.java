@@ -31,7 +31,7 @@ public class EventTypeFacade extends AbstractFacade<EventType> {
             tmp = new EventType(et);
             em.persist(tmp);
         }
-        
+        em.flush();
     }
     
     public void delete(int etId) {
@@ -41,6 +41,7 @@ public class EventTypeFacade extends AbstractFacade<EventType> {
         {
             em.remove(et);
         }
+        em.flush();
     }
 
     public EventType getEventType(int etId) {

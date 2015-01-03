@@ -23,10 +23,12 @@
                                     <f:selectItem itemValue="#{true}" itemLabel="Public"/>     
                                 </h:selectOneRadio>
                                 <h:outputLabel value="Id:" for="id" />
-                                <h:inputText id="id" value="#{privacyTypeBean.pt.id}" title="Id" />
-                                <p:commandButton id="submit" value="Save" 
-                                             action="#{privacyTypeBean.save()}" >
-                                   
+                                <h:outputText id="id" value="#{privacyTypeBean.pt.id}"/> <br/>
+                                <p:commandButton id="save" value="Save" >
+                                   <f:ajax render="db_table_output" listener="#{privacyTypeBean.save()}" />
+                                </p:commandButton>
+                                <p:commandButton id="create" value="Create New" >
+                                   <f:ajax render="db_table_output" listener="#{privacyTypeBean.createNew()}" />
                                 </p:commandButton>
                             </h:panelGrid>
                         </h:form>
@@ -50,9 +52,8 @@
                                         <h:outputText value="Edit"/>
                                     </f:facet>
                                     
-                                    <p:commandButton id="edit#{item.id}" value="Edit" 
-                                                     action="#{privacyTypeBean.edit(item.id)}"  >
-                                        
+                                    <p:commandButton id="edit#{item.id}" value="Edit" >
+                                        <f:ajax render="save_edit_output" listener="#{privacyTypeBean.edit(item.id)}" />
                                     </p:commandButton>
                                 </h:column>
                                 <h:column>
@@ -60,9 +61,8 @@
                                         <h:outputText value="Delete"/>
                                     </f:facet>
                                     
-                                    <p:commandButton id="delete#{item.id}" value="Delete" 
-                                             action="#{privacyTypeBean.delete(item.id)}" >
-                                       
+                                    <p:commandButton id="delete#{item.id}" value="Delete"  >
+                                       <f:ajax render="db_table_output" listener="#{privacyTypeBean.delete(item.id)}" />
                                     </p:commandButton>
                                 </h:column>
                             </h:dataTable>

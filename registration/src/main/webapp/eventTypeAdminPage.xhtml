@@ -25,9 +25,8 @@
                                 </h:selectOneRadio>
                                 <h:outputLabel value="Id:" for="id" />
                                 <h:inputText id="id" value="#{eventTypeBean.et.id}" title="Id" />
-                                <p:commandButton id="submit" value="Save" class="button alt"
-                                             action="#{eventTypeBean.save()}" >
-                                    <f:ajax render="db_table_output"  />
+                                <p:commandButton id="submit" value="Save" class="button alt" >
+                                    <f:ajax render="db_table_output" listener="#{eventTypeBean.save()}" />
                                 </p:commandButton>
                             </h:panelGrid>
                         </h:form>
@@ -54,9 +53,8 @@
                                         <h:outputText value="Edit"/>
                                     </f:facet>
                                     
-                                    <p:commandButton id="edit#{item.id}" value="Edit" 
-                                                     action="#{privacyTypeBean.edit(item.id)}"  >
-                                        <f:ajax render="save_edit_output"  />
+                                    <p:commandButton id="edit#{item.id}" value="Edit" >
+                                        <f:ajax render="save_edit_output" listener="#{eventTypeBean.edit(item.id)}" />
                                     </p:commandButton>
                                 </h:column>
                                 <h:column>
@@ -64,9 +62,8 @@
                                         <h:outputText value="Delete"/>
                                     </f:facet>
                                     
-                                    <p:commandButton id="delete#{item.id}" value="Delete" 
-                                             action="#{privacyTypeBean.delete(item.id)}" >
-                                       <f:ajax render="db_table_output"  />
+                                    <p:commandButton id="delete#{item.id}" value="Delete" >
+                                        <f:ajax render="db_table_output" listener="#{eventTypeBean.delete(item.id)}" />
                                     </p:commandButton>
                                 </h:column>
                             </h:dataTable>

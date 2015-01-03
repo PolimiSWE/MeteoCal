@@ -30,30 +30,36 @@ public class PrivacyTypeBean implements Serializable {
     private List<PrivacyType> dboutput;
     
     public PrivacyTypeBean() {
-        if(pt == null) pt = new PrivacyType();
     }
     
     @PostConstruct
     public void init() {
         // In @PostConstruct (will be invoked immediately after construction and dependency/property injection).
         dboutput = ptm.getDB_Table();
+        if(pt == null)
+            pt = new PrivacyType();
     }
     
-    public String save() {
+    public void createNew(){
+        pt = ptm.createNew();
+        dboutput = ptm.getDB_Table();
+    }
+    
+    public void save() {
         ptm.save(pt);
         dboutput = ptm.getDB_Table();
-        return "privacyTypeAdminPage?faces-redirect=true";
+        //return "privacyTypeAdminPage?faces-redirect=true";
     }
     
-    public String edit(int ptId) { 
+    public void edit(int ptId) { 
        pt = ptm.getPrivacyType(ptId);
-       return "privacyTypeAdminPage?faces-redirect=true";
+       //return "privacyTypeAdminPage?faces-redirect=true";
     }
     
-    public String delete(int ptId) {
+    public void delete(int ptId) {
         ptm.delete(ptId);
         dboutput = ptm.getDB_Table();
-        return "privacyTypeAdminPage?faces-redirect=true";
+        //return "privacyTypeAdminPage?faces-redirect=true";
     }
 
     //Getters and Setters
