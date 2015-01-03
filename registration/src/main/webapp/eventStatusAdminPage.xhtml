@@ -30,7 +30,7 @@
                                 <h:inputText id="id" value="#{eventStatusBean.es.id}" title="Id" />
                                 <p:commandButton id="submit" value="Save" class="button alt"
                                              action="#{eventStatusBean.save()}" >
-                                    <f:ajax render="db_table_output" execute="@all" immediate="true"/>
+                                    <f:ajax render="db_table_output" execute="@this" immediate="true"/>
                                 </p:commandButton>
                             </h:panelGrid>
                         </h:form>
@@ -59,7 +59,7 @@
                                     
                                     <p:commandButton id="edit#{item.id}" value="Edit" 
                                                      action="#{eventStatusBean.edit(item.id)}"  >
-                                        <f:ajax render="save_edit_output" execute="@all" immediate="true"/>
+                                        <f:ajax render="save_edit_output" execute="@this" immediate="true"/>
                                     </p:commandButton>
                                 </h:column>
                                 <h:column>
@@ -69,7 +69,7 @@
                                     
                                     <p:commandButton id="delete#{item.id}" value="Delete" 
                                              action="#{eventStatusBean.delete(item.id)}" >
-                                        <f:ajax render="db_table_output"  execute="@all" immediate="true"/>
+                                        <f:ajax render="db_table_output" execute="@this" immediate="true"/>
                                     </p:commandButton>
                                 </h:column>
                             </h:dataTable>
