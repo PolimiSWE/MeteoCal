@@ -15,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -24,9 +25,12 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name="EVENT_TYPES")
 public class EventType implements Serializable {
-    private static final long serialVersionUID = 1L;
+    
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE , generator="et_gen")
+    @TableGenerator(name="et_gen", table="ID_GEN",
+            pkColumnName="ID_NAME", valueColumnName="ID_VAL",
+            pkColumnValue="ET_GEN", initialValue = 160000000)
     @Column(name = "id_event_type")
     private Long id;
     
@@ -40,7 +44,6 @@ public class EventType implements Serializable {
     private Collection<Event> eventList;
 
     public EventType() {
-        this.id = (long)-1;
         this.type = false;
     }
 
@@ -69,10 +72,7 @@ public class EventType implements Serializable {
     }
 
     public Long getId() {
-        if(id!=null)
-            return id;
-        else 
-            return (long)-1;
+        return this.id;
     }
 
     public void setId(Long id) {

@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -24,11 +25,13 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name="PRIVACY_TYPES")
-@SequenceGenerator(name="sequence", sequenceName="sequence", initialValue=1, allocationSize=100)
 public class PrivacyType implements Serializable {
     
     @Id
-    @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "sequence" )
+    @GeneratedValue(strategy = GenerationType.TABLE , generator="pt_gen")
+    @TableGenerator(name="pt_gen", table="ID_GEN",
+            pkColumnName="ID_NAME", valueColumnName="ID_VAL",
+            pkColumnValue="PT_GEN", initialValue = 190000000)
     @Column(name = "id_privacy_type")
     private Long id;
     

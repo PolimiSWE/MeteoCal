@@ -17,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 /**
  *
@@ -25,9 +26,12 @@ import javax.persistence.Table;
 @Entity
 @Table(name="WEATHER_DATA_LISTS")
 public class WeatherDataList implements Serializable {
-    private static final long serialVersionUID = 1L;
+    
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO) 
+    @GeneratedValue(strategy = GenerationType.TABLE , generator="wdl_gen")
+    @TableGenerator(name="wdl_gen", table="ID_GEN",
+            pkColumnName="ID_NAME", valueColumnName="ID_VAL",
+            pkColumnValue="WDL_GEN", initialValue = 230000000)
     @Column(name = "id_weather_data_list")
     private Long id;
     

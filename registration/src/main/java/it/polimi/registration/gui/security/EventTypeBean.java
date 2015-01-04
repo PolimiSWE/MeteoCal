@@ -31,12 +31,17 @@ public class EventTypeBean implements Serializable {
     
     
     public EventTypeBean() {
-        if(et == null) et = new EventType();
     }
     
     @PostConstruct
     public void init() {
         // In @PostConstruct (will be invoked immediately after construction and dependency/property injection).
+        dboutput = etm.getDB_Table();
+        if(et == null) et = new EventType();
+    }
+    
+    public void createNew(){
+        et = etm.createNew();
         dboutput = etm.getDB_Table();
     }
     

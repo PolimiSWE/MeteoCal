@@ -39,6 +39,11 @@ public class EventStatusBean implements Serializable {
         dboutput = etm.getDB_Table();
     }
     
+    public void createNew(){
+        es = etm.createNew();
+        dboutput = etm.getDB_Table();
+    }
+    
     public void save() {
         etm.save(es);
         dboutput = etm.getDB_Table();

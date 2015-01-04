@@ -6,7 +6,6 @@
 package meteocal.entity;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,12 +16,11 @@ import java.sql.Timestamp;
 import java.util.Collection;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
 
 /**
@@ -32,9 +30,12 @@ import javax.persistence.Transient;
 @Entity
 @Table(name="EVENTS")
 public class Event implements Serializable {
-    private static final long serialVersionUID = 1L;
+    
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE , generator="evt_gen")
+    @TableGenerator(name="evt_gen", table="ID_GEN",
+            pkColumnName="ID_NAME", valueColumnName="ID_VAL",
+            pkColumnValue="EVT_GEN", initialValue = 130000000)
     @Column(name = "id_event")
     private Long id;
     
@@ -93,10 +94,6 @@ public class Event implements Serializable {
     private WeatherDataList weatherDataList;
     
     @NotNull(message = "May not be empty")
-    @OneToOne(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity =  meteocal.entity.InvitationList.class)
-    private InvitationList invitationList;
-    
-    @NotNull(message = "May not be empty")
     @ManyToOne(optional = false, targetEntity = meteocal.entity.User.class)
     @JoinColumn(name = "owner_event", referencedColumnName = "id_user")
     private User owner;  
@@ -109,22 +106,11 @@ public class Event implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "event", orphanRemoval = true, targetEntity = meteocal.entity.Invitation.class)
     private Collection<Invitation> invitations;
     
-    @NotNull(message = "May not be empty")
-    @OneToOne(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = meteocal.entity.UserList.class)
-    private UserList userList;
-    
-    @NotNull(message = "May not be empty")
-    @ManyToOne(optional = false, targetEntity = meteocal.entity.EventList.class)
-    @JoinColumn(name = "event_list", referencedColumnName = "id_event_list")
-    private EventList eventList;
-    
     
     //Transient attributes
-    @NotNull(message = "May not be empty")
     @Transient 
     private Collection<User> invited;
     
-    @NotNull(message = "May not be empty")
     @Transient
     private Collection<User> participants;
     
@@ -136,22 +122,6 @@ public class Event implements Serializable {
 
     public void setBeginHour(Integer beginHour) {
         this.beginHour = beginHour;
-    }
-
-    public EventList getEventList() {
-        return eventList;
-    }
-
-    public void setEventList(EventList eventList) {
-        this.eventList = eventList;
-    }
-
-    public UserList getUserList() {
-        return userList;
-    }
-
-    public void setUserList(UserList userList) {
-        this.userList = userList;
     }
 
     public String getCity() {
@@ -201,16 +171,6 @@ public class Event implements Serializable {
     public void setInvitations(Collection<Invitation> invitations) {
         this.invitations = invitations;
     }
-
-    public InvitationList getInvitationList() {
-        return invitationList;
-    }
-
-    public void setInvitationList(InvitationList invitationList) {
-        this.invitationList = invitationList;
-    }
-
-    
 
     public Integer getDuration() {
         return duration;

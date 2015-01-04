@@ -18,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 /**
  *
@@ -26,9 +27,12 @@ import javax.persistence.Table;
 @Entity
 @Table(name="CALENDARS")
 public class Calendar implements Serializable {
-    private static final long serialVersionUID = 1L;
+    
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE , generator="cal_gen")
+    @TableGenerator(name="cal_gen", table="ID_GEN",
+            pkColumnName="ID_NAME", valueColumnName="ID_VAL",
+            pkColumnValue="CAL_GEN", initialValue = 110000000)
     @Column(name = "id_calendar")
     private Long id;
 
@@ -37,20 +41,22 @@ public class Calendar implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "includedInCalendar", orphanRemoval = true, targetEntity = meteocal.entity.Event.class)
     private Collection<Event> events;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "includedInCalendar", orphanRemoval = true, targetEntity = meteocal.entity.EventList.class)
-    private Collection<EventList> eventLists;
-    
     @OneToOne(optional = false, targetEntity = meteocal.entity.User.class)
     @JoinColumn(name="owner_calendar", referencedColumnName = "id_user")
     private User owner;
     
-    @ManyToOne(optional = false, targetEntity = meteocal.entity.CalendarList.class)
-    @JoinColumn(name = "calendar_list", referencedColumnName = "id_calendar_list")
-    private CalendarList calendarList;
-    
     @ManyToOne(optional = false, targetEntity = meteocal.entity.PrivacyType.class)
     @JoinColumn(name = "calendar_privacy", referencedColumnName = "id_privacy_type")
     private PrivacyType calendarPrivacy;
+    
+    
+    //Constructors  
+    public Calendar() {
+    }
+
+    public Calendar(User owner) {
+        this.owner = owner;
+    }
     
     
     //Getters and Setters
@@ -79,24 +85,6 @@ public class Calendar implements Serializable {
     public void setOwner(User owner) throws NullPointerException {
         if(owner == null) throw new NullPointerException();
         this.owner = owner;
-    }
-
-    public CalendarList getCalendarList() {
-        return calendarList;
-    }
-
-    public void setCalendarList(CalendarList calendarList) throws NullPointerException {
-        if(calendarList == null) throw new NullPointerException();
-        this.calendarList = calendarList;
-    }
-
-    public Collection<EventList> getEventLists() {
-        return eventLists;
-    }
-
-    public void setEventLists(Collection<EventList> eventLists) throws NullPointerException {
-        if(eventLists == null) throw new NullPointerException();
-        this.eventLists = eventLists;
     }
 
     public Collection<Event> getEvents() {

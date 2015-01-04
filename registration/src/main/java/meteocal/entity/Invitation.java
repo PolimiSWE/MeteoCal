@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 /**
  *
@@ -22,9 +23,12 @@ import javax.persistence.Table;
 @Entity
 @Table(name="INVITATIONS")
 public class Invitation implements Serializable {
-    private static final long serialVersionUID = 1L;
+    
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE , generator="inv_gen")
+    @TableGenerator(name="inv_gen", table="ID_GEN",
+            pkColumnName="ID_NAME", valueColumnName="ID_VAL",
+            pkColumnValue="INV_GEN", initialValue = 170000000)
     @Column(name = "id_invitation")
     private Long id;
 
@@ -42,10 +46,6 @@ public class Invitation implements Serializable {
     @JoinColumn(name = "owner_user", referencedColumnName = "id_user")
     private User user;
     
-    @ManyToOne(optional = false, targetEntity = meteocal.entity.InvitationList.class)
-    @JoinColumn(name = "owner_invitation_list", referencedColumnName = "id_invitation_list")
-    private InvitationList invitationList;
-    
     
     //Getters and Setters
     public EventStatus getEventStatus() {
@@ -54,14 +54,6 @@ public class Invitation implements Serializable {
 
     public void setEventStatus(EventStatus eventStatus) {
         this.eventStatus = eventStatus;
-    }
-
-    public InvitationList getInvitationList() {
-        return invitationList;
-    }
-
-    public void setInvitationList(InvitationList invitationList) {
-        this.invitationList = invitationList;
     }
 
     public Event getEvent() {

@@ -10,70 +10,59 @@
         <title>Registration</title>
     </h:head>
     <h:body>
-        <div class="container">
-            <div class="headerindent"></div>
-            <div class="mainbody">
-                <div class="column-center" id="center_container"> 
-                    <f:view>
-                        <h:form id="save_edit_output">
-                            <h1><h:outputText value="Create/Edit"/></h1>
-                            <h:panelGrid columns="2">
-                                <h:selectOneRadio id="myRadio" value="#{privacyTypeBean.pt.privacy}">
-                                    <f:selectItem itemValue="#{false}" itemLabel="Private"/>   
-                                    <f:selectItem itemValue="#{true}" itemLabel="Public"/>     
-                                </h:selectOneRadio>
-                                <h:outputLabel value="Id:" for="id" />
-                                <h:outputText id="id" value="#{privacyTypeBean.pt.id}"/> <br/>
-                                <p:commandButton id="save" value="Save" >
-                                   <f:ajax render="db_table_output" listener="#{privacyTypeBean.save()}" />
-                                </p:commandButton>
-                                <p:commandButton id="create" value="Create New" >
-                                   <f:ajax render="db_table_output" listener="#{privacyTypeBean.createNew()}" />
-                                </p:commandButton>
-                            </h:panelGrid>
-                        </h:form>
-                        <h:form id="db_table_output">
-                            <h1><h:outputText value="List"/></h1>
-                            <h:dataTable value="#{privacyTypeBean.dboutput}" var="item">
-                                <h:column>
-                                    <f:facet name="header">
-                                        <h:outputText value="Privacy"/>
-                                    </f:facet>
-                                    <h:outputText value="#{item.privacy}"/>
-                                </h:column>
-                                <h:column>
-                                    <f:facet name="header">
-                                        <h:outputText value="Id"/>
-                                    </f:facet>
-                                    <h:outputText value="#{item.id}"/>
-                                </h:column>
-                                <h:column>
-                                    <f:facet name="header">
-                                        <h:outputText value="Edit"/>
-                                    </f:facet>
-                                    
-                                    <p:commandButton id="edit#{item.id}" value="Edit" >
-                                        <f:ajax render="save_edit_output" listener="#{privacyTypeBean.edit(item.id)}" />
-                                    </p:commandButton>
-                                </h:column>
-                                <h:column>
-                                    <f:facet name="header">
-                                        <h:outputText value="Delete"/>
-                                    </f:facet>
-                                    
-                                    <p:commandButton id="delete#{item.id}" value="Delete"  >
-                                       <f:ajax render="db_table_output" listener="#{privacyTypeBean.delete(item.id)}" />
-                                    </p:commandButton>
-                                </h:column>
-                            </h:dataTable>
-                        </h:form>
-                    </f:view>
-
-                </div>
-                <div class="column-left"></div>
-                <div class="column-right"></div>
-             </div>
-            <div class="footerrindent"></div>
-        </div>
+        <h:panelGroup id="parent_container">
+            <h:form id="parent_form">
+                <h1><h:outputText value="Create/Edit"/></h1>
+                <h:panelGrid id="save_edit_output" columns="2">
+                    <h:selectOneRadio id="myRadio" value="#{privacyTypeBean.pt.privacy}">
+                        <f:selectItem itemValue="#{false}" itemLabel="Private"/>   
+                        <f:selectItem itemValue="#{true}" itemLabel="Public"/>     
+                    </h:selectOneRadio>
+                    <h:outputLabel value="Id:" for="id" />
+                    <h:outputText id="id" value="#{privacyTypeBean.pt.id}"/> 
+                    <p:commandButton id="save" value="Save" >
+                       <f:ajax render="@form :parent_container :parent_form parent_form :db_table_output" 
+                                execute="@form" listener="#{privacyTypeBean.save()}" />
+                    </p:commandButton>
+                    <p:commandButton id="create" value="Create New" >
+                       <f:ajax render="@form :parent_container :parent_form parent_form :db_table_output" 
+                                execute="@form" listener="#{privacyTypeBean.createNew()}" />
+                    </p:commandButton>
+                </h:panelGrid>
+                <h1><h:outputText value="List"/></h1>
+                <h:dataTable id="db_table_output" value="#{privacyTypeBean.dboutput}" var="item">
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Privacy"/>
+                        </f:facet>
+                        <h:outputText value="#{item.privacy}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Id"/>
+                        </f:facet>
+                        <h:outputText value="#{item.id}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Edit"/>
+                        </f:facet>
+                        <p:commandButton id="edit#{item.id}" value="Edit" >
+                           <f:ajax render="@form :parent_container :parent_form parent_form :save_edit_output" 
+                                execute="@form" listener="#{privacyTypeBean.edit(item.id)}" />
+                        </p:commandButton>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Delete"/>
+                        </f:facet>
+                        <p:commandButton id="delete#{item.id}" value="Delete"  >
+                           <f:ajax render="@form :parent_container :parent_form parent_form :db_table_output" 
+                                execute="@form" listener="#{privacyTypeBean.delete(item.id)}" />
+                        </p:commandButton>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </h:panelGroup>
     </h:body>
 </html>

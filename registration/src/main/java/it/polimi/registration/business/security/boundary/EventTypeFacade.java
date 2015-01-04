@@ -22,16 +22,24 @@ public class EventTypeFacade extends AbstractFacade<EventType> {
     @PersistenceContext(unitName = "authPU")
     private EntityManager em;
 
-    public void save(EventType et) {
-        EventType tmp = em.find(EventType.class, (long)et.getId());
-        if(tmp != null) 
-            em.merge(et);
-        else
-        {
-            tmp = new EventType(et);
-            em.persist(tmp);
-        }
+    public EventType createNew(){
+        EventType tmp = new EventType();
+        em.persist(tmp);
         em.flush();
+        return tmp;
+    }
+    
+    public void save(EventType et) {
+        EventType tmp;
+        if(et.getId() != null) 
+        {
+            tmp = em.find(EventType.class, (long)et.getId());
+            if(tmp!=null)
+            {
+                em.merge(et);
+                em.flush();
+            }
+        }
     }
     
     public void delete(int etId) {

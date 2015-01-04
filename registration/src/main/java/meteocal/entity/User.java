@@ -14,32 +14,31 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 /**
  *
- * @author miglie
+ * @author Milos
  */
 @Entity
 @Table(name="USERS")
 public class User implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE , generator="usr_gen")
+    @TableGenerator(name="usr_gen", table="ID_GEN",
+            pkColumnName="ID_NAME", valueColumnName="ID_VAL",
+            pkColumnValue="USR_GEN", initialValue = 200000000)
     @Column(name = "id_user")
     private Long id;
     
-    @Pattern(regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
-            message = "invalid email")
+    //@Pattern(regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
+    //        message = "invalid email")
     @NotNull(message = "May not be empty")
     @Column(name = "email", unique = true)
     private String email;
@@ -47,10 +46,6 @@ public class User implements Serializable {
     @NotNull(message = "May not be empty")
     @Column(name = "password")
     private String password;
-    
-    @NotNull(message = "May not be empty")
-    @Column(name = "group_name")
-    private String groupName;
     
     @NotNull(message = "May not be empty")
     @Column(name = "name")
@@ -67,22 +62,10 @@ public class User implements Serializable {
     
     //Relationship Entities
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true, targetEntity = meteocal.entity.Invitation.class)
-    private Collection<Invitation> invitations;
-    
-    @ManyToOne(optional = false, targetEntity = meteocal.entity.UserList.class)
-    @JoinColumn(name = "owner_user_list", referencedColumnName = "id_user_list")
-    private UserList userList;
+    private Collection<Invitation> invitations;    
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner", orphanRemoval = true, targetEntity = meteocal.entity.Event.class)
     private Collection<Event> ownedEvents;
-    
-    @NotNull(message = "May not be empty")
-    @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity =  meteocal.entity.EventList.class)
-    private EventList eventList;
-    
-    @NotNull(message = "May not be empty")
-    @OneToOne(mappedBy = "invitedUser", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity =  meteocal.entity.InvitationList.class)
-    private InvitationList invitationList;
     
     @NotNull(message = "May not be empty")
     @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity =  meteocal.entity.Calendar.class)
@@ -91,13 +74,27 @@ public class User implements Serializable {
     
     //Transient attributes
     @Transient
-    private EventList otherEvents;
+    private Collection<Event> otherEvents;
     
     @Transient
-    private InvitationList acceptedInvitations;
+    private Collection<Invitation> acceptedInvitations;
     
     @Transient
-    private InvitationList pendingInvitations;
+    private Collection<Invitation> pendingInvitations;
+    
+    //Constructor
+
+    public User() {
+        this.email = "to be entered";
+        this.password = "to be entered";
+        this.name = "to be entered";
+        this.surname = "to be entered";
+        this.username = "to be entered";
+        this.invitations = null;
+        this.ownedEvents = null;
+        this.myCalendar = new Calendar(this);
+    }
+    
     
     //Getters and Setters 
     public String getName() {
@@ -124,28 +121,28 @@ public class User implements Serializable {
         this.username = username;
     }
 
-    public InvitationList getAcceptedInvitations() {
-        return acceptedInvitations;
-    }
-
-    public void setAcceptedInvitations(InvitationList acceptedInvitations) {
-        this.acceptedInvitations = acceptedInvitations;
-    }
-
-    public InvitationList getPendingInvitations() {
-        return pendingInvitations;
-    }
-
-    public void setPendingInvitations(InvitationList pendingInvitations) {
-        this.pendingInvitations = pendingInvitations;
-    }
-
-    public EventList getOtherEvents() {
+    public Collection<Event> getOtherEvents() {
         return otherEvents;
     }
 
-    public void setOtherEvents(EventList otherEvents) {
+    public void setOtherEvents(Collection<Event> otherEvents) {
         this.otherEvents = otherEvents;
+    }
+
+    public Collection<Invitation> getAcceptedInvitations() {
+        return acceptedInvitations;
+    }
+
+    public void setAcceptedInvitations(Collection<Invitation> acceptedInvitations) {
+        this.acceptedInvitations = acceptedInvitations;
+    }
+
+    public Collection<Invitation> getPendingInvitations() {
+        return pendingInvitations;
+    }
+
+    public void setPendingInvitations(Collection<Invitation> pendingInvitations) {
+        this.pendingInvitations = pendingInvitations;
     }
 
     public Calendar getMyCalendar() {
@@ -156,14 +153,6 @@ public class User implements Serializable {
         this.myCalendar = myCalendar;
     }
 
-    public EventList getEventList() {
-        return eventList;
-    }
-
-    public void setEventList(EventList eventList) {
-        this.eventList = eventList;
-    }
-
     public Collection<Event> getOwnedEvents() {
         return ownedEvents;
     }
@@ -172,36 +161,12 @@ public class User implements Serializable {
         this.ownedEvents = ownedEvents;
     }
 
-    public UserList getUserList() {
-        return userList;
-    }
-
-    public void setUserList(UserList userList) {
-        this.userList = userList;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
-
-    public String getGroupName() {
-        return groupName;
-    }
-
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public InvitationList getInvitationList() {
-        return invitationList;
-    }
-
-    public void setInvitationList(InvitationList invitationList) {
-        this.invitationList = invitationList;
     }
 
     public Collection<Invitation> getInvitations() {

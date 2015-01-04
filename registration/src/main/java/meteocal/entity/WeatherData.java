@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -24,9 +25,12 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name="WEATHER_DATA")
 public class WeatherData implements Serializable {
-    private static final long serialVersionUID = 1L;
+    
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE , generator="wd_gen")
+    @TableGenerator(name="wd_gen", table="ID_GEN",
+            pkColumnName="ID_NAME", valueColumnName="ID_VAL",
+            pkColumnValue="WD_GEN", initialValue = 220000000)
     @Column(name = "id_weather_data")
     private Long id;
     
