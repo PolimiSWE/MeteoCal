@@ -1,0 +1,251 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Calendar Admin Page</title>
+    </h:head>
+    <h:body>
+        <h:panelGroup id="calendar_list_view">
+            <h:form id="calendar_list_form">
+                <h1><h:outputText value="List"/></h1>
+                <h:dataTable id="calendar_list_table" value="#{calendarBean.dboutput}" var="item">
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Id"/>
+                        </f:facet>
+                        <h:outputText value="#{item.id}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="CalendarPrivacy"/>
+                        </f:facet>
+                        <h:outputText value="#{item.calendarPrivacy.privacy}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Owner"/>
+                        </f:facet>
+                        <h:outputText value="#{item.owner.username}"/>
+                    </h:column>
+                    <h:column>
+                        <p:commandButton id="selectCalendar" value="Select Calendar" class="button alt" >
+                            <f:ajax render="@form :calendar_list_view :calendar_list_form :calendar_list_table" 
+                                    execute="@form" listener="#{calendarBean.setCurrent(item)}" />
+                            <f:ajax render="@none" 
+                                    execute="@form" listener="#{eventBean.setCurrent_calendar(item)}" />
+                            <f:ajax render="@form :event_list_view :event_list_form :event_list_table" 
+                                    execute="@form" listener="#{calendarBean.updateCalendarEvents()}" />
+                        </p:commandButton>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </h:panelGroup>
+        <h:panelGroup id="event_list_view">
+            <h:form id="event_list_form">
+                <h1><h:outputText value="List"/></h1>
+                <h:dataTable id="event_list_table" value="#{calendarBean.current.events}" var="event">
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Id"/>
+                        </f:facet>
+                        <h:outputText value="#{event.id}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Name"/>
+                        </f:facet>
+                        <h:outputText value="#{event.name}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Owner"/>
+                        </f:facet>
+                        <h:outputText value="#{event.owner.username}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Privacy"/>
+                        </f:facet>
+                        <h:outputText value="#{event.eventPrivacy.privacy}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Privacy"/>
+                        </f:facet>
+                        <h:outputText value="#{event.eventType.type}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Invitations"/>
+                        </f:facet>
+                        <h:dataTable value="#{event.invitations}" var="invitation">
+                            <h:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Invitation Status"/>
+                                </f:facet>
+                                <h:outputText value="#{invitation.eventStatus.status}"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Invited User"/>
+                                </f:facet>
+                                <h:outputText value="#{invitation.user.username}"/>
+                            </h:column>
+                        </h:dataTable>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Select Event"/>
+                        </f:facet>
+                        <p:commandButton id="selectEvent#{evet.id}" value="Select Event" >
+                            <f:ajax render="@form :edit_event_view :edit_event_form :edit_event_panel
+                                    :event_owner_view :event_owner_form :event_owner_panel
+                                    :event_invited_view :event_invited_form :event_invited_table" 
+                                    execute="@form" listener="#{eventBean.selectCurrent(event)}" />
+                        </p:commandButton>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </h:panelGroup>
+        <h:panelGroup id="edit_event_view">
+            <h:form id="edit_event_form">
+                <h:panelGrid columns="2">
+                   
+                    <h:outputLabel value="Begin Hour:" for="event_input_beginHour" />
+                    <h:inputText id="event_input_beginHour" value="#{eventBean.current_beginHour}" />
+                    <h:outputLabel value="City:" for="event_input_city" />
+                    <h:inputText id="event_input_city" value="#{eventBean.current.city}" />
+                    <h:outputLabel value="Date of Event:" for="event_input_dateOfEvent" />
+                    <h:inputText id="event_input_dateOfEvent" value="#{eventBean.current_dateOfEvent}" />
+                    <h:outputLabel value="Duration:" for="event_input_duration" />
+                    <h:inputText id="event_input_duration" value="#{eventBean.current.duration}" />
+                    <h:outputLabel value="Event Privacy:" for="event_input_privacy" />
+                    <h:inputText id="event_input_privacy" value="#{eventBean.current_privacy}" />
+                    <h:outputLabel value="Event Type:" for="event_input_type" />
+                    <h:inputText id="event_input_type" value="#{eventBean.current_type}" />
+                    <h:outputLabel value="Event Id:" for="event_input_id" />
+                    <h:outputText id="event_input_id" value="#{eventBean.current.id}" />
+                    <h:outputLabel value="Event Included in Calendar:" for="event_input_calendar_id" />
+                    <h:outputText id="event_input_calendar_id" value="#{eventBean.current.includedInCalendar.id}" />
+                    <h:outputLabel value="Event Name:" for="event_input_name" />
+                    <h:inputText id="event_input_name" value="#{eventBean.current.name}" />
+                    <h:outputLabel value="Event Owner Name:" for="event_input_owner_username" />
+                    <h:outputText id="event_input_owner_username" value="#{eventBean.current.owner.username}" />
+                    <h:outputLabel value="Event Street and Number:" for="event_input_streetAndNumber" />
+                    <h:inputText id="event_input_streetAndNumber" value="#{eventBean.current.streetAndNumber}" />
+
+                    <p:commandButton id="saveEvent" value="Save" >
+                            <f:ajax  render="@form :edit_event_view :edit_event_form :edit_event_panel
+                                    :event_invited_view :event_invited_form :event_invited_table
+                                    :event_list_view :event_list_form :event_list_table" 
+                                    execute="@form" listener="#{eventBean.save()}" />
+                            <f:ajax  render="@form :event_list_view :event_list_form :event_list_table" 
+                                    execute="@form" listener="#{calendarBean.updateCalendarEvents()}" />
+                    </p:commandButton>
+                    <p:commandButton id="createNewEvent" value="Create New" >
+                            <f:ajax render="@form :edit_event_view :edit_event_form :edit_event_panel
+                                    :event_invited_view :event_invited_form :event_invited_table
+                                    :event_owner_view :event_owner_form :event_owner_panel" 
+                                    execute="@form" listener="#{eventBean.createNew()}" />
+                    </p:commandButton>
+                </h:panelGrid>
+            </h:form>
+        </h:panelGroup>
+        <h:panelGroup  id="user_list_view">
+            <h:form id="user_list_form">
+                <h1><h:outputText value="List"/></h1>
+                <h:dataTable id="user_list_table" value="#{userBean.dboutput}" var="item">
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Name"/>
+                        </f:facet>
+                        <h:outputText value="#{item.name}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Surname"/>
+                        </f:facet>
+                        <h:outputText value="#{item.surname}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Username"/>
+                        </f:facet>
+                        <h:outputText value="#{item.username}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Set Owner"/>
+                        </f:facet>
+                        <p:commandButton id="setOwner#{item.id}" value="Set Event Owner" >
+                            <f:ajax render="@form :edit_event_view :edit_event_form :edit_event_panel
+                                    :event_owner_view :event_owner_form :event_owner_panel" 
+                                    execute="@form" listener="#{eventBean.setOwner(item)}" />
+                        </p:commandButton>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Invite User"/>
+                        </f:facet>
+                        <p:commandButton id="inviteUser#{item.id}" value="Invite User" >
+                            <f:ajax render="@form :edit_event_view :edit_event_form :edit_event_panel
+                                    :event_invited_view :event_invited_form :event_invited_table" 
+                                    execute="@form" listener="#{eventBean.addInvited(item)}" />
+                        </p:commandButton>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </h:panelGroup>
+        <h:panelGroup id="event_owner_view">
+            <h:form id="event_owner_form">
+                <h1><h:outputText value="Event Owner"/></h1>
+                <h:panelGrid id="event_owner_panel" columns="2">
+                    <h:outputText value="Name:"/>
+                    <h:outputText value="#{eventBean.current_owner.name}" title="Name"/>
+                    <h:outputText value="Surname:"/>
+                    <h:outputText value="#{eventBean.current_owner.surname}" title="Surname"/>
+                    <h:outputText value="Username:"/>
+                    <h:outputText value="#{eventBean.current_owner.username}" title="Username"/>
+                </h:panelGrid>
+            </h:form>
+        </h:panelGroup>
+        <h:panelGroup id="event_invited_view">
+            <h:form id="event_invited_form">
+                <h1><h:outputText value="List"/></h1>
+                <h:dataTable id="event_invited_table" value="#{eventBean.current_invited}" var="item">
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Name"/>
+                        </f:facet>
+                        <h:outputText value="#{item.name}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Surname"/>
+                        </f:facet>
+                        <h:outputText value="#{item.surname}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Username"/>
+                        </f:facet>
+                        <h:outputText value="#{item.username}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Uninvite User"/>
+                        </f:facet>
+                        <p:commandButton id="uninviteUser#{item.id}" value="Uninvite User" >
+                            <f:ajax render="@form :edit_event_view :edit_event_form :edit_event_panel" 
+                                    execute="@form" listener="#{eventBean.removeInvited(item)}" />
+                        </p:commandButton>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </h:panelGroup>
+    </h:body>
+</html>
+

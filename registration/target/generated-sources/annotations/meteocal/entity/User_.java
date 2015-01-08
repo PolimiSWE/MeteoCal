@@ -5,10 +5,9 @@ import javax.persistence.metamodel.CollectionAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 import meteocal.entity.Calendar;
-import meteocal.entity.Event;
 import meteocal.entity.Invitation;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2015-01-05T00:04:39")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2015-01-06T03:49:06")
 @StaticMetamodel(User.class)
 public class User_ { 
 
@@ -16,7 +15,6 @@ public class User_ {
     public static volatile CollectionAttribute<User, Invitation> invitations;
     public static volatile SingularAttribute<User, String> surname;
     public static volatile SingularAttribute<User, String> name;
-    public static volatile CollectionAttribute<User, Event> ownedEvents;
     public static volatile SingularAttribute<User, Long> id;
     public static volatile SingularAttribute<User, Calendar> myCalendar;
     public static volatile SingularAttribute<User, String> email;

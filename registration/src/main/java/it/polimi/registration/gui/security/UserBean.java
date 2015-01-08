@@ -26,6 +26,9 @@ public class UserBean implements Serializable {
     UserFacade um;
     
     private User current;
+    private String password;
+    private String usernameMsg;
+    private String emailMsg;
     private List<User> dboutput;
     
     public UserBean() {
@@ -38,29 +41,53 @@ public class UserBean implements Serializable {
         if(current == null) 
         {
             current = new User();
+            usernameMsg = "";
+            emailMsg = "";
         }
     }
     
     public void createNew(){
         current = um.createNew();
+        usernameMsg = "";
+        emailMsg = "";
         dboutput = um.getDB_Table();
     }
     
     public void save() {
         um.save(current);
+        usernameMsg = "";
+        emailMsg = "";
         dboutput = um.getDB_Table();
         //return "user/eventTypeAdminPage?faces-redirect=true";
     }
 
     public void edit(int usrId) { 
        current = um.getUser(usrId);
+        usernameMsg = "";
+        emailMsg = "";
        //return "privacyTypeAdminPage?faces-redirect=true";
     }
     
     public void delete(int usrId) {
         um.delete(usrId);
+        usernameMsg = "";
+        emailMsg = "";
         dboutput = um.getDB_Table();
         //return "privacyTypeAdminPage?faces-redirect=true";
+    }
+    
+    public void checkUsername(){
+       if(um.checkUsername(current))
+           this.usernameMsg = "Username not taken.";
+       else
+           this.usernameMsg = "Username TAKEN!!! Please select different username";
+    }
+    
+    public void checkEmail(){
+        if(um.checkEmail(current))
+           this.emailMsg = "Email valid.";
+       else
+           this.emailMsg = "Email TAKEN!!! Please select different email";
     }
     
     
@@ -91,6 +118,30 @@ public class UserBean implements Serializable {
 
     public void setCurrent(User current) {
         this.current = current;
+    }
+
+    public String getPassword() {
+        return "Confidential Information!";
+    }
+
+    public void setPassword(String password) {
+        this.current.setPassword(password);
+    }
+
+    public String getUsernameMsg() {
+        return usernameMsg;
+    }
+
+    public void setUsernameMsg(String usernameMsg) {
+        this.usernameMsg = usernameMsg;
+    }
+
+    public String getEmailMsg() {
+        return emailMsg;
+    }
+
+    public void setEmailMsg(String emailMsg) {
+        this.emailMsg = emailMsg;
     }
     
     

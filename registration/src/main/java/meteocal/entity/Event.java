@@ -6,14 +6,16 @@
 package meteocal.entity;
 
 import java.io.Serializable;
+import java.sql.Time;
+import java.time.LocalTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
@@ -21,6 +23,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import static javax.persistence.TemporalType.DATE;
+import static javax.persistence.TemporalType.TIME;
 import javax.persistence.Transient;
 
 /**
@@ -41,33 +46,34 @@ public class Event implements Serializable {
     
     @NotNull(message = "May not be empty")
     @Column(name = "begin_hour")
-    private Integer beginHour;    
+    private Time beginHour;    
     
     @NotNull(message = "May not be empty")
     @Column(name = "city")
     private String city; 
     
     @NotNull(message = "May not be empty")
+    @Temporal(DATE)
     @Column(name = "dateOfEvent")
-    private Timestamp dateOfEvent;
+    private Date dateOfEvent;
     
     @NotNull(message = "May not be empty")
+    @Temporal(DATE)
     @Column(name = "date_created")
-    private Timestamp dateCreated; 
+    private Date dateCreated; 
     
-    @NotNull(message = "May not be empty")
+    @Temporal(DATE)
     @Column(name = "date_modified")
-    private Timestamp dateModified; 
+    private Date dateModified; 
     
-    @NotNull(message = "May not be empty")
+    @Temporal(DATE)
     @Column(name = "date_rescheduled")
-    private Timestamp dateRescheduled; 
+    private Date dateRescheduled; 
     
     @NotNull(message = "May not be empty")
     @Column(name = "duration")
     private Integer duration;            
     
-    @NotNull(message = "May not be empty")
     @Column(name = "modified")
     private Boolean modified;  
     
@@ -89,14 +95,8 @@ public class Event implements Serializable {
     @JoinColumn(name = "event_privacy", referencedColumnName = "id_privacy_type")
     private PrivacyType eventPrivacy;
     
-    @NotNull(message = "May not be empty")
     @OneToOne(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = meteocal.entity.WeatherDataList.class)
     private WeatherDataList weatherDataList;
-    
-    @NotNull(message = "May not be empty")
-    @ManyToOne(optional = false, targetEntity = meteocal.entity.User.class)
-    @JoinColumn(name = "owner_event", referencedColumnName = "id_user")
-    private User owner;  
     
     @NotNull(message = "May not be empty")
     @ManyToOne(optional = false, targetEntity = meteocal.entity.Calendar.class)
@@ -109,18 +109,34 @@ public class Event implements Serializable {
     
     //Transient attributes
     @Transient 
+    private User owner;
+    
+    @Transient 
     private Collection<User> invited;
     
     @Transient
     private Collection<User> participants;
     
     
+    //Constructor
+
+    public Event() {
+        this.beginHour = Time.valueOf("12:00:00");
+        this.city = "Enter City Name";
+        this.dateCreated = new Date(System.currentTimeMillis());
+        this.duration = 1;
+        this.name = "Enter Event Name";
+        this.streetAndNumber = "Enter Address";
+    }
+    
+    
+    
     //Getters and Setters 
-    public Integer getBeginHour() {
+    public Time getBeginHour() {
         return beginHour;
     }
 
-    public void setBeginHour(Integer beginHour) {
+    public void setBeginHour(Time beginHour) {
         this.beginHour = beginHour;
     }
 
@@ -132,35 +148,35 @@ public class Event implements Serializable {
         this.city = city;
     }
 
-    public Timestamp getDateOfEvent() {
+    public Date getDateOfEvent() {
         return dateOfEvent;
     }
 
-    public void setDateOfEvent(Timestamp dateOfEvent) {
+    public void setDateOfEvent(Date dateOfEvent) {
         this.dateOfEvent = dateOfEvent;
     }
 
-    public Timestamp getDateCreated() {
+    public Date getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(Timestamp dateCreated) {
+    public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
     }
 
-    public Timestamp getDateModified() {
+    public Date getDateModified() {
         return dateModified;
     }
 
-    public void setDateModified(Timestamp dateModified) {
+    public void setDateModified(Date dateModified) {
         this.dateModified = dateModified;
     }
 
-    public Timestamp getDateRescheduled() {
+    public Date getDateRescheduled() {
         return dateRescheduled;
     }
 
-    public void setDateRescheduled(Timestamp dateRescheduled) {
+    public void setDateRescheduled(Date dateRescheduled) {
         this.dateRescheduled = dateRescheduled;
     }
 

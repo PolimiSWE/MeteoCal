@@ -25,7 +25,7 @@ public class UserFacade extends AbstractFacade<User> {
     EntityManager em;
 
     
-     public User createNew(){
+    public User createNew(){
         User tmp = new User();
         TypedQuery<PrivacyType> query = em.createQuery("SELECT pt FROM PrivacyType AS pt WHERE pt.privacy=:privacyParam", PrivacyType.class);
         query.setParameter("privacyParam", false);
@@ -33,9 +33,6 @@ public class UserFacade extends AbstractFacade<User> {
         Calendar tmp_cal = tmp.getMyCalendar();
         tmp_cal.setCalendarPrivacy(pt);
         tmp.setMyCalendar(tmp_cal);
-        em.persist(tmp_cal);
-        em.persist(tmp);
-        em.flush();
         return tmp;
     }
     
@@ -49,6 +46,12 @@ public class UserFacade extends AbstractFacade<User> {
                 em.merge(usr);
                 em.flush();
             }
+        }
+        else
+        {
+            //em.persist(tmp.getMyCalendar());
+            em.persist(usr);
+            em.flush();
         }
     }
     
@@ -76,6 +79,20 @@ public class UserFacade extends AbstractFacade<User> {
         return query.getResultList();
     }
     
+    public boolean checkUsername(User current) {
+        TypedQuery<User> query = em.createQuery("SELECT usr FROM User AS usr WHERE usr.username=:usernameParam", User.class);
+        query.setParameter("usernameParam", current.getUsername());
+        List<User> queryRes = query.getResultList();
+        return queryRes.isEmpty();
+    }
+
+    public boolean checkEmail(User current) {
+        TypedQuery<User> query = em.createQuery("SELECT usr FROM User AS usr WHERE usr.email=:emailParam", User.class);
+        query.setParameter("emailParam", current.getEmail());
+        List<User> queryRes = query.getResultList();
+        return queryRes.isEmpty();
+    }
+    
 
     public void unregister() {
         em.remove(getLoggedUser());
@@ -93,4 +110,5 @@ public class UserFacade extends AbstractFacade<User> {
     public UserFacade(){
        super(User.class);
     }
+    
 }

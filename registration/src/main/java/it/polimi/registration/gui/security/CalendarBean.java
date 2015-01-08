@@ -13,6 +13,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import meteocal.entity.Calendar;
+import meteocal.entity.Event;
 
 /**
  *
@@ -27,6 +28,8 @@ public class CalendarBean implements Serializable {
     
     private Calendar current;
     private List<Calendar> dboutput;
+    private List<Event> events;
+    
     
     public CalendarBean() {
     }
@@ -35,6 +38,9 @@ public class CalendarBean implements Serializable {
     public void init() {
         // In @PostConstruct (will be invoked immediately after construction and dependency/property injection).
         dboutput = cm.getDB_Table();
+        if(this.current!= null)
+            if(this.current.getId()!=null)
+                events = cm.getCalendarEvents(this.current.getId());
         if(current == null) 
         {
             current = new Calendar();
@@ -53,6 +59,12 @@ public class CalendarBean implements Serializable {
     public void delete(int calId) {
         cm.delete(calId);
         dboutput = cm.getDB_Table();
+    }
+    
+    public void updateCalendarEvents(){
+        if(this.current!= null)
+            if(this.current.getId()!= null)
+                events = cm.getCalendarEvents(this.current.getId());
     }
     
     
@@ -81,5 +93,12 @@ public class CalendarBean implements Serializable {
     public void setDboutput(List<Calendar> dboutput) {
         this.dboutput = dboutput;
     }
-    
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
 }

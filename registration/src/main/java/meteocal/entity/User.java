@@ -64,15 +64,15 @@ public class User implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true, targetEntity = meteocal.entity.Invitation.class)
     private Collection<Invitation> invitations;    
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner", orphanRemoval = true, targetEntity = meteocal.entity.Event.class)
-    private Collection<Event> ownedEvents;
-    
     @NotNull(message = "May not be empty")
     @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity =  meteocal.entity.Calendar.class)
     private Calendar myCalendar;
     
     
     //Transient attributes
+    @Transient
+    private Collection<Event> ownedEvents;
+    
     @Transient
     private Collection<Event> otherEvents;
     
@@ -91,7 +91,6 @@ public class User implements Serializable {
         this.surname = "to be entered";
         this.username = "to be entered";
         this.invitations = null;
-        this.ownedEvents = null;
         this.myCalendar = new Calendar(this);
     }
     

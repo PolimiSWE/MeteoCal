@@ -11,21 +11,40 @@
         <h:panelGroup id="parent_container">
                 <h:form id="parent_form">
                     <h1><h:outputText value="Create/Edit"/></h1>
-                    <h:panelGrid columns="2">
+                    <h:panelGrid columns="3">
                         <h:outputLabel value="Name:" for="name" />
                         <h:inputText id="name" value="#{userBean.current.name}" title="Name" />
+                        <h:panelGroup/>
                         <h:outputLabel value="Surname:" for="surname" />
                         <h:inputText id="surname" value="#{userBean.current.surname}" title="Surname" />
+                        <h:panelGroup/>
                         <h:outputLabel value="Username:" for="username" />
                         <h:inputText id="username" value="#{userBean.current.username}" title="Username" />
-                        <h:outputLabel value="MyCalendar:" for="myCalendar" />
-                        <h:outputText id="myCalendar" value="#{userBean.current.myCalendar.id}" title="MyCalendar" />
-                        <h:outputLabel value="Id:" for="id" />
-                        <h:outputText id="id" value="#{userBean.current.id}" title="Id" />
+                        <p:commandButton id="check_username" value="Check Username" class="button alt" >
+                            <f:ajax render="@form :parent_container :parent_form parent_form :db_table_output" 
+                                    execute="@form" listener="#{userBean.checkUsername()}" />
+                        </p:commandButton>
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <h:outputText id="usernameMsg" value="#{userBean.usernameMsg}" title="Username status:" />
                         <h:outputLabel value="Email:" for="email" />
                         <h:inputText id="email" value="#{userBean.current.email}" title="Email" />
+                        <p:commandButton id="check_email" value="Check Email" class="button alt" >
+                            <f:ajax render="@form :parent_container :parent_form parent_form :db_table_output" 
+                                    execute="@form" listener="#{userBean.checkEmail()}" />
+                        </p:commandButton>
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <h:outputText id="emailMsg" value="#{userBean.emailMsg}" title="Email status:" />
+                        <h:outputLabel value="MyCalendar:" for="myCalendar" />
+                        <h:outputText id="myCalendar" value="#{userBean.current.myCalendar.id}" title="MyCalendar" />
+                        <h:panelGroup/>
+                        <h:outputLabel value="Id:" for="id" />
+                        <h:outputText id="id" value="#{userBean.current.id}" title="Id" />
+                        <h:panelGroup/>
                         <h:outputLabel value="Password:" for="password" />
-                        <h:inputText id="password" value="#{userBean.current.password}" title="Password" />
+                        <h:inputText id="password" value="#{userBean.password}" title="Password" />
+                        <h:panelGroup/>
                         <p:commandButton id="save" value="Save" class="button alt" >
                             <f:ajax render="@form :parent_container :parent_form parent_form :db_table_output" 
                                     execute="@form" listener="#{userBean.save()}" />
@@ -34,6 +53,7 @@
                             <f:ajax render="@form :parent_container :parent_form parent_form :db_table_output" 
                                     execute="@form" listener="#{userBean.createNew()}" />
                         </p:commandButton>
+                        <h:panelGroup/>
                     </h:panelGrid>
                     <h1><h:outputText value="List"/></h1>
                     <h:dataTable id="db_table_output" value="#{userBean.dboutput}" var="item">

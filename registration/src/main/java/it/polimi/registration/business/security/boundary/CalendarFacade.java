@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import meteocal.entity.Calendar;
+import meteocal.entity.Event;
 
 /**
  *
@@ -49,6 +50,12 @@ public class CalendarFacade extends AbstractFacade<Calendar> {
         em.flush();
     }
     
+    public List<Event> getCalendarEvents(long calendarId) {
+        TypedQuery<Event> query = em.createQuery("SELECT evt FROM Event AS evt WHERE evt.includedInCalendar.id=:calendarIdParam", Event.class);
+        query.setParameter("calendarIdParam", calendarId);
+        return query.getResultList();
+    }
+    
     public Calendar getCalendar(int calId) {
         Calendar cal;
         cal = em.find(Calendar.class, (long)calId);
@@ -66,5 +73,5 @@ public class CalendarFacade extends AbstractFacade<Calendar> {
     public CalendarFacade() {
         super(Calendar.class);
     }
-    
+
 }
