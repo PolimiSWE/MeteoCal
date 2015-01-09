@@ -5,7 +5,7 @@
  */
 package meteocal.entity;
 
-import it.polimi.registration.business.security.control.PasswordEncrypter;
+import meteocal.control.PasswordEncrypter;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.CascadeType;

@@ -5,8 +5,8 @@
  */
 package meteocal.entity;
 
-import it.polimi.registration.business.security.boundary.PrivacyTypeFacade;
-import it.polimi.registration.business.security.boundary.UserManager;
+import meteocal.boundary.PrivacyTypeFacade;
+import meteocal.boundary.UserManager;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;

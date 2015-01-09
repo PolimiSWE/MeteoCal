@@ -7,7 +7,6 @@ package meteocal.entity;
 
 import java.io.Serializable;
 import java.sql.Time;
-import java.time.LocalTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,7 +24,6 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import static javax.persistence.TemporalType.DATE;
-import static javax.persistence.TemporalType.TIME;
 import javax.persistence.Transient;
 
 /**
@@ -116,6 +114,9 @@ public class Event implements Serializable {
     
     @Transient
     private Collection<User> participants;
+    
+    @Transient
+    private Collection<User> notAttending;
     
     
     //Constructor
@@ -283,6 +284,14 @@ public class Event implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Collection<User> getNotAttending() {
+        return notAttending;
+    }
+
+    public void setNotAttending(Collection<User> notAttending) {
+        this.notAttending = notAttending;
     }
 
     @Override
