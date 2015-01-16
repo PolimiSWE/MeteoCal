@@ -6,7 +6,8 @@
 package meteocal.entity;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.sql.Time;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,6 +17,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import static javax.persistence.TemporalType.DATE;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -39,17 +42,18 @@ public class WeatherData implements Serializable {
     
     @NotNull(message = "May not be empty")
     @Column(name = "date")
-    private Timestamp date;
+    @Temporal(DATE)
+    private Date date;
     
     @NotNull(message = "May not be empty")
     @Column(name = "hour")
-    private Integer hour;
+    private Time hour;
    
     @Column(name = "preasure")
     private Double preasure;
     
     @Column(name = "temperature")
-    private Integer temperature;
+    private Double temperature;
     
     @Column(name = "wind_speed")
     private Double windSpeed;
@@ -70,19 +74,19 @@ public class WeatherData implements Serializable {
         this.cloudPercentage = cloudPercentage;
     }
 
-    public Timestamp getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(Timestamp date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
-    public Integer getHour() {
+    public Time getHour() {
         return hour;
     }
 
-    public void setHour(Integer hour) {
+    public void setHour(Time hour) {
         this.hour = hour;
     }
 
@@ -94,11 +98,11 @@ public class WeatherData implements Serializable {
         this.preasure = preasure;
     }
 
-    public Integer getTemperature() {
+    public Double getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(Integer temperature) {
+    public void setTemperature(Double temperature) {
         this.temperature = temperature;
     }
 
