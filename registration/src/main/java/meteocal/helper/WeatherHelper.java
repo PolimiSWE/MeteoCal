@@ -1,9 +1,5 @@
 package meteocal.helper;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -15,7 +11,6 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.Schedule;
@@ -29,7 +24,6 @@ import javax.ws.rs.client.ClientBuilder;
 import meteocal.entity.WeatherData;
 import org.primefaces.json.JSONArray;
 import org.primefaces.json.JSONObject;
-import sun.tools.jstat.Scale;
 
 
 
@@ -70,6 +64,7 @@ public class WeatherHelper {
     
     
     @Schedule(second = "*/5", minute = "*", hour = "*", persistent = false)
+    @SuppressWarnings("CallToPrintStackTrace")
     public void checkWeatherAutoTimer() {
         
         //api.openweathermap.org/data/2.5/forecast/daily?q=London&cnt=16
@@ -89,7 +84,7 @@ public class WeatherHelper {
             this.wdList = new ArrayList<>(0);
             for (int i = 0; i < items.length(); i++) {
                 JSONObject jobj = items.getJSONObject(i);
-                WeatherData wd = this.fromJsonDaily(jobj);
+                WeatherData wd = WeatherHelper.fromJsonDaily(jobj);
                 this.wdList.add(wd);
             }
         } catch (Exception e) {
@@ -115,7 +110,7 @@ public class WeatherHelper {
             this.wdList = new ArrayList<>(0);
             for (int i = 0; i < items.length(); i++) {
                 JSONObject jobj = items.getJSONObject(i);
-                WeatherData wd = this.fromJson3hours(jobj);
+                WeatherData wd = WeatherHelper.fromJson3hours(jobj);
                 this.wdList.add(wd);
             }
         } catch (Exception e) {
@@ -124,26 +119,26 @@ public class WeatherHelper {
     }
     public static WeatherData getClosestWeatherData(List<WeatherData> wdl, Date date, Time time){
         //take only weatherdata for given date "date"
-        List<WeatherData> wdlForTheDay = new ArrayList<WeatherData>();
+        List<WeatherData> wdlForTheDay = new ArrayList<>();
         for(WeatherData wd : wdl){
-            Date wddate = wd.getDate();
+            java.util.Date wddate = wd.getDate();
             if(wddate.equals(date))//
                 wdlForTheDay.add(wd);
         }
         if(wdlForTheDay.size() == 1)//probably from daily forecast request
             return wdlForTheDay.get(0);
-        else if(wdlForTheDay.size() == 0)
+        else if(wdlForTheDay.isEmpty())
             return null;
         else{//3hour forecast, find the best match
             WeatherData minDiffWd = new WeatherData();
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(time);
-            int hour = calendar.get(Calendar.HOUR);//hour of an event
+            int hour = calendar.get(Calendar.HOUR_OF_DAY);//hour of an event
             //0-23
             for (WeatherData wd : wdlForTheDay) {
             Time wdtime = wd.getHour();
             calendar.setTime(wdtime);
-            int wdhour = calendar.get(Calendar.HOUR);
+            int wdhour = calendar.get(Calendar.HOUR_OF_DAY);
             if(wdhour<=hour)
                 minDiffWd = wd;
             }
@@ -222,6 +217,7 @@ public class WeatherHelper {
         return wd;
     }
     
+    @SuppressWarnings("UseSpecificCatch")
     public static WeatherData fromJson3hours(JSONObject jsonObject){
         WeatherData wd = new WeatherData();
         try {
@@ -289,17 +285,19 @@ public class WeatherHelper {
         this.wdList = wdList;
     }
     
-    public static void main(String[] args) {
-     WeatherHelper helper = new WeatherHelper();
-     helper.checkWeather5days("London");
-     List<WeatherData> dataList = helper.getWdList();
+    public void testFun() {
+     //WeatherHelper helper = new WeatherHelper();
+     this.checkWeather5days("London");
+     List<WeatherData> dataList = this.getWdList();
      System.out.println("London weather:");
         for (WeatherData wd : dataList) {
             System.out.println(wd.getDate().toString()+"hr:"+wd.getHour().toString()+" cl:"+
                     wd.getCloudPercentage().toString()+" pr:"+wd.getPreasure().toString()+" tmp:"+
                     wd.getTemperature()+" wnd:"+wd.getWindSpeed());
         }
-     WeatherData wd = helper.getClosestWeatherData(dataList, new Date(2015, 1, 18), new Time(19,0,0));
+     Date dt = Date.valueOf("2015-1-18");
+     Time tm = Time.valueOf("19:00:00");
+     WeatherData wd = WeatherHelper.getClosestWeatherData(dataList, dt, tm);
      
      System.out.println("Closest to 18.1.2015 19h is:");
             System.out.println(wd.getDate().toString()+"hr:"+wd.getHour().toString()+" cl:"+
