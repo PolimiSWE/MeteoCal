@@ -1,19 +1,20 @@
 package meteocal.entity;
 
-import java.sql.Timestamp;
+import java.sql.Time;
+import java.util.Date;
 import javax.annotation.Generated;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 import meteocal.entity.WeatherDataList;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2015-01-16T13:51:19")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2015-01-16T16:50:01")
 @StaticMetamodel(WeatherData.class)
 public class WeatherData_ { 
 
-    public static volatile SingularAttribute<WeatherData, Timestamp> date;
+    public static volatile SingularAttribute<WeatherData, Date> date;
     public static volatile SingularAttribute<WeatherData, Double> preasure;
-    public static volatile SingularAttribute<WeatherData, Integer> hour;
-    public static volatile SingularAttribute<WeatherData, Integer> temperature;
+    public static volatile SingularAttribute<WeatherData, Time> hour;
+    public static volatile SingularAttribute<WeatherData, Double> temperature;
     public static volatile SingularAttribute<WeatherData, WeatherDataList> ownerList;
     public static volatile SingularAttribute<WeatherData, Long> id;
     public static volatile SingularAttribute<WeatherData, Double> windSpeed;
