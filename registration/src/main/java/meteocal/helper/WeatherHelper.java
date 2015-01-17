@@ -23,9 +23,12 @@ import javax.ejb.TimerConfig;
 import javax.ejb.TimerService;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import meteocal.bean.MailSendingBean;
 import meteocal.entity.WeatherData;
 import org.primefaces.json.JSONArray;
 import org.primefaces.json.JSONObject;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  *
@@ -337,6 +340,14 @@ public class WeatherHelper {
         System.out.println(wd.getDate().toString() + "hr:" + wd.getHour().toString() + " cl:"
                 + wd.getCloudPercentage().toString() + " pr:" + wd.getPreasure() + " tmp:"
                 + wd.getTemperature() + " wnd:" + wd.getWindSpeed());
-        System.exit(0);
+        ///////////////////////////////////////////////////////////
+        ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Mail.xml");
+        MailSendingBean msb = (MailSendingBean) context.getBean("mailSendingBean");
+        msb.sendMail("meteocaltester@gmail.com",
+    		   "nemtajo@yahoo.com",
+    		   "Subject-MeteoCal", 
+    		   "Testing only \n\n Sent from Java project");
+
     }
+    
 }
