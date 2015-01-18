@@ -26,17 +26,17 @@ public class UserLazyDataModel extends LazyDataModel<User> {
      
     @Override
     public User getRowData(String rowKey) {
-        for(User usr : datasource) {
-            if(usr.getId().toString().equals(rowKey))
-                return usr;
+        for(User obj : datasource) {
+            if(obj.getId().toString().equals(rowKey))
+                return obj;
         }
  
         return null;
     }
  
     @Override
-    public Object getRowKey(User car) {
-        return car.getId();
+    public Object getRowKey(User obj) {
+        return obj.getId();
     }
  
     @Override
@@ -44,7 +44,7 @@ public class UserLazyDataModel extends LazyDataModel<User> {
         List<User> data = new ArrayList<User>();
  
         //filter
-        for(User usr : datasource) {
+        for(User obj : datasource) {
             boolean match = true;
  
             if (filters != null) {
@@ -52,9 +52,9 @@ public class UserLazyDataModel extends LazyDataModel<User> {
                     try {
                         String filterProperty = it.next();
                         Object filterValue = filters.get(filterProperty);
-                        Field userField = usr.getClass().getDeclaredField(filterProperty);
-                        userField.setAccessible(true);
-                        String fieldValue = String.valueOf(userField.get(usr));
+                        Field objField = obj.getClass().getDeclaredField(filterProperty);
+                        objField.setAccessible(true);
+                        String fieldValue = String.valueOf(objField.get(obj));
  
                         if(filterValue == null || fieldValue.startsWith(filterValue.toString())) {
                             match = true;
@@ -70,7 +70,7 @@ public class UserLazyDataModel extends LazyDataModel<User> {
             }
  
             if(match) {
-                data.add(usr);
+                data.add(obj);
             }
         }
  

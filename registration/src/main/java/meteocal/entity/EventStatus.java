@@ -101,7 +101,12 @@ public class EventStatus implements Serializable {
 
     @Override
     public String toString() {
-        return "it.polimi.registration.business.security.entity.EventStatus[ id=" + id + " ]";
+        if(this.status==0)
+            return "Pending";
+        else if(this.status==1)
+            return "Accepted";
+        else
+            return "Declined";
     }
     
 }

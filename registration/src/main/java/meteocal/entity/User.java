@@ -192,4 +192,9 @@ public class User implements Serializable {
         this.password = PasswordEncrypter.encryptPassword(password);
     }
 
+    @Override
+    public String toString() {
+        return this.getName()+" "+this.getSurname()+" ("+this.getUsername()+")"; 
+    }
+    
 }

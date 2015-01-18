@@ -101,7 +101,9 @@ public class EventType implements Serializable {
 
     @Override
     public String toString() {
-        return "it.polimi.registration.business.security.entity.EventType[ id=" + id + " ]";
+        if (this.getType())
+            return "Outdoor";
+        else return "Indoor";
     }
     
 }

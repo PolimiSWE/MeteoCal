@@ -103,7 +103,10 @@ public class PrivacyType implements Serializable {
 
     @Override
     public String toString() {
-        return "it.polimi.registration.business.security.entity.Privacy[ id=" + id + " ]";
+        if(privacy)
+            return "Public";
+        else
+            return "Private";
     }
     
 }
