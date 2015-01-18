@@ -11,26 +11,23 @@
         <h:panelGroup id="calendar_list_view">
             <h:form id="calendar_list_form">
                 <h1><h:outputText value="List"/></h1>
-                <h:dataTable id="calendar_list_table" value="#{calendarBean.dboutput}" var="item">
-                    <h:column>
-                        <f:facet name="header">
-                            <h:outputText value="Id"/>
-                        </f:facet>
-                        <h:outputText value="#{item.id}"/>
-                    </h:column>
-                    <h:column>
+                <p:dataTable id="calendar_list_table" value="#{commonBean.allCalendars}" var="item" 
+                             rowKey="#{item.id}" emptyMessage="No records found"
+                             lazy="false" stickyHeader="true" 
+                             scrollable="true" liveScroll="true" scrollHeight="200">
+                    <p:column width="20px">
                         <f:facet name="header">
                             <h:outputText value="CalendarPrivacy"/>
                         </f:facet>
                         <h:outputText value="#{item.calendarPrivacy.privacy}"/>
-                    </h:column>
-                    <h:column>
+                    </p:column>
+                    <p:column width="20px">
                         <f:facet name="header">
                             <h:outputText value="Owner"/>
                         </f:facet>
                         <h:outputText value="#{item.owner.username}"/>
-                    </h:column>
-                    <h:column>
+                    </p:column>
+                    <p:column width="20px" >
                         <p:commandButton id="selectCalendar" value="Select Calendar" class="button alt" >
                             <f:ajax render="@form :calendar_list_view :calendar_list_form :calendar_list_table" 
                                     execute="@form" listener="#{calendarBean.setCurrent(item)}" />
@@ -39,8 +36,8 @@
                             <f:ajax render="@form :event_list_view :event_list_form :event_list_table" 
                                     execute="@form" listener="#{calendarBean.updateCalendarEvents()}" />
                         </p:commandButton>
-                    </h:column>
-                </h:dataTable>
+                    </p:column>
+                </p:dataTable>
             </h:form>
         </h:panelGroup>
         <h:panelGroup id="event_list_view">
@@ -157,7 +154,7 @@
         <h:panelGroup  id="user_list_view">
             <h:form id="user_list_form">
                 <h1><h:outputText value="List"/></h1>
-                <h:dataTable id="user_list_table" value="#{userBean.dboutput}" var="item">
+                <h:dataTable id="user_list_table" value="#{commonBean.allUsers}" var="item">
                     <h:column>
                         <f:facet name="header">
                             <h:outputText value="Name"/>

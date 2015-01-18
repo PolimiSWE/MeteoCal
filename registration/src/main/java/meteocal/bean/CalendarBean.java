@@ -9,12 +9,17 @@ import meteocal.boundary.CalendarFacade;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.inject.Inject;
 import meteocal.entity.Calendar;
 import meteocal.entity.Event;
+import meteocal.helper.CalendarHelper;
+import meteocal.helper.DayHelper;
 import meteocal.interfaces.CalendarBeanInterface;
+import meteocal.interfaces.CommonBeanInterface;
 
 /**
  *
@@ -27,12 +32,17 @@ public class CalendarBean implements Serializable,CalendarBeanInterface {
     @EJB
     CalendarFacade cm;
     
+    @Inject 
+    CommonBeanInterface commonData;
+    
     private Calendar current;
     private List<Calendar> dboutput;
     private List<Event> events;
+    private CalendarHelper calHelper;
     
     
     public CalendarBean() {
+        
     }
     
     @PostConstruct
@@ -46,6 +56,12 @@ public class CalendarBean implements Serializable,CalendarBeanInterface {
         {
             current = new Calendar();
         }
+        this.calHelper = new CalendarHelper(new Date(System.currentTimeMillis()));
+        List<DayHelper> daysOfweek = this.calHelper.getCurrentWeek();
+        for(DayHelper day : daysOfweek){
+            day.setTodaysEvents(this.commonData.getEventsForDay(day.getToday()));
+        }
+        this.calHelper.setCurrentWeek(daysOfweek);
     }
     
     public void save() {
@@ -101,6 +117,14 @@ public class CalendarBean implements Serializable,CalendarBeanInterface {
 
     public void setEvents(List<Event> events) {
         this.events = events;
+    }
+
+    public CalendarHelper getCalHelper() {
+        return calHelper;
+    }
+
+    public void setCalHelper(CalendarHelper calHelper) {
+        this.calHelper = calHelper;
     }
 
     @Override

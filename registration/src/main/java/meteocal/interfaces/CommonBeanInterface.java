@@ -5,8 +5,10 @@
  */
 package meteocal.interfaces;
 
+import java.util.Date;
 import java.util.List;
 import meteocal.entity.Calendar;
+import meteocal.entity.Event;
 import meteocal.entity.User;
 
 /**
@@ -26,4 +28,5 @@ public interface CommonBeanInterface {
     public void populateEvents();
     public void populateInvitations();
     public void populateUsers();
+    public List<Event> getEventsForDay(Date day);
 }

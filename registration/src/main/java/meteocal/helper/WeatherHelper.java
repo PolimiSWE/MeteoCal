@@ -64,7 +64,7 @@ public class WeatherHelper {
         timerService.createCalendarTimer(everyDay, new TimerConfig("", false));
     }
 
-    @Schedule(second = "*/5", minute = "*", hour = "*", persistent = false)
+    @Schedule(second = "*", minute = "*/1", hour = "*", persistent = false)
     @SuppressWarnings("CallToPrintStackTrace")
     public void checkWeatherAutoTimer() {
 
@@ -85,12 +85,12 @@ public class WeatherHelper {
             this.wdList = new ArrayList<>(0);
             for (int i = 0; i < items.length(); i++) {
                 JSONObject jobj = items.getJSONObject(i);
-                WeatherData wd = WeatherHelper.fromJsonDaily(jobj);
+                WeatherData wd = this.fromJsonDaily(jobj);
                 this.wdList.add(wd);
             }
             sortWeatherList();
         } catch (Exception e) {
-            e.printStackTrace();
+            this.wdList = new ArrayList<>(); // server returned empty JSON
         }
     }
 
@@ -113,7 +113,7 @@ public class WeatherHelper {
             this.wdList = new ArrayList<>(0);
             for (int i = 0; i < items.length(); i++) {
                 JSONObject jobj = items.getJSONObject(i);
-                WeatherData wd = WeatherHelper.fromJson3hours(jobj);
+                WeatherData wd = this.fromJson3hours(jobj);
                 this.wdList.add(wd);
             }
             sortWeatherList();
@@ -122,7 +122,7 @@ public class WeatherHelper {
         }
     }
 
-    public static WeatherData getClosestWeatherData(List<WeatherData> wdl, Date date, Time time) {
+    public WeatherData getClosestWeatherData(List<WeatherData> wdl, Date date, Time time) {
         //take only weatherdata for given date "date"
         List<WeatherData> wdlForTheDay = new ArrayList<>();
         for (WeatherData wd : wdl) {
@@ -207,7 +207,7 @@ public class WeatherHelper {
         return url + "&cnt=" + countedDays;
     }
 
-    public static WeatherData fromJsonDaily(JSONObject jsonObject) {
+    public WeatherData fromJsonDaily(JSONObject jsonObject) {
         WeatherData wd = new WeatherData();
         try {
             double temp = jsonObject.getJSONObject("temp").getDouble("day") - 273.15;
@@ -255,7 +255,7 @@ public class WeatherHelper {
     }
 
     @SuppressWarnings("UseSpecificCatch")
-    public static WeatherData fromJson3hours(JSONObject jsonObject) {
+    public WeatherData fromJson3hours(JSONObject jsonObject) {
         WeatherData wd = new WeatherData();
         try {
             double temp = jsonObject.getJSONObject("main").getDouble("temp") - 273.15;
@@ -334,7 +334,7 @@ public class WeatherHelper {
         }
         Date dt = java.sql.Date.valueOf("2015-1-18");
         Time tm = Time.valueOf("19:00:00");
-        WeatherData wd = WeatherHelper.getClosestWeatherData(dataList, dt, tm);
+        WeatherData wd = this.getClosestWeatherData(dataList, dt, tm);
 
         System.out.println("Closest to 18.1.2015 19h is:");
         System.out.println(wd.getDate().toString() + "hr:" + wd.getHour().toString() + " cl:"

@@ -35,15 +35,28 @@ public class CalendarHelper {
     
     public void moveByOneDayUp(){
         this.currentWeek.remove(0);
-        
-        this.currentWeek.add(null);
+        Date tmp_date = currentWeek.get(6).getToday();
+        tmp_date = this.getNextDay(tmp_date);
+        DayHelper tmp_day = new DayHelper(tmp_date);
+        this.currentWeek.add(tmp_day);
     }
     
     public void moveByOneDayDown(){
-    
+        this.currentWeek.remove(7);
+        Date tmp_date = currentWeek.get(0).getToday();
+        tmp_date = this.getBeforeDay(tmp_date);
+        DayHelper tmp_day = new DayHelper(tmp_date);
+        this.currentWeek.add(0, tmp_day);
     }
 
     private Date getNextDay(Date day){
+        Calendar c = Calendar.getInstance();
+        c.setTime(day);
+        c.add(Calendar.DATE, 1);  // number of days to add
+        return c.getTime();  // dt is now the new date
+    }
+    
+    private Date getBeforeDay(Date day) {
         String dt = day.toString();  // Start date
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
@@ -52,7 +65,7 @@ public class CalendarHelper {
         } catch (ParseException ex) {
             Logger.getLogger(CalendarHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
-        c.add(Calendar.DATE, 1);  // number of days to add
+        c.add(Calendar.DATE, -1);  // number of days to add
         return c.getTime();  // dt is now the new date
     }
     
@@ -63,7 +76,6 @@ public class CalendarHelper {
     public void setCurrentWeek(List<DayHelper> currentWeek) {
         this.currentWeek = currentWeek;
     }
-    
-    
+       
     
 }

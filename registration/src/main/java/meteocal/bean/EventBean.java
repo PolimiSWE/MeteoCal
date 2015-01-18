@@ -15,9 +15,11 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
 import meteocal.entity.Calendar;
 import meteocal.entity.Event;
 import meteocal.entity.User;
+import meteocal.helper.DayHelper;
 
 /**
  *
@@ -29,6 +31,7 @@ public class EventBean implements Serializable {
     
     @EJB
     EventFacade em;
+    
     
     private Calendar current_calendar;
     private Event current;
@@ -131,7 +134,8 @@ public class EventBean implements Serializable {
         this.current_beginHour = current.getBeginHour().toString();
         this.current_dateOfEvent = current.getDateOfEvent().toString();
     }
-
+    
+   
     
     //Getters and Setters
 

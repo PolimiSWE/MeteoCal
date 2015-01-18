@@ -7,6 +7,7 @@ package meteocal.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -137,6 +138,20 @@ public class CommonBean implements Serializable,CommonBeanInterface {
     @Override
     public void populateUsers() {
         this.allUsers = userFacade.findAll();
+    }
+    
+    @Override
+    public List<Event> getEventsForDay(Date day){
+        List<Event> events = new ArrayList<>();
+        for(Event e : this.ownedEvents){
+            if(e.getDateOfEvent().compareTo(day)==0)
+                events.add(e);
+        }
+        for(Event e : this.attendingEvents){
+            if(e.getDateOfEvent().compareTo(day)==0)
+                events.add(e);
+        }
+        return events;
     }
     
     

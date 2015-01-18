@@ -176,7 +176,7 @@ public class EventFacade extends AbstractFacade<Event> {
             current.setDateOfEvent(tmp);
         }
     }
-
+    
     @Override
     protected EntityManager getEntityManager() {
         return em;
