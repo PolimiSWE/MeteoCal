@@ -1,0 +1,21 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 18-Jan-2015, 23:28:38
+    Author     : Milos
+*/
+
+html { 
+  background: url(../images/bkg_img_1.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+#invitations_form.ui-datatable{
+    background: rgba(54, 25, 25, .3); color: #ffffff;    
+}

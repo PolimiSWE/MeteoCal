@@ -1,5 +1,6 @@
 package meteocal.helper;
 
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.ejb.Schedule;
 import javax.ejb.ScheduleExpression;
@@ -49,8 +51,6 @@ public class WeatherHelper {
     //api.openweathermap.org/data/2.5/forecast?q=London,us
     //dayly, next 16 days
     //api.openweathermap.org/data/2.5/forecast/daily?q=London&cnt=16
-    @Resource
-    private TimerService timerService;
 
     private Client client;
     private List<WeatherData> wdList;
@@ -60,9 +60,10 @@ public class WeatherHelper {
         this.client = ClientBuilder.newClient();
         this.city = "Milan";
         this.cnt = "16";
-        ScheduleExpression everyDay = new ScheduleExpression().second("*/5").minute("*").hour("*");
-        timerService.createCalendarTimer(everyDay, new TimerConfig("", false));
+        this.wdList = new ArrayList<>();
     }
+
+
 
     @Schedule(second = "*", minute = "*/1", hour = "*", persistent = false)
     @SuppressWarnings("CallToPrintStackTrace")
@@ -315,7 +316,10 @@ public class WeatherHelper {
     }
 
     public List<WeatherData> getWdList() {
-        return wdList;
+        if(this.wdList!=null)
+            return wdList;
+        else
+            return new VirtualFlow.ArrayLinkedList<>();
     }
 
     public void setWdList(List<WeatherData> wdList) {

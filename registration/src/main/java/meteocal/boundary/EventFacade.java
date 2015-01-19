@@ -54,14 +54,16 @@ public class EventFacade extends AbstractFacade<Event> {
         }
     }
     
-    public void save(Event current, List<User> current_invited, User current_owner, String current_privacy, String current_type,String current_beginHour,String current_dateOfEvent) {
+    public void save(Event current, List<User> current_invited, User current_owner,
+            boolean current_privacy, boolean current_type, Time current_input_beginHour,
+            Date current_input_dateOfEvent) {
         Event tmp;
         this.preparePrivacy(current, current_privacy);
         this.prepareType(current, current_type);
         this.prepareInvitations(current, current_invited);
         this.prepareOwner(current, current_owner);
-        this.prepareBeginHour(current, current_beginHour);
-        this.prepareDateOfEvent(current, current_dateOfEvent);
+        this.prepareBeginHour(current, current_input_beginHour);
+        this.prepareDateOfEvent(current, current_input_dateOfEvent);
         if(current.getId() != null) 
         {
             tmp = em.find(Event.class, (long)current.getId());
@@ -109,26 +111,16 @@ public class EventFacade extends AbstractFacade<Event> {
         return usr;
     }
 
-    private void preparePrivacy(Event current, String current_privacy){
+    private void preparePrivacy(Event current, boolean current_privacy){
         TypedQuery<PrivacyType> query = em.createQuery("SELECT pt FROM PrivacyType AS pt WHERE pt.privacy=:privacyParam", PrivacyType.class);
-        Boolean privacyParam = false;
-        if(current_privacy.equalsIgnoreCase("private"))
-            privacyParam = false;
-        if(current_privacy.equalsIgnoreCase("public"))
-            privacyParam = true;
-        query.setParameter("privacyParam", privacyParam);
+        query.setParameter("privacyParam", current_privacy);
         PrivacyType pt = query.getResultList().get(0);
         current.setEventPrivacy(pt);
     }
     
-    private void prepareType(Event current, String current_type){
+    private void prepareType(Event current, boolean current_type){
        TypedQuery<EventType> query = em.createQuery("SELECT et FROM EventType AS et WHERE et.type=:typeParam", EventType.class);
-        Boolean typeParam = false;
-        if(current_type.equalsIgnoreCase("outdoors"))
-            typeParam = false;
-        if(current_type.equalsIgnoreCase("indoors"))
-            typeParam = true;
-        query.setParameter("typeParam", typeParam);
+        query.setParameter("typeParam", current_type);
         EventType et = query.getResultList().get(0);
         current.setEventType(et); 
     }
@@ -155,10 +147,9 @@ public class EventFacade extends AbstractFacade<Event> {
         current.setIncludedInCalendar(tmp_cal);
     }
     
-    private void prepareBeginHour(Event current, String current_beginHour) {
+    private void prepareBeginHour(Event current, Time current_beginHour) {
         try{
-            Time tmp = Time.valueOf(current_beginHour);
-            current.setBeginHour(tmp);
+            current.setBeginHour(current_beginHour);
         }
         catch(Exception e){
             Time tmp = Time.valueOf("12:00:00");
@@ -166,10 +157,9 @@ public class EventFacade extends AbstractFacade<Event> {
         }
     }
 
-    private void prepareDateOfEvent(Event current, String current_dateOfEvent) {
+    private void prepareDateOfEvent(Event current, Date current_dateOfEvent) {
         try{
-            Date tmp = Date.valueOf(current_dateOfEvent);
-            current.setDateOfEvent(tmp);
+            current.setDateOfEvent(current_dateOfEvent);
         }
         catch(Exception e){
             Date tmp = Date.valueOf("2020-12-12");
@@ -191,4 +181,6 @@ public class EventFacade extends AbstractFacade<Event> {
         query.setParameter("calendarIdParam", cal.getId());
         return query.getResultList();
     }
+
+  
 }

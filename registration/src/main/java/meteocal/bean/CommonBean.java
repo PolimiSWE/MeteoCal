@@ -75,6 +75,7 @@ public class CommonBean implements Serializable,CommonBeanInterface {
     private List<Invitation> acceptedInvites;
     
     private List<User> allUsers;
+    private List<String> allUsersString;
     // </editor-fold>
     
     
@@ -138,6 +139,10 @@ public class CommonBean implements Serializable,CommonBeanInterface {
     @Override
     public void populateUsers() {
         this.allUsers = userFacade.findAll();
+        this.allUsersString = new ArrayList<>();
+        for(User u : this.allUsers){
+            this.allUsersString.add(u.getUsername());
+        }
     }
     
     @Override
@@ -307,6 +312,22 @@ public class CommonBean implements Serializable,CommonBeanInterface {
 
     public void setDeclinedEvents(List<Event> declinedEvents) {
         this.declinedEvents = declinedEvents;
+    }
+
+    public List<Event> getOwnedEvents() {
+        return ownedEvents;
+    }
+
+    public void setOwnedEvents(List<Event> ownedEvents) {
+        this.ownedEvents = ownedEvents;
+    }
+
+    public List<String> getAllUsersString() {
+        return allUsersString;
+    }
+
+    public void setAllUsersString(List<String> allUsersString) {
+        this.allUsersString = allUsersString;
     }
 
     public List<Invitation> getAllInvites() {

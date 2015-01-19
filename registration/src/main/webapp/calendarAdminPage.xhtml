@@ -8,38 +8,7 @@
         <title>Calendar Admin Page</title>
     </h:head>
     <h:body>
-        <h:panelGroup id="calendar_list_view">
-            <h:form id="calendar_list_form">
-                <h1><h:outputText value="List"/></h1>
-                <p:dataTable id="calendar_list_table" value="#{commonBean.allCalendars}" var="item" 
-                             rowKey="#{item.id}" emptyMessage="No records found"
-                             lazy="false" stickyHeader="true" 
-                             scrollable="true" liveScroll="true" scrollHeight="200">
-                    <p:column width="20px">
-                        <f:facet name="header">
-                            <h:outputText value="CalendarPrivacy"/>
-                        </f:facet>
-                        <h:outputText value="#{item.calendarPrivacy.privacy}"/>
-                    </p:column>
-                    <p:column width="20px">
-                        <f:facet name="header">
-                            <h:outputText value="Owner"/>
-                        </f:facet>
-                        <h:outputText value="#{item.owner.username}"/>
-                    </p:column>
-                    <p:column width="20px" >
-                        <p:commandButton id="selectCalendar" value="Select Calendar" class="button alt" >
-                            <f:ajax render="@form :calendar_list_view :calendar_list_form :calendar_list_table" 
-                                    execute="@form" listener="#{calendarBean.setCurrent(item)}" />
-                            <f:ajax render="@none" 
-                                    execute="@form" listener="#{eventBean.setCurrent_calendar(item)}" />
-                            <f:ajax render="@form :event_list_view :event_list_form :event_list_table" 
-                                    execute="@form" listener="#{calendarBean.updateCalendarEvents()}" />
-                        </p:commandButton>
-                    </p:column>
-                </p:dataTable>
-            </h:form>
-        </h:panelGroup>
+        
         <h:panelGroup id="event_list_view">
             <h:form id="event_list_form">
                 <h1><h:outputText value="List"/></h1>
@@ -98,10 +67,11 @@
                             <h:outputText value="Select Event"/>
                         </f:facet>
                         <p:commandButton id="selectEvent#{evet.id}" value="Select Event" >
-                            <f:ajax render="@form :edit_event_view :edit_event_form :edit_event_panel
+                            <!--<f:ajax render="@form :edit_event_view :edit_event_form :edit_event_panel
                                     :event_owner_view :event_owner_form :event_owner_panel
                                     :event_invited_view :event_invited_form :event_invited_table" 
-                                    execute="@form" listener="#{eventBean.selectCurrent(event)}" />
+                                    execute="@form" listener="#{eventBean.selectCurrent(event)}" /> -->
+                            <p:ajax update=":edit_event_view" process="@form" listener="#{eventBean.selectCurrent(event)}" />
                         </p:commandButton>
                     </h:column>
                 </h:dataTable>
@@ -139,8 +109,8 @@
                                     :event_invited_view :event_invited_form :event_invited_table
                                     :event_list_view :event_list_form :event_list_table" 
                                     execute="@form" listener="#{eventBean.save()}" />
-                            <f:ajax  render="@form :event_list_view :event_list_form :event_list_table" 
-                                    execute="@form" listener="#{calendarBean.updateCalendarEvents()}" />
+                           <!-- <f:ajax  render="@form :event_list_view :event_list_form :event_list_table" 
+                                    execute="@form" listener="#{calendarBean.updateCalendarEvents()}" /> -->
                     </p:commandButton>
                     <p:commandButton id="createNewEvent" value="Create New" >
                             <f:ajax render="@form :edit_event_view :edit_event_form :edit_event_panel

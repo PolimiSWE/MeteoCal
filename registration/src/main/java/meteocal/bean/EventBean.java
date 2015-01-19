@@ -9,17 +9,25 @@ import meteocal.boundary.EventFacade;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import meteocal.entity.Calendar;
 import meteocal.entity.Event;
 import meteocal.entity.User;
-import meteocal.helper.DayHelper;
+import meteocal.interfaces.CalendarBeanInterface;
+import meteocal.interfaces.UserBeanInterface;
 
 /**
  *
@@ -32,16 +40,19 @@ public class EventBean implements Serializable {
     @EJB
     EventFacade em;
     
+    @Inject
+    CalendarBeanInterface  calendarData;
     
-    private Calendar current_calendar;
+    @Inject
+    UserBeanInterface userData;
+    
     private Event current;
-    private String current_privacy;
-    private String current_type;
-    private String current_beginHour;
-    private String current_dateOfEvent;
-    private User current_owner;
+    private boolean current_privacy;
+    private boolean current_type;
+    private Time current_input_beginHour;
+    private Date current_input_dateOfEvent;
     private List<User> current_invited;
-    private List<Event> dboutput;
+    private String[] current_invited_string;
 
     /**
      * Creates a new instance of EventBean
@@ -52,37 +63,57 @@ public class EventBean implements Serializable {
     @PostConstruct
     public void init() {
         // In @PostConstruct (will be invoked immediately after construction and dependency/property injection).
-        dboutput = em.getDB_Table();
         if(current == null) 
         {
             current = new Event();
             current_invited = new ArrayList<>();
-            current_calendar = new Calendar();
-            current_owner = new User();
-            current_privacy = "Private";
-            current_type = "Outdoors";
-            current_beginHour = "Enter Begin Hour";
-            current_dateOfEvent = "Enter Date of the Event";
+            current_privacy = false;
+            current_type = false;
+            current_input_beginHour = new Time(System.currentTimeMillis());
+            current_input_dateOfEvent = new Date(System.currentTimeMillis());
         }
     }
     
     public void createNew(){
         current = em.createNew();
-        current.setIncludedInCalendar(current_calendar);
+        current.setIncludedInCalendar(this.calendarData.getCalendar());
         current_invited = new ArrayList<>();
-        current_owner = current_calendar.getOwner();
-        current_privacy = "Private";
-        current_type = "Outdoors";
-        current_beginHour = "Enter Begin Hour";
-        current_dateOfEvent = "Enter Date of the Event";
-        dboutput = em.getDB_Table();
+        current_privacy = false;
+        current_type = false;
+        current_input_beginHour = new Time(System.currentTimeMillis());
+        current_input_dateOfEvent = new Date(System.currentTimeMillis());
     }
     
     public void save() {
+        ExternalContext ec = FacesContext.getCurrentInstance().
+                getExternalContext();
+        Map<String, String> parameterMap = (Map<String, String>) ec.getRequestParameterMap();
+        String currentParam = parameterMap.get("edit_event_form:event_input_name");
+        this.current.setName(currentParam);
+        currentParam = parameterMap.get("edit_event_form:event_input_city");
+        this.current.setCity(currentParam);
+        currentParam = parameterMap.get("edit_event_form:event_input_streetAndNumber");
+        this.current.setStreetAndNumber(currentParam);
+        currentParam = parameterMap.get("edit_event_form:event_input_duration");
+        this.current.setDuration(Integer.parseInt(currentParam));
+        currentParam = parameterMap.get("edit_event_form:event_input_time_input");
+        this.current_input_beginHour = Time.valueOf(currentParam);
+        currentParam = parameterMap.get("edit_event_form:event_input_calendar_input");
+        DateFormat format = new SimpleDateFormat("dd/mm/yy");
+        try {
+            this.current_input_dateOfEvent = new Date(format.parse(currentParam).getTime());
+        } catch (ParseException ex) {
+            this.current_input_dateOfEvent = new Date(System.currentTimeMillis());
+        }
+
+        this.current_privacy = parameterMap.get("edit_event_form:eventPrivacyRadio").equalsIgnoreCase("true");
+        this.current_type = parameterMap.get("edit_event_form:eventTypeRadio").equalsIgnoreCase("true");
         Date currentTime = new Date(System.currentTimeMillis());
         current.setDateCreated(currentTime);
-        em.save(current,current_invited,current_owner,current_privacy,current_type,current_beginHour,current_dateOfEvent);
-        dboutput = em.getDB_Table();
+        this.prepareCurrentInvited();
+        em.save(current,current_invited,this.userData.getUser(),current_privacy,current_type,
+                current_input_beginHour,current_input_dateOfEvent);
+        this.calendarData.updateCalendarEvents();
         //return "user/eventTypeAdminPage?faces-redirect=true";
     }
 
@@ -95,17 +126,11 @@ public class EventBean implements Serializable {
         em.delete(evtId);
         current = new Event();
         current_invited = new ArrayList<>();
-        current_owner = new User();
-        current_privacy = "Private";
-        current_type = "Outdoors";
-        current_beginHour = "Enter Begin Hour";
-        current_dateOfEvent = "Enter Date of the Event";
-        dboutput = em.getDB_Table();
+        current_privacy = false;
+        current_type = false;
+        current_input_beginHour = new Time(System.currentTimeMillis());
+        current_input_dateOfEvent = new Date(System.currentTimeMillis());
         //return "privacyTypeAdminPage?faces-redirect=true";
-    }
-    
-    public void setOwner(User usr){
-        current_owner = usr;
     }
     
     public void addInvited(User usr){
@@ -121,18 +146,21 @@ public class EventBean implements Serializable {
    
     public void selectCurrent(Event current) {
         this.current = current;
-        this.current_owner = current.getOwner();
         this.current_invited = (List<User>) current.getInvited();
-        if(current.getEventPrivacy().getPrivacy() == true)
-            this.current_privacy = "Public";
-        else 
-            this.current_privacy = "Private";
-        if(current.getEventType().getType() == true)
-            this.current_privacy = "Indoors";
-        else 
-            this.current_privacy = "Outdoors";
-        this.current_beginHour = current.getBeginHour().toString();
-        this.current_dateOfEvent = current.getDateOfEvent().toString();
+        this.current_privacy = current.getEventPrivacy().getPrivacy();
+        this.current_type = current.getEventType().getType();
+        this.current_input_beginHour = current.getBeginHour();
+        this.current_input_dateOfEvent = (Date) current.getDateOfEvent();
+    }
+    
+    private void prepareCurrentInvited() {
+        this.current_invited = new ArrayList<>();
+        if(this.current_invited_string!=null){
+            int arrayLength = this.current_invited_string.length;
+            for(int i=0; i<arrayLength; i++){
+                this.current_invited.add(this.userData.getUserByUsername(this.current_invited_string[i]));
+            } 
+        }
     }
     
    
@@ -155,36 +183,20 @@ public class EventBean implements Serializable {
         this.current = current;
     }
 
-    public List<Event> getDboutput() {
-        return dboutput;
-    }
-
-    public void setDboutput(List<Event> dboutput) {
-        this.dboutput = dboutput;
-    }
-
-    public String getCurrent_privacy() {
+    public boolean getCurrent_privacy() {
         return current_privacy;
     }
 
-    public void setCurrent_privacy(String current_privacy) {
+    public void setCurrent_privacy(Boolean current_privacy) {
         this.current_privacy = current_privacy;
     }
 
-    public String getCurrent_type() {
+    public boolean getCurrent_type() {
         return current_type;
     }
 
-    public void setCurrent_type(String current_type) {
+    public void setCurrent_type(Boolean current_type) {
         this.current_type = current_type;
-    }
-
-    public User getCurrent_owner() {
-        return current_owner;
-    }
-
-    public void setCurrent_owner(User current_owner) {
-        this.current_owner = current_owner;
     }
 
     public List<User> getCurrent_invited() {
@@ -195,15 +207,14 @@ public class EventBean implements Serializable {
         this.current_invited = current_invited;
     }
 
-    public String getCurrent_beginHour() {
-        return current_beginHour;
+    public Time getCurrent_input_beginHour() {
+        return current_input_beginHour;
     }
 
-    public void setCurrent_beginHour(String current_beginHour) {
-        this.current_beginHour = current_beginHour;
+    public void setCurrent_input_beginHour(Time current_beginHour) {
         try{
-            Time tmp = Time.valueOf(current_beginHour);
-            current.setBeginHour(tmp);
+            this.current_input_beginHour = current_beginHour;
+            current.setBeginHour(current_beginHour);
         }
         catch(Exception e){
             Time tmp = Time.valueOf("12:00:00");
@@ -212,15 +223,14 @@ public class EventBean implements Serializable {
             
     }
 
-    public String getCurrent_dateOfEvent() {
-        return current_dateOfEvent;
+    public Date getCurrent_input_dateOfEvent() {
+        return current_input_dateOfEvent;
     }
 
-    public void setCurrent_dateOfEvent(String current_dateOfEvent) {
-        this.current_dateOfEvent = current_dateOfEvent;
+    public void setCurrent_input_dateOfEvent(Date current_dateOfEvent) {
         try{
-            Date tmp = Date.valueOf(current_dateOfEvent);
-            current.setDateOfEvent(tmp);
+            this.current_input_dateOfEvent = current_dateOfEvent;
+            current.setDateOfEvent(current_dateOfEvent);
         }
         catch(Exception e){
             Date tmp = Date.valueOf("2020-12-12");
@@ -228,13 +238,14 @@ public class EventBean implements Serializable {
         }
     }
 
-    public Calendar getCurrent_calendar() {
-        return current_calendar;
+    public String[] getCurrent_invited_string() {
+        return current_invited_string;
     }
 
-    public void setCurrent_calendar(Calendar current_calendar) {
-        this.current_calendar = current_calendar;
-        this.current.setIncludedInCalendar(current_calendar);
+    public void setCurrent_invited_string(String[] current_invited_string) {
+        this.current_invited_string = current_invited_string;
     }
+    
+    
     
 }

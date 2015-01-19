@@ -207,6 +207,11 @@ public class UserBean implements Serializable,UserBeanInterface {
         this.commonData.setAllUsers(tmp_allUsers);
     }
     
+    @Override
+    public User getUserByUsername(String username) {
+        return um.getUser(username);
+    }
+    
     
     // <editor-fold defaultstate="collapsed" desc="Getters and Setters">
     public String getName() {

@@ -14,4 +14,5 @@ import meteocal.entity.Calendar;
 public interface CalendarBeanInterface {
     public Calendar getCalendar();
     public void selectCalendar(Calendar cal);
+    public void updateCalendarEvents();
 }

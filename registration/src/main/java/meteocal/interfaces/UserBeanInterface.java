@@ -13,6 +13,7 @@ import meteocal.entity.User;
  */
 public interface UserBeanInterface {
     public User getUser();
+    public User getUserByUsername(String username);
     public void addUser(User usr);
     public void saveUser(User usr);
     public void saveUser();
