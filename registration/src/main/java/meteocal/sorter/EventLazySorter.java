@@ -28,7 +28,13 @@ public class EventLazySorter implements Comparator<Event> {
             Object value2 = userField.get(o2);
  
             int value = ((Comparable)value1).compareTo(value2);
-             
+            if(this.sortField.equals("dateOfEvent")){
+                long diff = ((java.util.Date) value1).getTime() - ((java.util.Date) value2).getTime();
+                if(diff<0)
+                    value = -1;
+                else
+                    value = 1;
+            }
             return SortOrder.ASCENDING.equals(sortOrder) ? value : -1 * value;
         }
         catch(Exception e) {
