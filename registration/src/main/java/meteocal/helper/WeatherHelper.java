@@ -1,6 +1,5 @@
 package meteocal.helper;
 
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.ejb.Schedule;
 import javax.ejb.ScheduleExpression;
@@ -51,6 +49,8 @@ public class WeatherHelper {
     //api.openweathermap.org/data/2.5/forecast?q=London,us
     //dayly, next 16 days
     //api.openweathermap.org/data/2.5/forecast/daily?q=London&cnt=16
+    @Resource
+    private TimerService timerService;
 
     private Client client;
     private List<WeatherData> wdList;
@@ -60,15 +60,17 @@ public class WeatherHelper {
         this.client = ClientBuilder.newClient();
         this.city = "Milan";
         this.cnt = "16";
-        this.wdList = new ArrayList<>();
+        ScheduleExpression everyDay = new ScheduleExpression().second("*/5").minute("*").hour("*");
+        timerService.createCalendarTimer(everyDay, new TimerConfig("", false));
     }
-
-
 
     @Schedule(second = "*", minute = "*/1", hour = "*", persistent = false)
     @SuppressWarnings("CallToPrintStackTrace")
     public void checkWeatherAutoTimer() {
-
+        checkWeather16days(this.city);
+    }
+    public void checkWeather16days(String city){
+        this.city = city;
         //api.openweathermap.org/data/2.5/forecast/daily?q=London&cnt=16
         String url = getAbsoluteUrl("forecast/daily");
         //?APPID=<key>&q={search-term}
@@ -252,6 +254,11 @@ public class WeatherHelper {
             wd.setHour(Time.valueOf("22:22:22"));
         }
         // Return new object
+        try {
+            wd.setCity(this.getCity());
+        } catch (Exception e) {
+            wd.setCity("Invalid");
+        }
         return wd;
     }
 
@@ -295,6 +302,12 @@ public class WeatherHelper {
             wd.setDate(java.sql.Date.valueOf("1970-1-1 22:22:22"));
             wd.setHour(Time.valueOf("22:22:22"));
         }
+        
+        try {
+            wd.setCity(this.getCity());
+        } catch (Exception e) {
+            wd.setCity("Invalid");
+        }
         // Return new object
         return wd;
     }
@@ -316,10 +329,7 @@ public class WeatherHelper {
     }
 
     public List<WeatherData> getWdList() {
-        if(this.wdList!=null)
-            return wdList;
-        else
-            return new VirtualFlow.ArrayLinkedList<>();
+        return wdList;
     }
 
     public void setWdList(List<WeatherData> wdList) {
@@ -353,5 +363,6 @@ public class WeatherHelper {
     		   "Testing only \n\n Sent from Java project");
 
     }
+    
     
 }

@@ -9,11 +9,21 @@
     </h:head>
     <h:body>
         <f:view>
-             <p:commandButton id="refreshButton" value="Create New" >
-                            <f:ajax render="@form " 
-                                    execute="@form" listener="#{weatherDataBean.testMethod()}" />
+            <h:form id="header-form">
+             <p:commandButton id="refreshButton" value="checkWeatherMainFun" >
+                            <f:ajax render=":header-form" 
+                                    execute=":header-form" listener="#{weatherDataBean.checkWeatherMainFun()}" />
             </p:commandButton>
-
+            
+            <p:outputLabel for="event_input_calendar" value="Date of the Event:" />
+            <p:calendar id="event_input_calendar" value="#{weatherDataBean.dateChosen}" effect="fold" />
+            
+            <p:outputLabel for="event_input_time" value="Time:" />
+            <p:calendar id="event_input_time" value="#{weatherDataBean.timeAsDateChosen}" pattern="HH:mm:ss" timeOnly="true"  />
+            
+            <p:outputLabel for="city" value="City:" />
+            <p:inputText id="city" value="#{weatherDataBean.city}" />
+            </h:form>
             <h:form>
                 <h1><h:outputText value="List"/></h1>
                 <h:dataTable value="#{weatherDataBean.wdList}" var="item">
@@ -55,9 +65,9 @@
                     </h:column>
                     <h:column>
                         <f:facet name="header">
-                            <h:outputText value="Id"/>
+                            <h:outputText value="City"/>
                         </f:facet>
-                        <h:outputText value="#{item.id}"/>
+                        <h:outputText value="#{item.city}"/>
                     </h:column>
                 </h:dataTable>
             </h:form>

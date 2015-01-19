@@ -58,6 +58,9 @@ public class WeatherData implements Serializable {
     @Column(name = "wind_speed")
     private Double windSpeed;
 
+    @NotNull(message = "May not be empty")
+    @Column(name = "city")
+    private String city;
     
     //Relationship Entities
     @ManyToOne(optional = false, targetEntity = meteocal.entity.WeatherDataList.class)
@@ -122,6 +125,15 @@ public class WeatherData implements Serializable {
         this.id = id;
     }
 
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+    
+    
     @Override
     public int hashCode() {
         int hash = 0;
