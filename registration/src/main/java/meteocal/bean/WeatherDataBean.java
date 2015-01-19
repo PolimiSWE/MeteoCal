@@ -26,10 +26,10 @@ import meteocal.helper.WeatherHelper;
 @Named(value="weatherDataBean")
 @SessionScoped
 public class WeatherDataBean implements Serializable{
-    @EJB
-    WeatherDataFacade wf;
+    //@EJB
+    //WeatherDataFacade wf;
     
-    @Inject
+    //@Inject
     private WeatherHelper weatherHelper;
     
     private List<WeatherData> wdList;
@@ -99,30 +99,13 @@ public class WeatherDataBean implements Serializable{
         this.city = city;
     }
     
-    public void checkWeatherMainFun(){//String city, java.sql.Date dt, Time tm
+    public void checkWeatherMainFun(){
         //String city = "London";
         //java.sql.Date dt = Date.valueOf("2015-01-28");
         java.sql.Date dt = new java.sql.Date(this.dateChosen.getTime());
         java.sql.Time tt = this.timeChosen;
         this.weatherHelper.setCity(this.city);
-        //if there is record WeatherData(City, date) in database return it
-        this.wdList = wf.getWeatherDataListFromDB(dt, city);
-        if(wdList.isEmpty()){
-            //call weather api
-            int diff = wf.getDateDiff(dt);
-            if(diff == 5){
-                //if date is in next 5 days call checkweather5days
-                this.weatherHelper.checkWeather5days(city);
-                this.wdList = this.weatherHelper.getWdList();
-            }
-            else if(diff == 16){
-                //if date is in next 16 days call checkweather16days
-                this.weatherHelper.checkWeather16days(city);
-                this.wdList = this.weatherHelper.getWdList();
-            }
-        } else {//else leave it to scheduler (make scheduler that runs once a day)
-               
-        }
+        this.weatherHelper.checkWeatherMainFun(this.city, dt, tt);
         
     }
     

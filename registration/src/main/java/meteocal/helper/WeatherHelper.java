@@ -15,15 +15,13 @@ import java.util.Comparator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.ejb.Schedule;
-import javax.ejb.ScheduleExpression;
+import javax.ejb.EJB;
 import javax.ejb.Singleton;
-import javax.ejb.Startup;
-import javax.ejb.TimerConfig;
 import javax.ejb.TimerService;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import meteocal.bean.MailSendingBean;
+import meteocal.boundary.WeatherDataFacade;
 import meteocal.entity.WeatherData;
 import org.primefaces.json.JSONArray;
 import org.primefaces.json.JSONObject;
@@ -34,10 +32,10 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  *
  * @author Nemanja
  */
-@Startup
-@Singleton
 public class WeatherHelper {
-
+    @EJB
+    WeatherDataFacade wf;
+    
     private final String API_KEY = "9729dca762d8bae8edbd698333eb40d4";
     private final String API_BASE_URL = "http://api.openweathermap.org/data/2.5/";
     private String city;
@@ -60,15 +58,10 @@ public class WeatherHelper {
         this.client = ClientBuilder.newClient();
         this.city = "Milan";
         this.cnt = "16";
-        ScheduleExpression everyDay = new ScheduleExpression().second("*/5").minute("*").hour("*");
-        timerService.createCalendarTimer(everyDay, new TimerConfig("", false));
+        //ScheduleExpression everyDay = new ScheduleExpression().second("*/5").minute("*").hour("*");
+        //timerService.createCalendarTimer(everyDay, new TimerConfig("", false));
     }
 
-    @Schedule(second = "*", minute = "*/1", hour = "*", persistent = false)
-    @SuppressWarnings("CallToPrintStackTrace")
-    public void checkWeatherAutoTimer() {
-        checkWeather16days(this.city);
-    }
     public void checkWeather16days(String city){
         this.city = city;
         //api.openweathermap.org/data/2.5/forecast/daily?q=London&cnt=16
@@ -335,7 +328,30 @@ public class WeatherHelper {
     public void setWdList(List<WeatherData> wdList) {
         this.wdList = wdList;
     }
-
+    
+    public void checkWeatherMainFun(String city, java.sql.Date dt, Time tt){
+        this.setCity(this.city);
+        //if there is record WeatherData(City, date) in database return it
+        this.wdList = wf.getWeatherDataListFromDB(dt, city);
+        if(wdList.isEmpty()){
+            //call weather api
+            int diff = wf.getDateDiff(dt);
+            if(diff == 5){
+                //if date is in next 5 days call checkweather5days
+                this.checkWeather5days(city);
+                this.wdList = this.getWdList();
+            }
+            else if(diff == 16){
+                //if date is in next 16 days call checkweather16days
+                this.checkWeather16days(city);
+                this.wdList = this.getWdList();
+            }
+        } else {//else leave it to scheduler (make scheduler that runs once a day)
+               
+        }
+        
+    }
+    
     public void testFun() {
         //WeatherHelper helper = new WeatherHelper();
         this.checkWeather5days("London");
