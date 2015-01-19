@@ -1,5 +1,7 @@
 package meteocal.backgroundworker;
 
+import java.sql.Time;
+import java.util.Calendar;
 import javax.annotation.PostConstruct;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
@@ -35,9 +37,13 @@ public class WeatherBackgroundWorker {
             return weatherHelper;
     }
     
-    @Schedule(second = "*", minute = "*/1", hour = "*", persistent = false)
+    @Schedule(second = "*", minute = "*", hour = "*/24", persistent = false)
     @SuppressWarnings("CallToPrintStackTrace")
     public void checkWeatherAutoTimer() {
-        weatherHelper.checkWeather16days(weatherHelper.getCity());
+        Calendar cal = Calendar.getInstance();
+        //gets current date from calendar
+        java.sql.Date dt = new java.sql.Date(cal.getTimeInMillis());
+        java.sql.Time tt = Time.valueOf("12:00:00");
+        weatherHelper.checkWeatherMainFun(weatherHelper.getCity(), dt, tt);
     }
 }
