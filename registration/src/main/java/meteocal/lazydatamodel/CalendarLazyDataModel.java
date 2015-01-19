@@ -23,6 +23,10 @@ public class CalendarLazyDataModel extends LazyDataModel<Calendar> {
     public CalendarLazyDataModel(List<Calendar> datasource) {
         this.datasource = datasource;
     }
+
+    public CalendarLazyDataModel() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
      
     @Override
     public Calendar getRowData(String rowKey) {

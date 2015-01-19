@@ -26,7 +26,9 @@ public class CalendarHelper {
         this.currentWeek = new ArrayList<>(0);
         Date tmp_date = firstDay;
         DayHelper tmp_day;
-        for(int i=0;i<7;i++){
+        tmp_day = new DayHelper(tmp_date);
+        this.currentWeek.add(tmp_day);
+        for(int i=1;i<7;i++){
             tmp_date = this.getNextDay(tmp_date);
             tmp_day = new DayHelper(tmp_date);
             this.currentWeek.add(tmp_day);
@@ -53,7 +55,8 @@ public class CalendarHelper {
         Calendar c = Calendar.getInstance();
         c.setTime(day);
         c.add(Calendar.DATE, 1);  // number of days to add
-        return c.getTime();  // dt is now the new date
+        Date tmp_date = new Date(c.getTime().getTime());  // dt is now the new date
+        return tmp_date;
     }
     
     private Date getBeforeDay(Date day) {

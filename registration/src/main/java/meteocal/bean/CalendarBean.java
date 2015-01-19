@@ -20,6 +20,7 @@ import meteocal.helper.CalendarHelper;
 import meteocal.helper.DayHelper;
 import meteocal.interfaces.CalendarBeanInterface;
 import meteocal.interfaces.CommonBeanInterface;
+import meteocal.lazyviewbeans.DayHelperLazyView;
 
 /**
  *
@@ -34,6 +35,9 @@ public class CalendarBean implements Serializable,CalendarBeanInterface {
     
     @Inject 
     CommonBeanInterface commonData;
+    
+    @Inject
+    DayHelperLazyView dayHelperView;
     
     private Calendar current;
     private CalendarHelper calHelper;
@@ -110,5 +114,6 @@ public class CalendarBean implements Serializable,CalendarBeanInterface {
             day.setTodaysEvents(this.commonData.getEventsForDay(day.getToday()));
         }
         this.calHelper.setCurrentWeek(daysOfweek);
+        this.dayHelperView.initDayHelperLazyDataModel(calHelper);
     }
 }

@@ -4,19 +4,19 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 */
 /* 
-    Created on : 18-Jan-2015, 23:28:38
+    Created on : 19-Jan-2015, 22:13:13
     Author     : Milos
 */
 
 html { 
-  background: url(../images/bkg_img_1.jpg) no-repeat center center fixed; 
+  background: url(../images/bkg_img_2.jpg) no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
 }
 
-#invitations_form.ui-datatable{
-    background: rgba(54, 25, 25, .3);
-    color: #ffffff;    
+#div_container_my_calendar{
+    background-color: rgba(154, 154, 154, .8);
+    color: #ffffff;
 }
