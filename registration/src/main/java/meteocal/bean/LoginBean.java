@@ -50,7 +50,7 @@ public class LoginBean implements Serializable{
     public String login() {
             if(this.tryLogIn(this.username, PasswordEncrypter.encryptPassword(this.password))){
                 this.userData.selectUser(username);
-                return "userAdminPage"; //need to go to MyCalendar page
+                return "myCalendarPage"; 
             }
             else
                 return "logInPage";

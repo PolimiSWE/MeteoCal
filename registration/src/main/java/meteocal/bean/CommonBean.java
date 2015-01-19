@@ -148,8 +148,14 @@ public class CommonBean implements Serializable,CommonBeanInterface {
     @Override
     public List<Event> getEventsForDay(Date day){
         List<Event> events = new ArrayList<>();
+        java.sql.Date e_dateOfEvent;
+        java.sql.Date day_date = new java.sql.Date(day.getTime());
+        String e_DOF_string;
+        String day_string = day_date.toString();
         for(Event e : this.ownedEvents){
-            if(e.getDateOfEvent().compareTo(day)==0)
+            e_dateOfEvent = new java.sql.Date(e.getDateOfEvent().getTime());
+            e_DOF_string = e_dateOfEvent.toString();
+            if(day_string.equals(e_DOF_string))
                 events.add(e);
         }
         for(Event e : this.attendingEvents){

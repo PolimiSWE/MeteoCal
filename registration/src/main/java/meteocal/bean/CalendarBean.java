@@ -36,8 +36,6 @@ public class CalendarBean implements Serializable,CalendarBeanInterface {
     CommonBeanInterface commonData;
     
     private Calendar current;
-    private List<Calendar> dboutput;
-    private List<Event> events;
     private CalendarHelper calHelper;
     
     
@@ -48,25 +46,15 @@ public class CalendarBean implements Serializable,CalendarBeanInterface {
     @PostConstruct
     public void init() {
         // In @PostConstruct (will be invoked immediately after construction and dependency/property injection).
-        dboutput = cm.getDB_Table();
-        if(this.current!= null)
-            if(this.current.getId()!=null)
-                events = cm.getCalendarEvents(this.current.getId());
         if(current == null) 
         {
             current = new Calendar();
         }
-        this.calHelper = new CalendarHelper(new Date(System.currentTimeMillis()));
-        List<DayHelper> daysOfweek = this.calHelper.getCurrentWeek();
-        for(DayHelper day : daysOfweek){
-            day.setTodaysEvents(this.commonData.getEventsForDay(day.getToday()));
-        }
-        this.calHelper.setCurrentWeek(daysOfweek);
+        
     }
     
     public void save() {
         cm.save(current);
-        dboutput = cm.getDB_Table();
     }
 
     public void edit(int calId) { 
@@ -75,14 +63,6 @@ public class CalendarBean implements Serializable,CalendarBeanInterface {
     
     public void delete(int calId) {
         cm.delete(calId);
-        dboutput = cm.getDB_Table();
-    }
-    
-    @Override
-    public void updateCalendarEvents(){
-        if(this.current!= null)
-            if(this.current.getId()!= null)
-                events = cm.getCalendarEvents(this.current.getId());
     }
     
     
@@ -104,22 +84,6 @@ public class CalendarBean implements Serializable,CalendarBeanInterface {
         this.current = current;
     }
 
-    public List<Calendar> getDboutput() {
-        return dboutput;
-    }
-
-    public void setDboutput(List<Calendar> dboutput) {
-        this.dboutput = dboutput;
-    }
-
-    public List<Event> getEvents() {
-        return events;
-    }
-
-    public void setEvents(List<Event> events) {
-        this.events = events;
-    }
-
     public CalendarHelper getCalHelper() {
         return calHelper;
     }
@@ -136,5 +100,15 @@ public class CalendarBean implements Serializable,CalendarBeanInterface {
     @Override
     public void selectCalendar(Calendar cal) {
         this.current = cal;
+    }
+    
+    @Override
+    public void populateCalHelper(){
+        this.calHelper = new CalendarHelper(new Date(System.currentTimeMillis()));
+        List<DayHelper> daysOfweek = this.calHelper.getCurrentWeek();
+        for(DayHelper day : daysOfweek){
+            day.setTodaysEvents(this.commonData.getEventsForDay(day.getToday()));
+        }
+        this.calHelper.setCurrentWeek(daysOfweek);
     }
 }

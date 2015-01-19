@@ -15,8 +15,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -85,35 +83,12 @@ public class EventBean implements Serializable {
     }
     
     public void save() {
-        ExternalContext ec = FacesContext.getCurrentInstance().
-                getExternalContext();
-        Map<String, String> parameterMap = (Map<String, String>) ec.getRequestParameterMap();
-        String currentParam = parameterMap.get("edit_event_form:event_input_name");
-        this.current.setName(currentParam);
-        currentParam = parameterMap.get("edit_event_form:event_input_city");
-        this.current.setCity(currentParam);
-        currentParam = parameterMap.get("edit_event_form:event_input_streetAndNumber");
-        this.current.setStreetAndNumber(currentParam);
-        currentParam = parameterMap.get("edit_event_form:event_input_duration");
-        this.current.setDuration(Integer.parseInt(currentParam));
-        currentParam = parameterMap.get("edit_event_form:event_input_time_input");
-        this.current_input_beginHour = Time.valueOf(currentParam);
-        currentParam = parameterMap.get("edit_event_form:event_input_calendar_input");
-        DateFormat format = new SimpleDateFormat("dd/mm/yy");
-        try {
-            this.current_input_dateOfEvent = new Date(format.parse(currentParam).getTime());
-        } catch (ParseException ex) {
-            this.current_input_dateOfEvent = new Date(System.currentTimeMillis());
-        }
-
-        this.current_privacy = parameterMap.get("edit_event_form:eventPrivacyRadio").equalsIgnoreCase("true");
-        this.current_type = parameterMap.get("edit_event_form:eventTypeRadio").equalsIgnoreCase("true");
         Date currentTime = new Date(System.currentTimeMillis());
         current.setDateCreated(currentTime);
         this.prepareCurrentInvited();
         em.save(current,current_invited,this.userData.getUser(),current_privacy,current_type,
                 current_input_beginHour,current_input_dateOfEvent);
-        this.calendarData.updateCalendarEvents();
+        //this.calendarData.updateCalendarEvents();
         //return "user/eventTypeAdminPage?faces-redirect=true";
     }
 
@@ -187,7 +162,7 @@ public class EventBean implements Serializable {
         return current_privacy;
     }
 
-    public void setCurrent_privacy(Boolean current_privacy) {
+    public void setCurrent_privacy(boolean current_privacy) {
         this.current_privacy = current_privacy;
     }
 
@@ -195,7 +170,7 @@ public class EventBean implements Serializable {
         return current_type;
     }
 
-    public void setCurrent_type(Boolean current_type) {
+    public void setCurrent_type(boolean current_type) {
         this.current_type = current_type;
     }
 
@@ -207,14 +182,14 @@ public class EventBean implements Serializable {
         this.current_invited = current_invited;
     }
 
-    public Time getCurrent_input_beginHour() {
+    public java.util.Date getCurrent_input_beginHour() {
         return current_input_beginHour;
     }
 
-    public void setCurrent_input_beginHour(Time current_beginHour) {
+    public void setCurrent_input_beginHour(java.util.Date current_beginHour) {
         try{
-            this.current_input_beginHour = current_beginHour;
-            current.setBeginHour(current_beginHour);
+            this.current_input_beginHour = new Time(current_beginHour.getTime());
+            current.setBeginHour(this.current_input_beginHour);
         }
         catch(Exception e){
             Time tmp = Time.valueOf("12:00:00");
@@ -223,14 +198,14 @@ public class EventBean implements Serializable {
             
     }
 
-    public Date getCurrent_input_dateOfEvent() {
+    public java.util.Date getCurrent_input_dateOfEvent() {
         return current_input_dateOfEvent;
     }
 
-    public void setCurrent_input_dateOfEvent(Date current_dateOfEvent) {
+    public void setCurrent_input_dateOfEvent(java.util.Date current_dateOfEvent) {
         try{
-            this.current_input_dateOfEvent = current_dateOfEvent;
-            current.setDateOfEvent(current_dateOfEvent);
+            this.current_input_dateOfEvent = new Date(current_dateOfEvent.getTime());
+            current.setDateOfEvent(this.current_input_dateOfEvent);
         }
         catch(Exception e){
             Date tmp = Date.valueOf("2020-12-12");

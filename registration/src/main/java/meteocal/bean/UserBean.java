@@ -107,6 +107,7 @@ public class UserBean implements Serializable,UserBeanInterface {
        this.calendarData.selectCalendar(user.getMyCalendar());
        this.commonData.populateEvents();
        this.commonData.populateInvitations();
+       this.calendarData.populateCalHelper();
        usernameMsg = "";
        emailMsg = "";
     }
@@ -117,6 +118,7 @@ public class UserBean implements Serializable,UserBeanInterface {
        this.calendarData.selectCalendar(current.getMyCalendar());
        this.commonData.populateEvents();
        this.commonData.populateInvitations();
+       this.calendarData.populateCalHelper();
        usernameMsg = "";
        emailMsg = "";
     }

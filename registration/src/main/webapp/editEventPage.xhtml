@@ -39,7 +39,7 @@
                         </p:commandButton>
                     </p:column>
                 </p:dataTable>
-
+                
                 <p:dialog header="Invitation Detail" widgetVar="invitationDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
                 <p:outputPanel id="invitationDetail" style="text-align:center;">
                     <p:panelGrid  columns="2" rendered="#{not empty invitationLazyView.selectedInvitation}" columnClasses="label,value">
@@ -80,6 +80,10 @@
             </p:dialog>
         </h:form>
         </div>
+            <h:form>
+                <p:commandButton id="goToMyCalendarButton" value="Go to My Calendar Page" action="myCalendarPage" />
+                <p:commandButton id="goToMyEventsButton" value="Go to My Events Page" action="myEventsPage" />
+            </h:form>
         </div> 
         <div style="width:15%; float: right;" > </div>
         <div style="width:30%; float: left;" >
@@ -138,8 +142,12 @@
 
                 </h:panelGrid>
 
-                <p:commandButton value="Save" process=":edit_event_form" update=":edit_event_form" actionListener="#{eventBean.save()}"  />
-                <p:commandButton value="Create New" process=":edit_event_form" update=":edit_event_form" actionListener="#{eventBean.createNew()}"  />
+                <p:commandButton value="Save" actionListener="#{eventBean.save()}">
+                    <f:ajax event="click" execute=":edit_event_form" render=":edit_event_form" />
+                </p:commandButton>
+                <p:commandButton value="Create New" actionListener="#{eventBean.createNew()}"  >
+                    <f:ajax event="click" execute=":edit_event_form" render=":edit_event_form" />
+                </p:commandButton>
 
             </h:form>
         </div>

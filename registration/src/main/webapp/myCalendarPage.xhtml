@@ -10,7 +10,7 @@
         <f:view>
             <h:form>
                 <h:dataTable value="#{calendarBean.calHelper.currentWeek}" var="day">
-                    <h:column>
+                    <h:column> 
                         <f:facet name="header">
                             <h:outputText value='#{day.today}'/>
                         </f:facet>
@@ -21,53 +21,11 @@
                                     <f:facet name="header">
                                         <h:outputText value="BeginHour"/>
                                     </f:facet>
-                                    <h:outputText value="#{event.beginHour}"/>
-                                </h:column>
-                                <h:column>
-                                    <f:facet name="header">
-                                        <h:outputText value="City"/>
-                                    </f:facet>
-                                    <h:outputText value="#{event.city}"/>
-                                </h:column>
-                                
-                                <h:column>
-                                    <f:facet name="header">
-                                        <h:outputText value="Duration"/>
-                                    </f:facet>
-                                    <h:outputText value="#{event.duration}"/>
-                                </h:column>
-                                <h:column>
-                                    <f:facet name="header">
-                                        <h:outputText value="EventType"/>
-                                    </f:facet>
-                                    <h:outputText value="#{event.eventType}"/>
-                                </h:column>
-                                <h:column>
-                                    <f:facet name="header">
-                                        <h:outputText value="Name"/>
-                                    </f:facet>
                                     <h:outputText value="#{event.name}"/>
                                 </h:column>
-                                <h:column>
-                                    <f:facet name="header">
-                                        <h:outputText value="Owner"/>
-                                    </f:facet>
-                                    <h:outputText value="#{event.owner}"/>
-                                </h:column>
-                                <h:column>
-                                    <f:facet name="header">
-                                        <h:outputText value="EventPrivacy"/>
-                                    </f:facet>
-                                    <h:outputText value="#{event.eventPrivacy}"/>
-                                </h:column>
-                                <h:column>
-                                    <f:facet name="header">
-                                        <h:outputText value="StreetAndNumber"/>
-                                    </f:facet>
-                                    <h:outputText value="#{event.streetAndNumber}"/>
-                                </h:column>
+                                
                                
-                            </h:dataTable>
+                        </h:dataTable>
                        
 
                     </h:column>
