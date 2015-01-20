@@ -26,10 +26,11 @@ import meteocal.helper.WeatherHelper;
 @Named(value="weatherDataBean")
 @SessionScoped
 public class WeatherDataBean implements Serializable{
-    //@EJB
-    //WeatherDataFacade wf;
     
-    //@Inject
+    @EJB
+    WeatherDataFacade wf;
+    
+    
     private WeatherHelper weatherHelper;
     
     private List<WeatherData> wdList;
@@ -105,8 +106,14 @@ public class WeatherDataBean implements Serializable{
         java.sql.Date dt = new java.sql.Date(this.dateChosen.getTime());
         java.sql.Time tt = this.timeChosen;
         this.weatherHelper.setCity(this.city);
+        this.weatherHelper.setWdList(wf.getWeatherDataListFromDB(dt, city));
         this.weatherHelper.checkWeatherMainFun(this.city, dt, tt);
-        
+        this.setWdList(this.weatherHelper.getWdList());
+        this.saveWdList();
+    }
+
+    private void saveWdList() {
+        this.wf.saveWdList(this.wdList);
     }
     
 }

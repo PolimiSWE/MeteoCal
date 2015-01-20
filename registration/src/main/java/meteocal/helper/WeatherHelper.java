@@ -33,8 +33,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @author Nemanja
  */
 public class WeatherHelper {
-    @EJB
-    WeatherDataFacade wf;
     
     private final String API_KEY = "9729dca762d8bae8edbd698333eb40d4";
     private final String API_BASE_URL = "http://api.openweathermap.org/data/2.5/";
@@ -47,8 +45,7 @@ public class WeatherHelper {
     //api.openweathermap.org/data/2.5/forecast?q=London,us
     //dayly, next 16 days
     //api.openweathermap.org/data/2.5/forecast/daily?q=London&cnt=16
-    @Resource
-    private TimerService timerService;
+    
 
     private Client client;
     private List<WeatherData> wdList;
@@ -252,6 +249,27 @@ public class WeatherHelper {
         } catch (Exception e) {
             wd.setCity("Invalid");
         }
+        try{
+            wd.setDescription(jsonObject.getJSONArray("weather").getJSONObject(0).getString("description"));
+        }
+        catch(Exception e){
+            wd.setDescription("No Description");
+        }
+        
+        try{
+            wd.setIcon(jsonObject.getJSONArray("weather").getJSONObject(0).getString("icon"));
+        }
+        catch(Exception e){
+            wd.setIcon("No Icon");
+        }
+        
+        try{
+            wd.setCode(jsonObject.getJSONArray("weather").getJSONObject(0).getInt("id"));
+        }
+        catch(Exception e){
+            wd.setCode(800);
+        }
+        
         return wd;
     }
 
@@ -301,8 +319,47 @@ public class WeatherHelper {
         } catch (Exception e) {
             wd.setCity("Invalid");
         }
+        
+        try{
+            wd.setDescription(jsonObject.getJSONArray("weather").getJSONObject(0).getString("description"));
+        }
+        catch(Exception e){
+            wd.setDescription("No Description");
+        }
+        
+        try{
+            wd.setIcon(jsonObject.getJSONArray("weather").getJSONObject(0).getString("icon"));
+        }
+        catch(Exception e){
+            wd.setIcon("No Icon");
+        }
+        
+        try{
+            wd.setCode(jsonObject.getJSONArray("weather").getJSONObject(0).getInt("id"));
+        }
+        catch(Exception e){
+            wd.setCode(800);
+        }
         // Return new object
         return wd;
+    }
+    
+    public int getDateDiff(java.sql.Date dt1){
+        //get current date time with Calendar()
+	   Calendar cal = Calendar.getInstance();
+           
+           long d1=dt1.getTime();
+           long d2=cal.getTimeInMillis();
+
+           int diff = (int) (d1-d2)/(1000*60*60*24);//Math.abs(
+           if(diff<0)
+               return -1;
+           else if(diff<=5)
+               return 5;
+           else if(diff<=16)
+               return 16;
+           else 
+               return -1;
     }
 
     public String getCity() {
@@ -331,11 +388,11 @@ public class WeatherHelper {
     
     public void checkWeatherMainFun(String city, java.sql.Date dt, Time tt){
         this.setCity(this.city);
-        //if there is record WeatherData(City, date) in database return it
-        this.wdList = wf.getWeatherDataListFromDB(dt, city);
+        //if there is record WeatherData(City, date) in database 
+        
         if(wdList.isEmpty()){
             //call weather api
-            int diff = wf.getDateDiff(dt);
+            int diff = this.getDateDiff(dt);
             if(diff == 5){
                 //if date is in next 5 days call checkweather5days
                 this.checkWeather5days(city);

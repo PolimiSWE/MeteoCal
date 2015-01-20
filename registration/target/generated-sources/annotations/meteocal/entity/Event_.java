@@ -10,18 +10,17 @@ import meteocal.entity.Calendar;
 import meteocal.entity.EventType;
 import meteocal.entity.Invitation;
 import meteocal.entity.PrivacyType;
-import meteocal.entity.WeatherDataList;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2015-01-19T22:31:17")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2015-01-20T01:05:13")
 @StaticMetamodel(Event.class)
 public class Event_ { 
 
-    public static volatile SingularAttribute<Event, WeatherDataList> weatherDataList;
     public static volatile SingularAttribute<Event, Time> beginHour;
     public static volatile SingularAttribute<Event, String> city;
     public static volatile SingularAttribute<Event, Calendar> includedInCalendar;
     public static volatile SingularAttribute<Event, Date> dateModified;
     public static volatile SingularAttribute<Event, PrivacyType> eventPrivacy;
+    public static volatile SingularAttribute<Event, Boolean> notifyOwner;
     public static volatile SingularAttribute<Event, EventType> eventType;
     public static volatile SingularAttribute<Event, Integer> duration;
     public static volatile SingularAttribute<Event, String> streetAndNumber;

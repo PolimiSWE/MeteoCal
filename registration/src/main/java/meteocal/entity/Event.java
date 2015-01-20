@@ -19,7 +19,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
@@ -81,7 +80,11 @@ public class Event implements Serializable {
     
     @NotNull(message = "May not be empty")
     @Column(name = "street_and_number")
-    private String streetAndNumber;    
+    private String streetAndNumber; 
+    
+    @NotNull(message = "May not be empty")
+    @Column(name = "notify_owner")
+    private boolean notifyOwner;
     
     
     //Relationship Entities
@@ -92,9 +95,6 @@ public class Event implements Serializable {
     @ManyToOne(optional = false, targetEntity = meteocal.entity.PrivacyType.class)
     @JoinColumn(name = "event_privacy", referencedColumnName = "id_privacy_type")
     private PrivacyType eventPrivacy;
-    
-    @OneToOne(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = meteocal.entity.WeatherDataList.class)
-    private WeatherDataList weatherDataList;
     
     @NotNull(message = "May not be empty")
     @ManyToOne(optional = false, targetEntity = meteocal.entity.Calendar.class)
@@ -269,14 +269,13 @@ public class Event implements Serializable {
         this.streetAndNumber = streetAndNumber;
     }
 
-    public WeatherDataList getWeatherDataList() {
-        return weatherDataList;
+    public boolean isNotifyOwner() {
+        return notifyOwner;
     }
 
-    public void setWeatherDataList(WeatherDataList weatherDataList) {
-        this.weatherDataList = weatherDataList;
+    public void setNotifyOwner(boolean notifyOwner) {
+        this.notifyOwner = notifyOwner;
     }
-    
 
     public Long getId() {
         return id;

@@ -11,7 +11,7 @@
         <f:view>
             <h:form id="header-form">
              <p:commandButton id="refreshButton" value="checkWeatherMainFun" >
-                            <f:ajax render=":header-form" 
+                            <f:ajax render=":weather_data_form" 
                                     execute=":header-form" listener="#{weatherDataBean.checkWeatherMainFun()}" />
             </p:commandButton>
             
@@ -24,7 +24,7 @@
             <p:outputLabel for="city" value="City:" />
             <p:inputText id="city" value="#{weatherDataBean.city}" />
             </h:form>
-            <h:form>
+            <h:form id="weather_data_form">
                 <h1><h:outputText value="List"/></h1>
                 <h:dataTable value="#{weatherDataBean.wdList}" var="item">
                     <h:column>
@@ -68,6 +68,24 @@
                             <h:outputText value="City"/>
                         </f:facet>
                         <h:outputText value="#{item.city}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="City"/>
+                        </f:facet>
+                        <h:outputText value="#{item.code}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="City"/>
+                        </f:facet>
+                        <h:outputText value="#{item.description}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="City"/>
+                        </f:facet>
+                        <h:outputText value="#{item.icon}"/>
                     </h:column>
                 </h:dataTable>
             </h:form>

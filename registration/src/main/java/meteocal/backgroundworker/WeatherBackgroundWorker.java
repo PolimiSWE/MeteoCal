@@ -37,7 +37,7 @@ public class WeatherBackgroundWorker {
             return weatherHelper;
     }
     
-    @Schedule(second = "*", minute = "*", hour = "*/24", persistent = false)
+    @Schedule(second = "*", minute = "*/5", hour = "*", persistent = false)
     @SuppressWarnings("CallToPrintStackTrace")
     public void checkWeatherAutoTimer() {
         Calendar cal = Calendar.getInstance();

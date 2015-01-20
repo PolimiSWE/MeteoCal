@@ -13,8 +13,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
@@ -62,10 +60,16 @@ public class WeatherData implements Serializable {
     @Column(name = "city")
     private String city;
     
-    //Relationship Entities
-    @ManyToOne(optional = false, targetEntity = meteocal.entity.WeatherDataList.class)
-    @JoinColumn(name = "owner_list", referencedColumnName = "id_weather_data_list")
-    private WeatherDataList ownerList;
+    
+    @Column(name = "description")
+    private String description;
+    
+    
+    @Column(name = "icon")
+    private String icon;
+    
+    @Column(name = "code")
+    private Integer code;
     
     
     //Getters and Setters 
@@ -132,6 +136,32 @@ public class WeatherData implements Serializable {
     public void setCity(String city) {
         this.city = city;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+    
+    
     
     
     @Override

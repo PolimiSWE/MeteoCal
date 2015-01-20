@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -31,6 +32,14 @@ public class Invitation implements Serializable {
             pkColumnValue="INV_GEN", initialValue = 170000000)
     @Column(name = "id_invitation")
     private Long id;
+    
+    @NotNull(message = "May not be empty")
+    @Column(name = "notify_user")
+    private boolean notifyUser;
+    
+    
+    @Column(name = "notification_type")
+    private String notificationType; //rescheduled, modified
 
     
     //Relationship Entities
@@ -78,6 +87,22 @@ public class Invitation implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public boolean getNotifyUser() {
+        return notifyUser;
+    }
+
+    public void setNotifyUser(boolean notifyUser) {
+        this.notifyUser = notifyUser;
+    }
+
+    public String getNotificationType() {
+        return notificationType;
+    }
+
+    public void setNotificationType(String notificationType) {
+        this.notificationType = notificationType;
     }
 
     @Override
