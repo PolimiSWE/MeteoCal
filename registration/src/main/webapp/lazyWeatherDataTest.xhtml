@@ -13,6 +13,10 @@
                          paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                          rowsPerPageTemplate="5,10,15" selectionMode="single" selection="#{weatherDataLazyView.selectedWeatherData}" id="weatherDataTable" lazy="true">
                 <p:ajax event="rowSelect" listener="#{weatherDataLazyView.onRowSelect}" update=":form:weatherDataDetail" oncomplete="PF('weatherDataDialog').show()" />
+                
+                <p:column headerText="Icon">
+                    <img src="images/icons/#{weatherData.icon}.png"/>
+                </p:column>
                 <p:column headerText="Date" sortBy="#{weatherData.date}" filterBy="#{weatherData.date}">
                     <h:outputText value="#{weatherData.date}" />
                 </p:column>
@@ -22,18 +26,21 @@
                 <p:column headerText="Temperature" sortBy="#{weatherData.temperature}" filterBy="#{weatherData.temperature}">
                     <h:outputText value="#{weatherData.temperature}" />
                 </p:column>
-                <p:column headerText="Pressure" sortBy="#{weatherData.preasure}" filterBy="#{weatherData.preasure}">
-                    <h:outputText value="#{weatherData.preasure}" />
+                <p:column headerText="Description" sortBy="#{weatherData.description}" filterBy="#{weatherData.description}">
+                    <h:outputText value="#{weatherData.description}" />
                 </p:column>
             </p:dataTable>
 
             <p:dialog header="WeatherData Detail" widgetVar="weatherDataDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
                 <p:outputPanel id="weatherDataDetail" style="text-align:center;">
                     <p:panelGrid  columns="2" rendered="#{not empty weatherDataLazyView.selectedWeatherData}" columnClasses="label,value">
+                        <!--<f:facet name="header">
+                            <p:graphicImage name="images/icons/#{weatherDataLazyView.selectedWeatherData.icon}.png"/> 
+                        </f:facet> -->
                         <f:facet name="header">
-                            <p:graphicImage name="images/pic01.jpg"/> 
+                        <img src="images/icons/#{weatherDataLazyView.selectedWeatherData.icon}.png"/> 
                         </f:facet>
-
+                        
                         <h:outputText value="Date" />
                         <h:outputText value="#{weatherDataLazyView.selectedWeatherData.date}" />
 
@@ -51,6 +58,9 @@
 
                         <h:outputText value="Wind speed" />
                         <h:outputText value="#{weatherDataLazyView.selectedWeatherData.windSpeed}" />
+
+                        <h:outputText value="Description" />
+                        <h:outputText value="#{weatherDataLazyView.selectedWeatherData.description}" />
 
                         
                     </p:panelGrid>

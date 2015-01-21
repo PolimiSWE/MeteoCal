@@ -120,7 +120,12 @@ public class UserFacade extends AbstractFacade<User> {
         User queryRes = query.getSingleResult();
         return queryRes;
     }
-    
+    public User getUserByEmail(String email){
+        TypedQuery<User> query = em.createQuery("SELECT usr FROM User AS usr WHERE usr.email=:emailParam", User.class);
+        query.setParameter("emailParam", email);
+        User queryRes = query.getSingleResult();
+        return queryRes;
+    }
 
     public void unregister() {
         em.remove(getLoggedUser());
