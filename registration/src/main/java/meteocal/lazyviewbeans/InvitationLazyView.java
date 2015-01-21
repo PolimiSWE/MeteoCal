@@ -1,6 +1,7 @@
 package meteocal.lazyviewbeans;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
@@ -32,6 +33,10 @@ public class InvitationLazyView implements Serializable {
     public void init() {
         lazyModel = new InvitationLazyDataModel(invf.findAll());
     }
+    
+    public void initInvitationDataModel(List<Invitation> invites){
+        lazyModel = new InvitationLazyDataModel(invites);
+    }
  
     public InvitationLazyDataModel getLazyModel() {
         return lazyModel;
@@ -45,6 +50,9 @@ public class InvitationLazyView implements Serializable {
         this.selectedInvitation = selectedInvitation;
     }
      
+    public void update(long userId){
+        lazyModel = new InvitationLazyDataModel(invf.findAll(userId));
+    }
     
      
     public void onRowSelect(SelectEvent event) {

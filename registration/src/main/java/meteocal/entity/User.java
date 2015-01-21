@@ -27,7 +27,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name="USERS")
-public class User implements Serializable {
+public class User implements Serializable,Comparable<User> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE , generator="usr_gen")
@@ -62,7 +62,10 @@ public class User implements Serializable {
     
     //Relationship Entities
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true, targetEntity = meteocal.entity.Invitation.class)
-    private Collection<Invitation> invitations;    
+    private Collection<Invitation> invitations;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner", orphanRemoval = true, targetEntity = meteocal.entity.Notification.class)
+    private Collection<Notification> notifications;
     
     @NotNull(message = "May not be empty")
     @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity =  meteocal.entity.Calendar.class)
@@ -102,6 +105,14 @@ public class User implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Collection<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(Collection<Notification> notifications) {
+        this.notifications = notifications;
     }
 
     public String getSurname() {
@@ -195,6 +206,11 @@ public class User implements Serializable {
     @Override
     public String toString() {
         return this.getName()+" "+this.getSurname()+" ("+this.getUsername()+")"; 
+    }
+
+    @Override
+    public int compareTo(User o) {
+        return this.toString().compareTo(o.toString());
     }
     
 }

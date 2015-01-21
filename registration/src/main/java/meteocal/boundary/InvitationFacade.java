@@ -5,13 +5,11 @@
  */
 package meteocal.boundary;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import meteocal.entity.Event;
 import meteocal.entity.Invitation;
 import meteocal.entity.User;
 
@@ -34,8 +32,25 @@ public class InvitationFacade extends AbstractFacade<Invitation> {
     }
     
     public List<Invitation> findAll(User u){
-        TypedQuery<Invitation> query = em.createQuery("SELECT inv FROM Invitation AS inv WHERE inv.user.id=:userIdParam", Invitation.class);
+        TypedQuery<Invitation> query = em.createQuery("SELECT inv FROM Invitation AS inv WHERE"
+                + " inv.user.id=:userIdParam", Invitation.class);
         query.setParameter("userIdParam", u.getId());
+        return query.getResultList();
+    }
+
+    public List<Invitation> findAll(long userId) {
+        TypedQuery<Invitation> query = em.createQuery("SELECT inv FROM Invitation AS inv WHERE"
+                + " inv.user.id=:userIdParam", Invitation.class);
+        query.setParameter("userIdParam", userId);
+        return query.getResultList();
+    }
+
+    public List<Invitation> findDirtyInvitations(Long id) {
+        TypedQuery<Invitation> query = 
+                em.createQuery("SELECT inv FROM Invitation AS inv WHERE"
+                        + " inv.user.id=:userIdParam AND inv.notifyUser=:dirtyParam", Invitation.class);
+        query.setParameter("userIdParam", id);
+        query.setParameter("dirtyParam", true);
         return query.getResultList();
     }
     

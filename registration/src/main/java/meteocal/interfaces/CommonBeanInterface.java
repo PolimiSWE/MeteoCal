@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import meteocal.entity.Calendar;
 import meteocal.entity.Event;
+import meteocal.entity.Invitation;
 import meteocal.entity.User;
 
 /**
@@ -17,6 +18,7 @@ import meteocal.entity.User;
  */
 public interface CommonBeanInterface {
     public List<Calendar> getAllCalendars();
+    public UserBeanInterface getUserData();
     public void setAllCalendars(List<Calendar> allCalendars);
     public List<Calendar> getPublicCalendars();
     public void setPublicCalendars(List<Calendar> publicCalendars);
@@ -29,4 +31,8 @@ public interface CommonBeanInterface {
     public void populateInvitations();
     public void populateUsers();
     public List<Event> getEventsForDay(Date day);
+
+    public List<Invitation> getPendingInvites();
+
+    public List<Invitation> getAllInvites();
 }

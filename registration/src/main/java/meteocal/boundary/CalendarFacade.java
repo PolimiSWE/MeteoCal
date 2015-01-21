@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import meteocal.entity.Calendar;
 import meteocal.entity.Event;
+import meteocal.entity.PrivacyType;
 
 /**
  *
@@ -27,13 +28,21 @@ public class CalendarFacade extends AbstractFacade<Calendar> {
         return query.getResultList();
     }
     
-    public void save(Calendar cal) {
+    public PrivacyType getPrivacyType(boolean pt){
+        TypedQuery<PrivacyType> query = 
+                em.createQuery("SELECT pt FROM PrivacyType AS pt WHERE pt.privacy=:ptParam", PrivacyType.class);
+        query.setParameter("ptParam", pt);
+        return query.getSingleResult();
+    }
+    
+    public void save(Calendar cal, boolean cal_privacy) {
         Calendar tmp;
         if(cal.getId() != null) 
         {
             tmp = em.find(Calendar.class, (long)cal.getId());
             if(tmp!=null)
             {
+                tmp.setCalendarPrivacy(this.getPrivacyType(cal_privacy));
                 em.merge(cal);
                 em.flush();
             }

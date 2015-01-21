@@ -5,14 +5,10 @@
  */
 package meteocal.helper;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -25,6 +21,8 @@ public class CalendarHelper {
     public CalendarHelper(Date firstDay) {
         this.currentWeek = new ArrayList<>(0);
         Date tmp_date = firstDay;
+        tmp_date = this.getNextDay(tmp_date);
+        tmp_date = this.getBeforeDay(tmp_date);
         DayHelper tmp_day;
         tmp_day = new DayHelper(tmp_date);
         this.currentWeek.add(tmp_day);
@@ -36,19 +34,19 @@ public class CalendarHelper {
     }
     
     public void moveByOneDayUp(){
-        this.currentWeek.remove(0);
         Date tmp_date = currentWeek.get(6).getToday();
         tmp_date = this.getNextDay(tmp_date);
         DayHelper tmp_day = new DayHelper(tmp_date);
         this.currentWeek.add(tmp_day);
+        this.currentWeek.remove(0);
     }
     
     public void moveByOneDayDown(){
-        this.currentWeek.remove(7);
         Date tmp_date = currentWeek.get(0).getToday();
         tmp_date = this.getBeforeDay(tmp_date);
         DayHelper tmp_day = new DayHelper(tmp_date);
         this.currentWeek.add(0, tmp_day);
+        this.currentWeek.remove(7);
     }
 
     private Date getNextDay(Date day){
@@ -60,16 +58,10 @@ public class CalendarHelper {
     }
     
     private Date getBeforeDay(Date day) {
-        String dt = day.toString();  // Start date
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
-        try {
-            c.setTime(sdf.parse(dt));
-        } catch (ParseException ex) {
-            Logger.getLogger(CalendarHelper.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        c.add(Calendar.DATE, -1);  // number of days to add
-        return c.getTime();  // dt is now the new date
+        c.setTime(day);
+        c.add(Calendar.DATE, -1);  // number of days to add  
+        return new Date(c.getTime().getTime());  // dt is now the new date
     }
     
     public List<DayHelper> getCurrentWeek() {

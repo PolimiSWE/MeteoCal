@@ -33,15 +33,6 @@ public class Invitation implements Serializable {
     @Column(name = "id_invitation")
     private Long id;
     
-    @NotNull(message = "May not be empty")
-    @Column(name = "notify_user")
-    private boolean notifyUser;
-    
-    
-    @Column(name = "notification_type")
-    private String notificationType; //rescheduled, modified
-
-    
     //Relationship Entities
     @ManyToOne(optional = false, targetEntity = meteocal.entity.EventStatus.class)
     @JoinColumn(name = "event_status", referencedColumnName = "id_event_status")
@@ -89,22 +80,7 @@ public class Invitation implements Serializable {
         this.id = id;
     }
 
-    public boolean getNotifyUser() {
-        return notifyUser;
-    }
-
-    public void setNotifyUser(boolean notifyUser) {
-        this.notifyUser = notifyUser;
-    }
-
-    public String getNotificationType() {
-        return notificationType;
-    }
-
-    public void setNotificationType(String notificationType) {
-        this.notificationType = notificationType;
-    }
-
+    
     @Override
     public int hashCode() {
         int hash = 0;

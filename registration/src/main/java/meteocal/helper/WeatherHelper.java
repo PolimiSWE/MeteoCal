@@ -55,6 +55,7 @@ public class WeatherHelper {
         this.client = ClientBuilder.newClient();
         this.city = "Milan";
         this.cnt = "16";
+        wdList = new ArrayList<>();
         //ScheduleExpression everyDay = new ScheduleExpression().second("*/5").minute("*").hour("*");
         //timerService.createCalendarTimer(everyDay, new TimerConfig("", false));
     }
@@ -383,30 +384,33 @@ public class WeatherHelper {
     }
 
     public void setWdList(List<WeatherData> wdList) {
-        this.wdList = wdList;
+        if(wdList!=null)
+            this.wdList = wdList;
+        else
+            this.wdList = new ArrayList<>();
     }
     
     public void checkWeatherMainFun(String city, java.sql.Date dt, Time tt){
         this.setCity(this.city);
         //if there is record WeatherData(City, date) in database 
-        
-        if(wdList.isEmpty()){
-            //call weather api
-            int diff = this.getDateDiff(dt);
-            if(diff == 5){
-                //if date is in next 5 days call checkweather5days
-                this.checkWeather5days(city);
-                this.wdList = this.getWdList();
-            }
-            else if(diff == 16){
-                //if date is in next 16 days call checkweather16days
-                this.checkWeather16days(city);
-                this.wdList = this.getWdList();
-            }
-        } else {//else leave it to scheduler (make scheduler that runs once a day)
-               
-        }
-        
+        if(wdList!=null)
+            if(wdList.isEmpty()){
+                //call weather api
+                int diff = this.getDateDiff(dt);
+                if(diff == 5){
+                    //if date is in next 5 days call checkweather5days
+                    this.checkWeather5days(city);
+                    this.wdList = this.getWdList();
+                }
+                else if(diff == 16){
+                    //if date is in next 16 days call checkweather16days
+                    this.checkWeather16days(city);
+                    this.wdList = this.getWdList();
+                }
+            } 
+            else {//else leave it to scheduler (make scheduler that runs once a day)
+
+            } 
     }
     
     public void testFun() {

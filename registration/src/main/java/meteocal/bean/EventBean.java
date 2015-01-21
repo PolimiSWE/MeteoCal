@@ -23,6 +23,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import meteocal.entity.Event;
+import meteocal.entity.Invitation;
 import meteocal.entity.User;
 import meteocal.interfaces.CalendarBeanInterface;
 import meteocal.interfaces.UserBeanInterface;
@@ -156,6 +157,18 @@ public class EventBean implements Serializable {
 
     public void setCurrent(Event current) {
         this.current = current;
+        this.current_input_beginHour = current.getBeginHour();
+        this.current_input_dateOfEvent = new Date(current.getDateOfEvent().getTime());
+        this.current_invited = new ArrayList<>();
+        this.current_invited_string = new String[current.getInvitations().size()];
+        int i=0;
+        for(Invitation inv : current.getInvitations()){
+            this.current_invited.add(inv.getUser());
+            this.current_invited_string[i] = inv.getUser().getUsername();
+            i++;
+        }
+        this.current_privacy = current.getEventPrivacy().getPrivacy();
+        this.current_type = current.getEventType().getType();
     }
 
     public boolean getCurrent_privacy() {

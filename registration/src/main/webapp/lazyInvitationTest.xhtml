@@ -23,6 +23,8 @@
                     <h:outputText value="#{invitation.eventStatus}" />
                 </p:column>
             </p:dataTable>
+            
+            <p:poll interval="30" listener="#{invitationLazyView.update(userBean.current.id)}" update="form:invitationTable" />
 
             <p:dialog header="Invitation Detail" widgetVar="invitationDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
                 <p:outputPanel id="invitationDetail" style="text-align:center;">

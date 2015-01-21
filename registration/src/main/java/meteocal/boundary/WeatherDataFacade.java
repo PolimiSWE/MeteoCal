@@ -5,7 +5,7 @@
  */
 package meteocal.boundary;
 
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -25,7 +25,11 @@ public class WeatherDataFacade extends AbstractFacade<WeatherData> {
 
     public List<WeatherData> getDbOutput(){
         TypedQuery<WeatherData> query = em.createQuery("SELECT wd FROM WeatherData AS wd", WeatherData.class);
-        return query.getResultList();
+        List<WeatherData> result = query.getResultList();
+        if(result!=null)
+            return query.getResultList();
+        else
+            return new ArrayList<>();
     }
     
     @Override
@@ -41,7 +45,11 @@ public class WeatherDataFacade extends AbstractFacade<WeatherData> {
         query.setParameter("dateParam", dt, TemporalType.DATE);
         query.setParameter("cityParam", city);
         //query.setParameter("date", new java.util.Date(), TemporalType.DATE);
-        return query.getResultList();
+        List<WeatherData> result = query.getResultList();
+        if(result!=null)
+            return query.getResultList();
+        else
+            return new ArrayList<>();
     }
 
     public void saveWdList(List<WeatherData> wdList) {

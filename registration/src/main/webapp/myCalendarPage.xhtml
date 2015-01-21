@@ -10,151 +10,252 @@
     </h:head>
     <h:body>
         <f:view>
-            <div id="div_border_top" style="width: 100% !important; height: 5%; float: top;">
+            <h:panelGroup style="width: 100%; height: 5%;">
                 
-            </div>
-            <div id="div_border_left" style="width: 5% !important; float: left;">
-                
-            </div>
+            </h:panelGroup>
                 <h:form id="form_my_calendar">
-                    <div id="div_container_my_calendar" style="width: 65% !important; float: left;
-                             margin: 5px !important; padding: 5px !important;">                             
-                        <p:outputLabel title="#{calendarBean.calHelper.currentWeek.get(0).today}" />
-                        <div id="div_container_day_one" style="width: 14.28% !important; float: left;" >
-                            <p:dataTable var="evt" value="#{dayHelperLazyView.dayOnelazyModel}" paginator="true" rows="10"
-                                         paginatorTemplate="{PreviousPageLink} {NextPageLink}"
-                                         rowsPerPageTemplate="5,10,15" selectionMode="single" 
+                    <div id="div_container_my_calendar" style="width: 65% !important; float: left; height: 60% !important;
+                             margin: 5px !important; padding: 5px !important;">
+                        
+                            
+                        <p:panelGrid id="my_calendar_header" columns="5"
+                                    
+                                    styleClass="my_calendar_header_panel_class">
+                            <p:commandButton value="Previous Day" actionListener="#{calendarBean.oneDayLess()}"
+                                             update="form_my_calendar"
+                                             styleClass="my_calendar_button_class" />
+                            <p:outputLabel value="My Calendar" />
+                            <p:outputLabel value="Event Privacy" for="eventPrivacyRadio" />
+                            <h:selectOneRadio id="eventPrivacyRadio" value="#{calendarBean.current_privacy}"
+                                              style="background-color: rgba(54,54,54,0.6);
+                                                     color: #FA2;" >
+                                <f:selectItem itemValue="#{false}" itemLabel="Private"/>   
+                                <f:selectItem itemValue="#{true}" itemLabel="Public"/>
+                                <f:ajax event="valueChange" listener="#{calendarBean.save()}" />
+                            </h:selectOneRadio>
+                            <p:commandButton value="Next Day" actionListener="#{calendarBean.oneDayMore()}"
+                                             styleClass="my_calendar_button_class" 
+                                         update="form_my_calendar" />
+                        </p:panelGrid>
+                            
+                        
+                        <div id="div_container_day_one" style="width: 14.28% !important;
+                                                                float: left;" >
+                            <p:dataTable var="evt" value="#{dayHelperLazyView.dayOnelazyModel}" paginator="true" rows="5"
+                                         paginatorTemplate="{PreviousPageLink} {NextPageLink}" 
+                                         selectionMode="single" 
                                          selection="#{dayHelperLazyView.selectedEvent}" id="day_one_table" lazy="true">
-                                <p:ajax event="rowSelect" listener="#{dayHelperLazyView.onRowSelect}"  />
-                                <p:column headerText="#{dayHelperLazyView.dayOne.toString()}" sortBy="#{evt.beginHour}">
-                                    <h:outputText value="#{evt.name}" />
-                                    <br/>
-                                    <h:outputText value="#{evt.beginHour}" />
+                                <p:ajax event="rowSelect" listener="#{dayHelperLazyView.onRowSelect}"
+                                        update=":form_my_calendar" oncomplete="PF('eventDialog').show()"/>
+                                <p:column headerText="#{dayHelperLazyView.parseDate(0)}" sortBy="#{evt.beginHour}">
+                                    <h:outputText value="#{evt.toString()}" />
                                 </p:column>
+                                
                             </p:dataTable>
                         </div>
-                        <p:outputLabel title="#{calendarBean.calHelper.currentWeek.get(1).today}" />
+                        
                         <div id="div_container_day_two" style="width: 14.28% !important; float: left;" >
-                            <p:dataTable var="evt" value="#{dayHelperLazyView.dayTwolazyModel}" paginator="true" rows="10"
+                            <p:dataTable var="evt" value="#{dayHelperLazyView.dayTwolazyModel}" paginator="true" rows="5"
                                          paginatorTemplate="{PreviousPageLink} {NextPageLink}"
                                          rowsPerPageTemplate="5,10,15" selectionMode="single" 
                                          selection="#{dayHelperLazyView.selectedEvent}" id="day_two_table" lazy="true">
-                                <p:ajax event="rowSelect" listener="#{dayHelperLazyView.onRowSelect}"  />
-                                <p:column headerText="#{dayHelperLazyView.dayTwo.toString()}" sortBy="#{evt.beginHour}">
-                                    <h:outputText value="#{evt.name}" />
-                                    <br/>
-                                    <h:outputText value="#{evt.beginHour}" />
+                                <p:ajax event="rowSelect" listener="#{dayHelperLazyView.onRowSelect}"
+                                        update=":form_my_calendar" oncomplete="PF('eventDialog').show()"/>
+                                <p:column headerText="#{dayHelperLazyView.parseDate(1)}" sortBy="#{evt.beginHour}">
+                                    <h:outputText value="#{evt.toString()}" />
                                 </p:column>
                             </p:dataTable>
                         </div>
-                        <p:outputLabel title="#{calendarBean.calHelper.currentWeek.get(2).today}" />
+                        
                         <div id="div_container_day_three" style="width: 14.28% !important; float: left;" >
-                            <p:dataTable var="evt" value="#{dayHelperLazyView.dayThreelazyModel}" paginator="true" rows="10"
+                            <p:dataTable var="evt" value="#{dayHelperLazyView.dayThreelazyModel}" paginator="true" rows="5"
                                          paginatorTemplate="{PreviousPageLink} {NextPageLink}"
                                          rowsPerPageTemplate="5,10,15" selectionMode="single" 
                                          selection="#{dayHelperLazyView.selectedEvent}" id="day_three_table" lazy="true">
-                                <p:ajax event="rowSelect" listener="#{dayHelperLazyView.onRowSelect}"  />
-                                <p:column headerText="#{dayHelperLazyView.dayThree.toString()}" sortBy="#{evt.beginHour}">
-                                    <h:outputText value="#{evt.name}" />
-                                    <br/>
-                                    <h:outputText value="#{evt.beginHour}" />
+                                <p:ajax event="rowSelect" listener="#{dayHelperLazyView.onRowSelect}"
+                                        update=":form_my_calendar" oncomplete="PF('eventDialog').show()"/>
+                                <p:column headerText="#{dayHelperLazyView.parseDate(2)}" sortBy="#{evt.beginHour}">
+                                    <h:outputText value="#{evt.toString()}" />
                                 </p:column>
                             </p:dataTable>
                         </div>
-                        <p:outputLabel title="#{calendarBean.calHelper.currentWeek.get(3).today}" />
+                        
                         <div id="div_container_day_four" style="width: 14.28% !important; float: left;" >
-                            <p:dataTable var="evt" value="#{dayHelperLazyView.dayFourlazyModel}" paginator="true" rows="10"
+                            <p:dataTable var="evt" value="#{dayHelperLazyView.dayFourlazyModel}" paginator="true" rows="5"
                                          paginatorTemplate="{PreviousPageLink} {NextPageLink}"
                                          rowsPerPageTemplate="5,10,15" selectionMode="single" 
                                          selection="#{dayHelperLazyView.selectedEvent}" id="day_four_table" lazy="true">
-                                <p:ajax event="rowSelect" listener="#{dayHelperLazyView.onRowSelect}"  />
-                                <p:column headerText="#{dayHelperLazyView.dayFour.toString()}" sortBy="#{evt.beginHour}" >
-                                    <h:outputText value="#{evt.name}" />
-                                    <br/>
-                                    <h:outputText value="#{evt.beginHour}" />
+                                <p:ajax event="rowSelect" listener="#{dayHelperLazyView.onRowSelect}"
+                                        update=":form_my_calendar" oncomplete="PF('eventDialog').show()"/>
+                                <p:column headerText="#{dayHelperLazyView.parseDate(3)}" sortBy="#{evt.beginHour}" >
+                                   <h:outputText value="#{evt.toString()}" />
                                 </p:column>
                             </p:dataTable>
                         </div>
-                        <p:outputLabel title="#{calendarBean.calHelper.currentWeek.get(4).today}" />
+                        
                         <div id="div_container_day_five" style="width: 14.28% !important; float: left;" >
-                            <p:dataTable var="evt" value="#{dayHelperLazyView.dayFivelazyModel}" paginator="true" rows="10"
+                            <p:dataTable var="evt" value="#{dayHelperLazyView.dayFivelazyModel}" paginator="true" rows="5"
                                          paginatorTemplate="{PreviousPageLink} {NextPageLink}"
                                          rowsPerPageTemplate="5,10,15" selectionMode="single" 
                                          selection="#{dayHelperLazyView.selectedEvent}" id="day_five_table" lazy="true">
-                                <p:ajax event="rowSelect" listener="#{dayHelperLazyView.onRowSelect}"  />
-                                <p:column headerText="#{dayHelperLazyView.dayFive.toString()}" sortBy="#{evt.beginHour}">
-                                    <h:outputText value="#{evt.name}" />
-                                    <br/>
-                                    <h:outputText value="#{evt.beginHour}" />
+                                <p:ajax event="rowSelect" listener="#{dayHelperLazyView.onRowSelect}"
+                                        update=":form_my_calendar" oncomplete="PF('eventDialog').show()"/>
+                                <p:column headerText="#{dayHelperLazyView.parseDate(4)}" sortBy="#{evt.beginHour}">
+                                   <h:outputText value="#{evt.toString()}" />
                                 </p:column>
                             </p:dataTable>
                         </div>
-                        <p:outputLabel title="#{calendarBean.calHelper.currentWeek.get(5).today}" />
+                        
                         <div id="div_container_day_six" style="width: 14.28% !important; float: left;" >
-                            <p:dataTable var="evt" value="#{dayHelperLazyView.daySixlazyModel}" paginator="true" rows="10"
+                            <p:dataTable var="evt" value="#{dayHelperLazyView.daySixlazyModel}" paginator="true" rows="5"
                                          paginatorTemplate="{PreviousPageLink} {NextPageLink}"
                                          rowsPerPageTemplate="5,10,15" selectionMode="single" 
                                          selection="#{dayHelperLazyView.selectedEvent}" id="day_six_table" lazy="true">
-                                <p:ajax event="rowSelect" listener="#{dayHelperLazyView.onRowSelect}"  />
-                                <p:column headerText="#{dayHelperLazyView.daySix.toString()}" sortBy="#{evt.beginHour}" >
-                                    <h:outputText value="#{evt.name}" />
-                                    <br/>
-                                    <h:outputText value="#{evt.beginHour}" />
+                                <p:ajax event="rowSelect" listener="#{dayHelperLazyView.onRowSelect}"
+                                        update=":form_my_calendar" oncomplete="PF('eventDialog').show()"/>
+                                <p:column headerText="#{dayHelperLazyView.parseDate(5)}" sortBy="#{evt.beginHour}" >
+                                    <h:outputText value="#{evt.toString()}" />
                                 </p:column>
                             </p:dataTable>
                         </div>
-                        <p:outputLabel title="#{calendarBean.calHelper.currentWeek.get(6)}" />
+                        
                         <div id="div_container_day_seven" style="width: 14.28% !important; float: left;" >
-                            <p:dataTable var="evt" value="#{dayHelperLazyView.daySevenlazyModel}" paginator="true" rows="10"
+                            <p:dataTable var="evt" value="#{dayHelperLazyView.daySevenlazyModel}" paginator="true" rows="5"
                                          paginatorTemplate="{PreviousPageLink} {NextPageLink}"
                                          rowsPerPageTemplate="5,10,15" selectionMode="single" 
                                          selection="#{dayHelperLazyView.selectedEvent}" id="day_seven_table" lazy="true">
-                                <p:ajax event="rowSelect" listener="#{dayHelperLazyView.onRowSelect}"  />
-                                <p:column headerText="#{dayHelperLazyView.daySeven.toString()}" sortBy="#{evt.beginHour}" >
-                                    <h:outputText value="#{evt.name}" />
-                                    <br/>
-                                    <h:outputText value="#{evt.beginHour}" />
+                                <p:ajax event="rowSelect" listener="#{dayHelperLazyView.onRowSelect}"
+                                        update=":form_my_calendar" oncomplete="PF('eventDialog').show()"/>
+                                <p:column headerText="#{dayHelperLazyView.parseDate(6)}" sortBy="#{evt.beginHour}" >
+                                    <h:outputText value="#{evt.toString()}" />
                                 </p:column>
                             </p:dataTable>
                         </div>
                     </div>
-                </h:form>
-            <div id="div_border_middle" style="width: 9% !important; float: left;">
-                
-            </div>
-            <div id="div_container_invitations" style="width: 20% !important; float: left;">
-                 <h:form>
-                <h:dataTable value="#{calendarBean.calHelper.currentWeek}" var="day">
-                    <h:column> 
-                        <f:facet name="header">
-                            <h:outputText value='#{day.today}'/>
-                        </f:facet>
-                        
-                        
-                        <h:dataTable value="#{day.todaysEvents}" var="event">
-                                <h:column>
-                                    <f:facet name="header">
-                                        <h:outputText value="BeginHour"/>
-                                    </f:facet>
-                                    <h:outputText value="#{event.name}"/>
-                                </h:column>
+                    
+                     <p:dialog header="Event Detail" widgetVar="eventDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:outputPanel id="eventDetail" style="text-align:center;">
+                            <p:panelGrid  columns="2" rendered="#{not empty dayHelperLazyView.selectedEvent}" columnClasses="label,value">
+                                <f:facet name="header">
+                                    <p:graphicImage value="${facesContext.externalContext.requestContextPath}/images/event_icon.png"/> 
+                                </f:facet>
                                 
-                               
-                        </h:dataTable>
-                       
+                                <h:outputText value="Name:" />
+                                <h:outputText value="#{dayHelperLazyView.selectedEvent.name}" />
 
-                    </h:column>
-                </h:dataTable>
-            </h:form>
-            </div>
-            <div id="div_border_right" style="width: 5% !important; float: right;">
-                
-            </div>
-            <div id="div_border_bottom" style="width: 100% !important; height: 5%; float: bottom;">
-                
+                                <h:outputText value="Date" />
+                                <h:outputText value="#{dayHelperLazyView.selectedEvent.dateOfEvent}" />
+
+                                <h:outputText value="Begin hour" />
+                                <h:outputText value="#{dayHelperLazyView.selectedEvent.beginHour}" />
+
+                                <h:outputText value="Duration" />
+                                <h:outputText value="#{dayHelperLazyView.selectedEvent.duration}" />
+
+                                <h:outputText value="City" />
+                                <h:outputText value="#{dayHelperLazyView.selectedEvent.city}" />
+
+                                <h:outputText value="Address" />
+                                <h:outputText value="#{dayHelperLazyView.selectedEvent.streetAndNumber}" />
+
+                                <h:outputText value="Event type" />
+                                <h:outputText value="#{dayHelperLazyView.selectedEvent.eventType}" />
+                                
+                                <p:commandButton value="Edit" type="button"                                                  
+                                                 onclick="PF('eventDialog').hide();" >
+                                    <p:ajax listener="#{calendarBean.goToEditEventPage(dayHelperLazyView.selectedEvent)}" />
+                                </p:commandButton>
+                                <p:commandButton value="Delete" type="button" onclick="PF('eventDialog').hide();" />
+                                
+                            </p:panelGrid>
+                        </p:outputPanel>
+                         
+                    </p:dialog>
+                </h:form>
+            
+            <div id="div_container_invitations" style="width: 32% !important; float: right;">
+                 <h:form id="form_invitations">
+                     <p:dataTable var="invitation" value="#{invitationLazyView.lazyModel}" paginator="true" rows="5"
+                         paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink} "
+                         selectionMode="single" selection="#{invitationLazyView.selectedInvitation}" id="invitationTable" lazy="true">
+                        <p:ajax event="rowSelect" listener="#{invitationLazyView.onRowSelect}" update=":form_invitations:invitation_detail" oncomplete="PF('invitationDialog').show()" />
+                        <p:column headerText="Invited by" sortBy="#{invitation.user}">
+                            <h:outputText value="#{invitation.user}" />
+                        </p:column>
+                        <p:column headerText="Event name" sortBy="#{invitation.event}">
+                            <h:outputText value="#{invitation.event.name}" />
+                        </p:column>
+                        <p:column headerText="Status" sortBy="#{invitation.eventStatus}">
+                            <h:outputText value="#{invitation.eventStatus}" />
+                        </p:column>
+                    </p:dataTable>
+            
+                    <p:poll interval="30" listener="#{invitationLazyView.update(userBean.current.id)}" update="form_invitations:invitationTable" />
+
+                    <p:dialog id="invitation_dialog" header="Invitation Detail" widgetVar="invitationDialog" 
+                              modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:outputPanel id="invitation_detail" style="text-align:center;">
+                            <p:panelGrid  columns="2" rendered="#{not empty invitationLazyView.selectedInvitation}" columnClasses="label,value">
+                                <f:facet name="header">
+                                    <p:graphicImage name="${facesContext.externalContext.requestContextPath}/images/invite_icon.png"/> 
+                                </f:facet>
+
+                                <h:outputText value="Id:" />
+                                <h:outputText value="#{invitationLazyView.selectedInvitation.id}" />
+
+                                <h:outputText value="Invited by" />
+                                <h:outputText value="#{invitationLazyView.selectedInvitation.user}" />
+
+                                <h:outputText value="Invitation status" />
+                                <h:outputText value="#{invitationLazyView.selectedInvitation.eventStatus}" />
+
+                                <h:outputText value="Event" />
+                                <h:outputText value="#{invitationLazyView.selectedInvitation.event.name}" />
+
+                                <h:outputText value="Date" />
+                                <h:outputText value="#{invitationLazyView.selectedInvitation.event.dateOfEvent}" />
+
+                                <h:outputText value="Begin hour" />
+                                <h:outputText value="#{invitationLazyView.selectedInvitation.event.beginHour}" />
+
+                                <h:outputText value="Duration" />
+                                <h:outputText value="#{invitationLazyView.selectedInvitation.event.duration}" />
+
+                                <h:outputText value="City" />
+                                <h:outputText value="#{invitationLazyView.selectedInvitation.event.city}" />
+
+                                <h:outputText value="Address" />
+                                <h:outputText value="#{invitationLazyView.selectedInvitation.event.streetAndNumber}" />
+
+
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </p:dialog>
+                </h:form>
             </div>
             
-           
+            <h:form id="form_notifications">
+                <div id="div_container_notificatons"
+                     style="width: 32%;
+                            height: 40%;
+                            float: right;">
+                    <p:dataScroller value="#{notificationBean.externalNOTF}" id="external_notifications"
+                                        var="notf" chunkSize="5" mode="inline" scrollHeight="100">
+                        <h:outputText value="#{notf.destUser.toString} 
+                                             #{notf.description}" style="font-weight: bold"/>
+                        
+                    </p:dataScroller>
+                    <p:poll interval="60" listener="#{userBean.updateNotifications()}" 
+                                update="form_notifications:external_notifications
+                                        form_notifications:internal_notifications" />
+                    <p:dataScroller value="#{notificationBean.internalNOTF}" id="internal_notifications"
+                                        var="notf" chunkSize="5" mode="inline" scrollHeight="100">
+                            <h:outputText value="#{notf.destUser.toString} 
+                                                #{notf.description}" style="font-weight: bold"/>
+                    </p:dataScroller>
+
+                </div>
+            </h:form>
         </f:view>
 
     </h:body>

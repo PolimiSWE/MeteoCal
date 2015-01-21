@@ -31,7 +31,7 @@ import javax.persistence.Transient;
  */
 @Entity
 @Table(name="EVENTS")
-public class Event implements Serializable {
+public class Event implements Serializable,Comparable<Event> {
     
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE , generator="evt_gen")
@@ -315,7 +315,26 @@ public class Event implements Serializable {
 
     @Override
     public String toString() {
-        return "meteocal.entity.Event[ id=" + id + " ]";
+        String padding="";
+        Integer length = this.name.length() + this.beginHour.toString().length();
+        String output;
+        if(length<=33){
+            Integer padding_length = 33%length;
+            for(int i=0;i<padding_length;i++)
+                padding = padding + " ";
+            output = this.beginHour.toString() + padding + this.name;
+        }
+        else{
+            output = this.beginHour.toString() + padding + this.name;
+            output=output.substring(0, 29)+"...";
+        }
+        return output;
+        
+    }
+
+    @Override
+    public int compareTo(Event o) {
+       return this.getName().compareTo(o.getName());
     }
     
 }

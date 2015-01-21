@@ -23,6 +23,7 @@ import meteocal.entity.User;
 import meteocal.interfaces.CalendarBeanInterface;
 import meteocal.interfaces.CommonBeanInterface;
 import meteocal.interfaces.UserBeanInterface;
+import meteocal.lazyviewbeans.InvitationLazyView;
 
 /**
  *
@@ -42,6 +43,8 @@ public class UserBean implements Serializable,UserBeanInterface {
     CommonBeanInterface commonData;
     @Inject
     CalendarBeanInterface calendarData;
+    @Inject
+    NotificationBean notificationData; 
     
     private User current;
     private String password;
@@ -68,11 +71,6 @@ public class UserBean implements Serializable,UserBeanInterface {
             emailMsg = "";
             usernameValid = false;
             emailValid = false;
-        }
-        if(this.commonData == null)
-        {
-            //FacesContext context = FacesContext.getCurrentInstance();
-            //commonData = (CommonBean) context.getApplication().evaluateExpressionGet(context, "#{commonBean}", CommonBean.class);
         }
     }
     
@@ -108,6 +106,7 @@ public class UserBean implements Serializable,UserBeanInterface {
        this.commonData.populateEvents();
        this.commonData.populateInvitations();
        this.calendarData.populateCalHelper();
+       this.calendarData.populateInvitations();
        usernameMsg = "";
        emailMsg = "";
     }
@@ -119,6 +118,7 @@ public class UserBean implements Serializable,UserBeanInterface {
        this.commonData.populateEvents();
        this.commonData.populateInvitations();
        this.calendarData.populateCalHelper();
+       this.calendarData.populateInvitations();
        usernameMsg = "";
        emailMsg = "";
     }
@@ -212,6 +212,10 @@ public class UserBean implements Serializable,UserBeanInterface {
     @Override
     public User getUserByUsername(String username) {
         return um.getUser(username);
+    }
+    
+    public void updateNotifications(){
+        this.notificationData.updateNotifications(current);
     }
     
     

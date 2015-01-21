@@ -20,3 +20,65 @@ html {
     background-color: rgba(154, 154, 154, .8);
     color: #ffffff;
 }
+
+#form_my_calendar:my_calendar_header{
+    width: 99% !important;
+    height: 5% !important;
+    float: left; 
+    margin: 5px !important; 
+    padding: 5px !important;
+    background-color: rgba(54,54,54,0.2);
+    
+}
+
+.my_calendar_header_panel_class{
+    width: 99% !important;
+    height: 5% !important;
+    float: left; 
+    margin: 5px !important; 
+    padding: 5px !important;
+    background-color: rgba(54,54,54,0.2);
+    border-collapse: separate;
+}
+
+.my_calendar_header_panel_class td {
+    background-color: rgba(54,54,54,0.8);
+    color: #FA2;
+}
+
+
+.my_calendar_button_class {
+    -webkit-box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
+    -moz-box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
+    box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
+    color:#333 !important;
+    background-color:#FA2 !important;
+    border-radius:5px !important;
+    -moz-border-radius:5px !important;
+    -webkit-border-radius:5px !important;
+    border:none !important;
+    font-family:'Helvetica Neue',Arial,sans-serif !important;
+    font-size:16px !important;
+    font-weight:700 !important;
+    height: 100% !important;
+    width: 100% !important;
+    padding:4px 16px;
+    text-shadow:#FE6 0 1px !important; 
+    background-image: url('') !important;
+}
+
+.ui-widget {
+    font-size: 0.8em;
+}
+
+.ui-paginator {
+    background-color: rgba(20,20,20,0.4);
+    color: #FA2;
+    background-image: none;
+}
+
+.ui-sortable-column {
+    background-color: rgba(20,20,20,0.6);
+    color: #FA2;
+    background-image: none;
+}

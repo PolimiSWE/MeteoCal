@@ -24,7 +24,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name="EVENT_STATUSES")
-public class EventStatus implements Serializable {
+public class EventStatus implements Serializable,Comparable<EventStatus> {
     
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE , generator="es_gen")
@@ -107,6 +107,11 @@ public class EventStatus implements Serializable {
             return "Accepted";
         else
             return "Declined";
+    }
+
+    @Override
+    public int compareTo(EventStatus o) {
+        return this.getStatus().compareTo(o.getStatus());
     }
     
 }

@@ -15,4 +15,5 @@ public interface CalendarBeanInterface {
     public Calendar getCalendar();
     public void selectCalendar(Calendar cal);
     public void populateCalHelper();
+    public void populateInvitations();
 }

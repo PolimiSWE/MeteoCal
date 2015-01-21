@@ -1,9 +1,14 @@
 package meteocal.lazyviewbeans;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
@@ -17,7 +22,7 @@ import org.primefaces.event.SelectEvent;
  * @author Nemanja
  */
 @Named(value="dayHelperLazyView")
-@RequestScoped
+@SessionScoped
 public class DayHelperLazyView implements Serializable {
     
     
@@ -187,6 +192,22 @@ public class DayHelperLazyView implements Serializable {
 
     public void setDaySeven(Date daySeven) {
         this.daySeven = daySeven;
+    }
+    
+    public String parseDate(Integer index){
+        Date tmp;
+        if(index==0) tmp=this.dayOne;
+        else if(index==1) tmp=this.dayTwo;
+        else if(index==2) tmp=this.dayThree;
+        else if(index==3) tmp=this.dayFour;
+        else if(index==4) tmp=this.dayFive;
+        else if(index==5) tmp=this.daySix;
+        else if(index==6) tmp=this.daySeven;
+        else tmp = new Date(System.currentTimeMillis());
+        String output="";
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, d/MMM/yyyy");
+        output = dateFormat.format(tmp);
+        return output;
     }
      
     

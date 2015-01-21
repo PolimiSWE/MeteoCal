@@ -60,6 +60,7 @@ public class CommonBean implements Serializable,CommonBeanInterface {
     @Inject
     CalendarBeanInterface calendarData;
     
+    
     private List<Calendar> allCalendars;
     private List<Calendar> publicCalendars;
     private List<Calendar> privateCalendars;
@@ -94,12 +95,14 @@ public class CommonBean implements Serializable,CommonBeanInterface {
         this.allCalendars = new ArrayList<>(0);
         this.privateCalendars = new ArrayList<>(0);
         this.publicCalendars = new ArrayList<>(0);
+        
     }
     
     @PostConstruct
     public void Init() {
+        
         this.populateCalendars();
-        this.populateUsers();            
+        this.populateUsers();    
     }
     
      @Override
@@ -120,19 +123,27 @@ public class CommonBean implements Serializable,CommonBeanInterface {
 
     @Override
     public void populateInvitations() {
-        this.allInvites = invFacade.findAll(userData.getUser());  
-        for (Invitation inv : this.allInvites) {
-            this.otherEvents.add(inv.getEvent());
-                if (inv.getEventStatus().getStatus() == 0)
-                    this.pendingInvites.add(inv);
-                if (inv.getEventStatus().getStatus() == 1){
-                    this.declinedInvites.add(inv);
-                    this.declinedEvents.add(inv.getEvent());
-                }
-                if (inv.getEventStatus().getStatus() == 2){
-                    this.acceptedInvites.add(inv);
-                    this.attendingEvents.add(inv.getEvent());
-                }
+        if(this.userData!=null){
+            this.pendingInvites = new ArrayList<>();
+            this.acceptedInvites = new ArrayList<>();
+            this.declinedInvites = new ArrayList<>();
+            this.attendingEvents = new ArrayList<>();
+            this.declinedEvents = new ArrayList<>();
+            this.otherEvents = new ArrayList<>();
+            this.allInvites = invFacade.findAll(userData.getUser());  
+            for (Invitation inv : this.allInvites) {
+                this.otherEvents.add(inv.getEvent());
+                    if (inv.getEventStatus().getStatus() == 0)
+                        this.pendingInvites.add(inv);
+                    if (inv.getEventStatus().getStatus() == 1){
+                        this.declinedInvites.add(inv);
+                        this.declinedEvents.add(inv.getEvent());
+                    }
+                    if (inv.getEventStatus().getStatus() == 2){
+                        this.acceptedInvites.add(inv);
+                        this.attendingEvents.add(inv.getEvent());
+                    }
+            }
         }
     }
     
@@ -167,7 +178,7 @@ public class CommonBean implements Serializable,CommonBeanInterface {
     
     
     // <editor-fold defaultstate="collapsed" desc="Getters and Setters">
-
+    
     @Override
     public List<User> getAllUsers() {
         return allUsers;
@@ -234,6 +245,7 @@ public class CommonBean implements Serializable,CommonBeanInterface {
         this.ptFacade = ptFacade;
     }
 
+    @Override
     public UserBeanInterface getUserData() {
         return userData;
     }
@@ -336,6 +348,7 @@ public class CommonBean implements Serializable,CommonBeanInterface {
         this.allUsersString = allUsersString;
     }
 
+    @Override
     public List<Invitation> getAllInvites() {
         return allInvites;
     }
@@ -344,6 +357,7 @@ public class CommonBean implements Serializable,CommonBeanInterface {
         this.allInvites = allInvites;
     }
 
+    @Override
     public List<Invitation> getPendingInvites() {
         return pendingInvites;
     }
@@ -353,4 +367,5 @@ public class CommonBean implements Serializable,CommonBeanInterface {
     }
     // </editor-fold>
 
+   
 }

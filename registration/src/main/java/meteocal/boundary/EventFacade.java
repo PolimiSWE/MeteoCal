@@ -182,5 +182,13 @@ public class EventFacade extends AbstractFacade<Event> {
         return query.getResultList();
     }
 
+    public List<Event> findDirtyEvents(Long id) {
+        TypedQuery<Event> query = em.createQuery("SELECT evt FROM Event AS evt WHERE"
+                + " evt.includedInCalendar.id=:calendarIdParam AND evt.notifyOwner=:dirtyParam", Event.class);
+        query.setParameter("calendarIdParam", id);
+        query.setParameter("dirtyParam", true);
+        return query.getResultList();
+    }
+
   
 }
