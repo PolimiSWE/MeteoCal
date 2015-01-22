@@ -8,8 +8,10 @@ package meteocal.bean;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -48,12 +50,25 @@ public class LoginBean implements Serializable{
     }
     
     public String login() {
+            if(this.password.isEmpty()){
+                FacesContext.getCurrentInstance()
+                        .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Password Not Entered!"));
+                this.passwordEntered = false;
+                return "";
+            }
             if(this.tryLogIn(this.username, PasswordEncrypter.encryptPassword(this.password))){
                 this.userData.selectUser(username);
+                this.password ="";
+                this.passwordEntered = false;
+                this.username ="";
+                this.usernameEntered = false;
                 return "myCalendarPage"; 
             }
-            else
-                return "logInPage";
+            else{
+                FacesContext.getCurrentInstance()
+                        .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Invalid Credentials!"));
+                return "";
+            }
         
     }
     public String logout() {
@@ -127,6 +142,13 @@ public class LoginBean implements Serializable{
 
     public void setUsername(String username) {
         this.username = username;
+        if(this.username!=null){
+            if(!this.username.isEmpty())
+                this.validateUsername(FacesContext.getCurrentInstance(),
+                        FacesContext.getCurrentInstance()
+                                .getViewRoot().findComponent(":form_log_in:usernameInput"),
+                        this.username);
+        }
     }
 
     public String getPassword() {
@@ -135,5 +157,13 @@ public class LoginBean implements Serializable{
 
     public void setPassword(String password) {
         this.password = password;
+        if(this.username!=null){
+            if(!this.password.isEmpty()){
+                this.validatePassword(FacesContext.getCurrentInstance(),
+                        FacesContext.getCurrentInstance()
+                                .getViewRoot().findComponent(":form_log_in:passwordInput"),
+                        this.password);
+            }
+        }
     }
 }

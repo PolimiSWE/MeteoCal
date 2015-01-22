@@ -6,8 +6,9 @@ import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 import meteocal.entity.Calendar;
 import meteocal.entity.Invitation;
+import meteocal.entity.Notification;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2015-01-21T21:07:51")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2015-01-21T23:12:40")
 @StaticMetamodel(User.class)
 public class User_ { 
 
@@ -18,6 +19,7 @@ public class User_ {
     public static volatile SingularAttribute<User, Long> id;
     public static volatile SingularAttribute<User, Calendar> myCalendar;
     public static volatile SingularAttribute<User, String> email;
+    public static volatile CollectionAttribute<User, Notification> notifications;
     public static volatile SingularAttribute<User, String> username;
 
 }

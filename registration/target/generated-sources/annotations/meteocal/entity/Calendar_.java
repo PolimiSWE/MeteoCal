@@ -8,7 +8,7 @@ import meteocal.entity.Event;
 import meteocal.entity.PrivacyType;
 import meteocal.entity.User;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2015-01-21T21:07:51")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2015-01-21T23:12:40")
 @StaticMetamodel(Calendar.class)
 public class Calendar_ { 
 

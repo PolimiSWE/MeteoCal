@@ -6,6 +6,7 @@
 package meteocal.interfaces;
 
 import meteocal.entity.Calendar;
+import meteocal.helper.CalendarHelper;
 
 /**
  *
@@ -16,4 +17,5 @@ public interface CalendarBeanInterface {
     public void selectCalendar(Calendar cal);
     public void populateCalHelper();
     public void populateInvitations();
+    public CalendarHelper getCalHelper();
 }

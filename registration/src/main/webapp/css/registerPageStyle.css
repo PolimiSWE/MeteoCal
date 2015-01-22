@@ -1,0 +1,133 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 22-Jan-2015, 01:32:49
+    Author     : Milos
+*/
+html { 
+  background: url(../images/bkg_img_7.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+#register_form {
+    position: absolute;
+    height: 300px;
+    width: 620px;
+    margin: -250px 0 0 -310px;
+    top: 50%;
+    left: 50%;
+}
+
+.register_meteocal{
+    position: absolute;
+    left: 255px;
+    bottom: 235px;
+    color: rgb(29, 149, 249) !important;
+    text-shadow: 1px 1px 3px #FFF;
+}
+
+.ui-outputlabel .ui-widget .log_in_meteocal{
+    font-size: 2em;
+}
+
+.ui-widget{
+    color: rgb(130,230,130);
+}
+
+.ui-widget-content a{
+    color: rgb(130,230,130);
+}
+
+.ui-widget-header .ui-inputfield, .ui-widget-content .ui-inputfield{
+    width: 97%;
+}
+
+.inner_container{
+    width: 100%;
+    margin: 5px;
+    padding: 5px;
+}
+
+.inner_container td{
+    width: 50%;
+    background-color: rgba(90,130,230,0.8);
+}
+
+.outter_container{
+    width: 100%;
+    margin: 5px;
+    padding: 5px;
+    border-radius: 10px;
+    background-color: rgba(168, 181, 213, 0.5);
+}
+
+.outter_container td{
+    width: 50%;
+    margin: 5px;
+    padding: 5px;
+    background-color: rgba(152, 183, 188, 0.7);
+}
+
+.ui-panelgrid{
+    border-collapse: separate;
+    width: 100%;
+    
+}
+
+.ui-panelgrid td{
+    width: 50%;
+    margin: 5px;
+    padding: 5px;
+}
+
+.ui-widget-content{
+    background-color: rgba(90,130,230,0.2);
+    width: 50%;
+    margin: 5px;
+    padding: 5px;
+}
+
+.ui-panelgrid .ui-panelgrid-cell{
+    width: 50%;
+}
+
+.register_header{
+    width: 96%;
+    height: 50px;
+    margin: 6px;
+    padding: 5px;
+    background-color: rgba(119, 199, 44, 0.41);
+    border: 1px solid #79740C;
+    text-align: center;
+}
+
+.register_button{
+    -webkit-box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
+    -moz-box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
+    box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
+    color:#333 !important;
+    background-color: rgba(130,230,130,0.8) !important;
+    border-radius:5px !important;
+    -moz-border-radius:5px !important;
+    -webkit-border-radius:5px !important;
+    border:none !important;
+    font-family:'Helvetica Neue',Arial,sans-serif !important;
+    font-size:16px !important;
+    font-weight:700 !important;
+    height: 100% !important;
+    width: 100% !important;
+    padding:4px 16px;
+    text-shadow:#FE6 0 1px !important; 
+    background-image: url('') !important;
+}
+
+.ui-messages-error-summary{
+    font-weight: normal !important;
+}
+

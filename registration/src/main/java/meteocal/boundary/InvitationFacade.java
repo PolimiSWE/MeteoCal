@@ -34,7 +34,10 @@ public class InvitationFacade extends AbstractFacade<Invitation> {
     public List<Invitation> findAll(User u){
         TypedQuery<Invitation> query = em.createQuery("SELECT inv FROM Invitation AS inv WHERE"
                 + " inv.user.id=:userIdParam", Invitation.class);
-        query.setParameter("userIdParam", u.getId());
+        if(u!=null)
+            query.setParameter("userIdParam", u.getId());
+        else
+            query.setParameter("userIdParam", 0);
         return query.getResultList();
     }
 

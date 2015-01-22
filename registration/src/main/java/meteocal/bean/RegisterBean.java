@@ -15,6 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -35,6 +36,8 @@ public class RegisterBean implements Serializable {
     
     @Inject
     UserBeanInterface userData;
+    @Inject
+    LoginBean loginData;
     
     private String name;
     private String surname;
@@ -42,14 +45,12 @@ public class RegisterBean implements Serializable {
     private String username;
     private String password;
     private String re_pasword;
-    private String usernameMsg;
     private boolean usernameValid;
     private boolean emailValid;
-    private String emailMsg;
     private boolean passwordValid;
     
     private static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-    private String passwordMsg;
+   
     
     
     public RegisterBean() {
@@ -58,16 +59,15 @@ public class RegisterBean implements Serializable {
     @PostConstruct
     public void init() {
         // In @PostConstruct (will be invoked immediately after construction and dependency/property injection).
-        this.email = "";
-        this.emailMsg = "";
+        //this.email = "";
         this.emailValid = false;
-        this.name = "";
-        this.password = "";
-        this.re_pasword = "";
-        this.surname = "";
-        this.username = "";
-        this.usernameMsg = "";
+        //this.name = "";
+        //this.password = "";
+        //this.re_pasword = "";
+        //this.surname = "";
+        //this.username = "";
         this.usernameValid = false;
+        this.passwordValid = false;
     }
     
     public void register(){
@@ -79,9 +79,11 @@ public class RegisterBean implements Serializable {
             this.userData.setEmail(this.email);
             this.userData.setPassword(password);
             this.userData.saveUser();
+            this.loginData.tryLogIn(this.username, this.password);
+            this.userData.selectUser(this.username);
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext(); 
             try {
-                context.redirect("userAdminPage.xhtml");
+                context.redirect("myCalendarPage.xhtml");
             } catch (IOException ex) {
                 Logger.getLogger(RegisterBean.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -94,53 +96,85 @@ public class RegisterBean implements Serializable {
            this.username = value.toString();
        else 
            this.username = "";
-       if(uf.checkUsername(this.username)){
-           this.usernameMsg = "Username not taken.";
-           this.usernameValid = true;
-       }
-       else{
-           this.usernameMsg = "Username TAKEN!!! Please select different username";
-           this.usernameValid = false;
+       if(this.usernameValid!=true){
+           if(uf.checkUsername(this.username)){
+               FacesContext.getCurrentInstance()
+                        .addMessage(null, 
+                                new FacesMessage(FacesMessage.SEVERITY_INFO,
+                                        "Username OK.",
+                                        "Usename OK."));
+               this.usernameValid = true;
+           }
+           else{
+               FacesContext.getCurrentInstance()
+                        .addMessage(null, 
+                                new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                        "Error! Username not available. Please select different username.",
+                                        "Invalid Username!"));
+               this.usernameValid = false;
+           }
        }
     }
     
     public void validateEmail(FacesContext context, UIComponent toValidate, Object value) {
        String tmpValue;
-       if(value!=null)
-           tmpValue = value.toString();
-       else
-           tmpValue = "";
-       Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(tmpValue);
-       if(matcher.find()){ 
-           this.email = tmpValue;
-           if(uf.checkEmail(this.email)){
-               this.emailMsg = "Email not taken.";
-               this.emailValid = true;
+       if(this.emailValid!=true){
+           if(value!=null)
+               tmpValue = value.toString();
+           else
+               tmpValue = "";
+           Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(tmpValue);
+           if(matcher.find()){ 
+               this.email = tmpValue;
+               if(uf.checkEmail(this.email)){
+                   FacesContext.getCurrentInstance()
+                            .addMessage(null, 
+                                    new FacesMessage(FacesMessage.SEVERITY_INFO,
+                                            "Email OK.",
+                                            "Email OK."));
+                   this.emailValid = true;
+               }
+               else{
+                   FacesContext.getCurrentInstance()
+                            .addMessage(null, 
+                                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                            "Error! Email not available. Please select different email address.",
+                                            "Invalid Username!"));
+                   emailValid = false;
+               }
            }
            else{
-               this.emailMsg = "Email Address TAKEN!!! Please select different email address";
+               FacesContext.getCurrentInstance()
+                            .addMessage(null, 
+                                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                            "Error! Email not fomed well.",
+                                            "Invalid email!"));
                emailValid = false;
            }
-       }
-       else{
-           this.emailMsg = "Email address is not well formed!!!";
-           emailValid = false;
-       }
+        }
     }
     
     public void validateRePassword(FacesContext context, UIComponent toValidate, Object value) {
         if(value!=null)
            this.re_pasword = value.toString();
-       else
+        else
            this.re_pasword = "";
-       if(this.re_pasword.equals(this.password)){
-           this.passwordMsg = "Password Match";
+        if(this.re_pasword.equals(this.password)){
+           FacesContext.getCurrentInstance()
+                        .addMessage(null, 
+                                new FacesMessage(FacesMessage.SEVERITY_INFO,
+                                        "Password MATCH.",
+                                        "Password MATCH."));
            this.passwordValid = true;
-       }
-       else{
-           this.passwordMsg = "Password not Matched!!! Please reenter pasword.";
+        }
+        else{
+           FacesContext.getCurrentInstance()
+                        .addMessage(null, 
+                                new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                        "Error! Passwords not matching.",
+                                        "Error! Passwords not matching."));
            this.passwordValid = false;
-       }
+        }
     }
     
     public void validatePassword(FacesContext context, UIComponent toValidate, Object value) {
@@ -148,6 +182,16 @@ public class RegisterBean implements Serializable {
            this.password = value.toString();
        else
            this.password = "";
+    }
+    
+    public void checkAllDataOK(){
+        if(this.emailValid && this.passwordValid && this.usernameValid){
+            FacesContext.getCurrentInstance()
+                        .addMessage(null, 
+                                new FacesMessage(FacesMessage.SEVERITY_INFO,
+                                        "All data valid. Please proceede.",
+                                        "All data valid!"));
+        }
     }
 
     public UserFacade getUf() {
@@ -214,14 +258,6 @@ public class RegisterBean implements Serializable {
         this.re_pasword = re_pasword;
     }
 
-    public String getUsernameMsg() {
-        return usernameMsg;
-    }
-
-    public void setUsernameMsg(String usernameMsg) {
-        this.usernameMsg = usernameMsg;
-    }
-
     public boolean isUsernameValid() {
         return usernameValid;
     }
@@ -238,14 +274,6 @@ public class RegisterBean implements Serializable {
         this.emailValid = emailValid;
     }
 
-    public String getEmailMsg() {
-        return emailMsg;
-    }
-
-    public void setEmailMsg(String emailMsg) {
-        this.emailMsg = emailMsg;
-    }
-
     public boolean isPasswordValid() {
         return passwordValid;
     }
@@ -253,15 +281,5 @@ public class RegisterBean implements Serializable {
     public void setPasswordValid(boolean passwordValid) {
         this.passwordValid = passwordValid;
     }
-
-    public String getPasswordMsg() {
-        return passwordMsg;
-    }
-
-    public void setPasswordMsg(String passwordMsg) {
-        this.passwordMsg = passwordMsg;
-    }
-    
-    
     
 }

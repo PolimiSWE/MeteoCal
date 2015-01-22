@@ -1,6 +1,7 @@
 package meteocal.lazyviewbeans;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -31,7 +32,7 @@ public class InvitationLazyView implements Serializable {
      
     @PostConstruct
     public void init() {
-        lazyModel = new InvitationLazyDataModel(invf.findAll());
+        lazyModel = new InvitationLazyDataModel(new ArrayList<Invitation>());
     }
     
     public void initInvitationDataModel(List<Invitation> invites){

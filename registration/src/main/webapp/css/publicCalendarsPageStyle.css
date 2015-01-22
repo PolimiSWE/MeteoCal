@@ -1,0 +1,240 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 19-Jan-2015, 22:13:13
+    Author     : Milos
+*/
+
+html { 
+  background: url(../images/bkg_img_3.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+#public_calendars_navigation{
+    background-color: rgba(154, 154, 154, .8);
+    height: 50px;
+    margin: 5px !important; 
+    padding: 5px !important;
+}
+
+#div_container_public_calendar{
+    background-color: rgba(154, 154, 154, .8);
+    color: #ffffff;
+    width: 62% !important; 
+    float: left; 
+    height: 350px !important;
+    margin: 5px !important; 
+    padding: 5px !important;
+    overflow-y: auto;
+}
+
+#div_container_users{
+    background-color: rgba(154, 154, 154, .8);
+    color: #ffffff;
+    margin: 5px !important; 
+    padding: 5px !important;
+    width: 32% !important;
+    float: right;
+}
+
+#form_users{
+    background-color: rgba(154, 154, 154, .8);
+    color: #ffffff;
+    margin: 5px !important; 
+    padding: 5px !important;
+    height: 275px;
+}
+
+#form_public_calendar:public_calendar_header{
+    width: 99% !important;
+    height: 5% !important;
+    float: left; 
+    margin: 5px !important; 
+    padding: 5px !important;
+    background-color: rgba(54,54,54,0.2);
+    
+}
+
+#event_dialog_event_details{
+    width: 40%;
+    float: left;
+}
+
+.public_calendar_header_panel_class{
+    width: 99% !important;
+    height: 5% !important;
+    float: left; 
+    margin: 5px !important; 
+    padding: 5px !important;
+    background-color: rgba(54,54,54,0.2);
+    border-collapse: separate;
+}
+
+.public_calendar_header_panel_class td {
+    background-color: rgba(54,54,54,0.8);
+    color: #FA2;
+}
+
+
+.public_calendar_button_class {
+    -webkit-box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
+    -moz-box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
+    box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
+    color:#333 !important;
+    background-color:#FA2 !important;
+    border-radius:5px !important;
+    -moz-border-radius:5px !important;
+    -webkit-border-radius:5px !important;
+    border:none !important;
+    font-family:'Helvetica Neue',Arial,sans-serif !important;
+    font-size:16px !important;
+    font-weight:700 !important;
+    height: 100% !important;
+    width: 100% !important;
+    padding:4px 16px;
+    text-shadow:#FE6 0 1px !important; 
+    background-image: url('') !important;
+}
+
+.ui-widget {
+    font-size: 0.8em;
+}
+
+.ui-paginator {
+    background-color: rgba(20,20,20,0.4);
+    color: #FA2;
+    background-image: none;
+}
+
+.ui-sortable-column {
+    background-color: rgba(20,20,20,0.6);
+    color: #FA2;
+    background-image: none;
+}
+
+.ui-widget-header{
+    background-color: rgba(60,60,60,0.6);
+}
+
+.ui-icon-closethick{
+    background-color: rgba(60,0,0,0.9);
+}
+
+.event_dialog_class {
+    width: 70% !important;
+    background-color: rgba(60,60,60,0.6);
+}
+
+.event_dialog_weather_data_class{
+    width: 60%;
+    background-color: rgba(40,40,40,0.6);
+    float: right;
+}
+
+.event_dialog_event_details_class{
+    width: 40%;
+    background-color: rgba(40,40,40,0.6);
+    float: left;
+}
+
+.event_dialog_event_details_class td{
+    width: 50% !important;
+    color: #FA2;
+    background-color: rgba(40,40,40,0.8);
+}
+
+.invitation_dialog_class{
+    background-color: rgba(40,40,40,0.6);   
+}
+
+.invitation_dialog_class td{
+    width: 50% !important;
+    color: #FA2;
+    background-color: rgba(40,40,40,0.8);
+}
+
+.notification_data_scroller{
+    background-color: rgba(60,60,60,0.6);
+}
+
+.ui-datascroller .ui-widget-content{
+     background-color: rgba(60,60,60,0.6);
+}
+
+.ui-widget-content{
+    background-color: rgba(255,255,255,0.4);
+}
+
+.navigation_button_class{
+    -webkit-box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
+    -moz-box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
+    box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
+    color: #FEB6A8 !important;
+    background-color:#C45169 !important;
+    border-radius:5px !important;
+    -moz-border-radius:5px !important;
+    -webkit-border-radius:5px !important;
+    border:none !important;
+    font-family:'Helvetica Neue',Arial,sans-serif !important;
+    font-size:16px !important;
+    font-weight:700 !important;
+    height: 80% !important;
+    width: 24.1% !important;
+    padding:4px 16px;
+    text-shadow: #784275 0 0 3px !important 
+    background-image: url('') !important;
+    margin: 5px !important; 
+    float: left;
+}
+
+.navigation_divider{
+    width: 5% !important;
+    float: left;
+}
+
+.event_dialog_button{
+    -webkit-box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
+    -moz-box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
+    box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
+    color:#333 !important;
+    background-color:#FA2 !important;
+    border-radius:5px !important;
+    -moz-border-radius:5px !important;
+    -webkit-border-radius:5px !important;
+    border:none !important;
+    font-family:'Helvetica Neue',Arial,sans-serif !important;
+    font-size:12px !important;
+    font-weight:500 !important;
+    width: 90% !important;
+    padding:4px 16px;
+    text-shadow:#FE6 0 1px !important; 
+    background-image: url('') !important;
+    margin: 5px !important; 
+    
+}
+
+.invitation_dialog_button{
+    -webkit-box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
+    -moz-box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
+    box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
+    color:#333 !important;
+    background-color:#FA2 !important;
+    border-radius:5px !important;
+    -moz-border-radius:5px !important;
+    -webkit-border-radius:5px !important;
+    border:none !important;
+    font-family:'Helvetica Neue',Arial,sans-serif !important;
+    font-size:12px !important;
+    font-weight:500 !important;
+    width: 90% !important;
+    padding:4px 16px;
+    text-shadow:#FE6 0 1px !important; 
+    background-image: url('') !important;
+    margin: 5px !important; 
+}

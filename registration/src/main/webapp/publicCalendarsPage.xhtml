@@ -1,0 +1,240 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Public Calendars Page</title>
+        <link rel="stylesheet" href="${facesContext.externalContext.requestContextPath}/css/publicCalendarsPageStyle.css" type="text/css" />
+    </h:head>
+    <h:body>
+        <f:view>
+            <h:form id="public_calendars_navigation">
+                <p:commandButton value="Log Out" action="#{loginBean.logout()}"
+                                             styleClass="navigation_button_class" />
+                <div class="navigation_divider"/>
+                <p:commandButton value="Change Password" action="changePasswordPage"
+                                             styleClass="navigation_button_class" />
+                <div class="navigation_divider"/>
+                <p:commandButton value="Go to My Calendar" action="myCalendarPage"
+                    styleClass="navigation_button_class" >
+                    <f:ajax event="click" listener="#{calendarBean.goToPublicCalendarsPage()}" />  
+                </p:commandButton>
+                <div class="navigation_divider"/>
+                <p:commandButton value="Go to My Events" action="editEventPage"
+                                             styleClass="navigation_button_class" />
+                                         
+            </h:form>
+            <h:form id="form_public_calendar">
+                <div id="div_container_public_calendar" >
+
+
+                    <p:panelGrid id="public_calendar_header" columns="5"
+
+                                styleClass="public_calendar_header_panel_class">
+                        <p:commandButton value="Previous Day" actionListener="#{publicCalendarsBean.oneDayLess()}"
+                                         update="form_public_calendar"
+                                         styleClass="public_calendar_button_class" />
+                        
+                        <p:outputLabel value= "#{userLazyView.selectedUser.toString()}"  />
+                        <p:outputLabel value=" Calendar" />
+                        
+                        <p:commandButton value="Next Day" actionListener="#{publicCalendarsBean.oneDayMore()}"
+                                         styleClass="public_calendar_button_class" 
+                                     update="form_public_calendar" />
+                    </p:panelGrid>
+
+
+                    <div id="div_container_day_one" style="width: 14.28% !important;
+                                                            float: left;" >
+                        <p:dataTable var="evt" value="#{dayHelperLazyView.dayOnelazyModel}" paginator="true" rows="5"
+                                     paginatorTemplate="{PreviousPageLink} {NextPageLink}" 
+                                     selectionMode="single" 
+                                     selection="#{dayHelperLazyView.selectedEvent}" id="day_one_table" lazy="true">
+                            <p:ajax event="rowSelect" listener="#{dayHelperLazyView.onRowSelect}"
+                                    update=":form_public_calendar" oncomplete="PF('eventDialog').show()"/>
+                            <p:column headerText="#{dayHelperLazyView.parseDate(0)}" sortBy="#{evt.beginHour}">
+                                <h:outputText value="#{evt.toStringOnlyPublic()}" />
+                            </p:column>
+
+                        </p:dataTable>
+                    </div>
+
+                    <div id="div_container_day_two" style="width: 14.28% !important; float: left;" >
+                        <p:dataTable var="evt" value="#{dayHelperLazyView.dayTwolazyModel}" paginator="true" rows="5"
+                                     paginatorTemplate="{PreviousPageLink} {NextPageLink}"
+                                     rowsPerPageTemplate="5,10,15" selectionMode="single" 
+                                     selection="#{dayHelperLazyView.selectedEvent}" id="day_two_table" lazy="true">
+                            <p:ajax event="rowSelect" listener="#{dayHelperLazyView.onRowSelect}"
+                                    update=":form_public_calendar" oncomplete="PF('eventDialog').show()"/>
+                            <p:column headerText="#{dayHelperLazyView.parseDate(1)}" sortBy="#{evt.beginHour}">
+                                <h:outputText value="#{evt.toStringOnlyPublic()}" />
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+
+                    <div id="div_container_day_three" style="width: 14.28% !important; float: left;" >
+                        <p:dataTable var="evt" value="#{dayHelperLazyView.dayThreelazyModel}" paginator="true" rows="5"
+                                     paginatorTemplate="{PreviousPageLink} {NextPageLink}"
+                                     rowsPerPageTemplate="5,10,15" selectionMode="single" 
+                                     selection="#{dayHelperLazyView.selectedEvent}" id="day_three_table" lazy="true">
+                            <p:ajax event="rowSelect" listener="#{dayHelperLazyView.onRowSelect}"
+                                    update=":form_public_calendar" oncomplete="PF('eventDialog').show()"/>
+                            <p:column headerText="#{dayHelperLazyView.parseDate(2)}" sortBy="#{evt.beginHour}">
+                                <h:outputText value="#{evt.toStringOnlyPublic()}" />
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+
+                    <div id="div_container_day_four" style="width: 14.28% !important; float: left;" >
+                        <p:dataTable var="evt" value="#{dayHelperLazyView.dayFourlazyModel}" paginator="true" rows="5"
+                                     paginatorTemplate="{PreviousPageLink} {NextPageLink}"
+                                     rowsPerPageTemplate="5,10,15" selectionMode="single" 
+                                     selection="#{dayHelperLazyView.selectedEvent}" id="day_four_table" lazy="true">
+                            <p:ajax event="rowSelect" listener="#{dayHelperLazyView.onRowSelect}"
+                                    update=":form_public_calendar" oncomplete="PF('eventDialog').show()"/>
+                            <p:column headerText="#{dayHelperLazyView.parseDate(3)}" sortBy="#{evt.beginHour}" >
+                               <h:outputText value="#{evt.toStringOnlyPublic()}" />
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+
+                    <div id="div_container_day_five" style="width: 14.28% !important; float: left;" >
+                        <p:dataTable var="evt" value="#{dayHelperLazyView.dayFivelazyModel}" paginator="true" rows="5"
+                                     paginatorTemplate="{PreviousPageLink} {NextPageLink}"
+                                     rowsPerPageTemplate="5,10,15" selectionMode="single" 
+                                     selection="#{dayHelperLazyView.selectedEvent}" id="day_five_table" lazy="true">
+                            <p:ajax event="rowSelect" listener="#{dayHelperLazyView.onRowSelect}"
+                                    update=":form_public_calendar" oncomplete="PF('eventDialog').show()"/>
+                            <p:column headerText="#{dayHelperLazyView.parseDate(4)}" sortBy="#{evt.beginHour}">
+                               <h:outputText value="#{evt.toStringOnlyPublic()}" />
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+
+                    <div id="div_container_day_six" style="width: 14.28% !important; float: left;" >
+                        <p:dataTable var="evt" value="#{dayHelperLazyView.daySixlazyModel}" paginator="true" rows="5"
+                                     paginatorTemplate="{PreviousPageLink} {NextPageLink}"
+                                     rowsPerPageTemplate="5,10,15" selectionMode="single" 
+                                     selection="#{dayHelperLazyView.selectedEvent}" id="day_six_table" lazy="true">
+                            <p:ajax event="rowSelect" listener="#{dayHelperLazyView.onRowSelect}"
+                                    update=":form_public_calendar" oncomplete="PF('eventDialog').show()"/>
+                            <p:column headerText="#{dayHelperLazyView.parseDate(5)}" sortBy="#{evt.beginHour}" >
+                                <h:outputText value="#{evt.toStringOnlyPublic()}" />
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+
+                    <div id="div_container_day_seven" style="width: 14.28% !important; float: left;" >
+                        <p:dataTable var="evt" value="#{dayHelperLazyView.daySevenlazyModel}" paginator="true" rows="5"
+                                     paginatorTemplate="{PreviousPageLink} {NextPageLink}"
+                                     rowsPerPageTemplate="5,10,15" selectionMode="single" 
+                                     selection="#{dayHelperLazyView.selectedEvent}" id="day_seven_table" lazy="true">
+                            <p:ajax event="rowSelect" listener="#{dayHelperLazyView.onRowSelect}"
+                                    update=":form_public_calendar" oncomplete="PF('eventDialog').show()"/>
+                            <p:column headerText="#{dayHelperLazyView.parseDate(6)}" sortBy="#{evt.beginHour}" >
+                                <h:outputText value="#{evt.toStringOnlyPublic()}" />
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+
+                 <p:dialog header="Event Detail" widgetVar="eventDialog" modal="true"
+                           showEffect="fade" hideEffect="fade" resizable="false"
+                           styleClass="event_dialog_class">
+                    <p:outputPanel id="eventDetail" style="text-align:center;">
+                       
+                        <p:panelGrid  columns="2" rendered="#{not empty dayHelperLazyView.selectedEvent}"
+                                      columnClasses="label,value"
+                                      styleClass="event_dialog_event_details_class">
+                            <f:facet name="header">
+                                <img src="images/event_icon.png"
+                                     style="width: 50px;
+                                            height: 50px;
+                                            margin: 5px;"/> 
+                            </f:facet>
+                            
+                            <h:outputText value="Event:" 
+                                          rendered="#{not dayHelperLazyView.selectedEvent.eventPrivacy.privacy}"/>
+                            <h:outputText value="#{dayHelperLazyView.selectedEvent.toStringOnlyPublic()}" 
+                                          rendered="#{not dayHelperLazyView.selectedEvent.eventPrivacy.privacy}"/>
+
+                            <h:outputText value="Name:" 
+                                          rendered="#{dayHelperLazyView.selectedEvent.eventPrivacy.privacy}"/>
+                            <h:outputText value="#{dayHelperLazyView.selectedEvent.name}" 
+                                          rendered="#{dayHelperLazyView.selectedEvent.eventPrivacy.privacy}"/>
+
+                            <h:outputText value="Date" 
+                                          rendered="#{dayHelperLazyView.selectedEvent.eventPrivacy.privacy}"/>
+                            <h:outputText value="#{dayHelperLazyView.selectedEvent.dateOfEvent}"
+                                          rendered="#{dayHelperLazyView.selectedEvent.eventPrivacy.privacy}"/>
+
+                            <h:outputText value="Begin hour"
+                                          rendered="#{dayHelperLazyView.selectedEvent.eventPrivacy.privacy}"/>
+                            <h:outputText value="#{dayHelperLazyView.selectedEvent.beginHour}"
+                                          rendered="#{dayHelperLazyView.selectedEvent.eventPrivacy.privacy}"/>
+
+                            <h:outputText value="Duration"
+                                          rendered="#{dayHelperLazyView.selectedEvent.eventPrivacy.privacy}"/>
+                            <h:outputText value="#{dayHelperLazyView.selectedEvent.duration}"
+                                          rendered="#{dayHelperLazyView.selectedEvent.eventPrivacy.privacy}"/>
+
+                            <h:outputText value="City"
+                                          rendered="#{dayHelperLazyView.selectedEvent.eventPrivacy.privacy}"/>
+                            <h:outputText value="#{dayHelperLazyView.selectedEvent.city}"
+                                          rendered="#{dayHelperLazyView.selectedEvent.eventPrivacy.privacy}"/>
+
+                            <h:outputText value="Address"
+                                          rendered="#{dayHelperLazyView.selectedEvent.eventPrivacy.privacy}"/>
+                            <h:outputText value="#{dayHelperLazyView.selectedEvent.streetAndNumber}" 
+                                          rendered="#{dayHelperLazyView.selectedEvent.eventPrivacy.privacy}"/>
+
+                            <h:outputText value="Event type" 
+                                          rendered="#{dayHelperLazyView.selectedEvent.eventPrivacy.privacy}"/>
+                            <h:outputText value="#{dayHelperLazyView.selectedEvent.eventType}" 
+                                          rendered="#{dayHelperLazyView.selectedEvent.eventPrivacy.privacy}"/>
+
+                        </p:panelGrid>
+                     
+
+                    </p:outputPanel>
+
+                </p:dialog>
+            </h:form>
+
+            <div id="div_container_users" >
+                 <h:form id="form_users">
+                    <p:dataTable var="user" value="#{userLazyView.lazyModel}" paginator="true" rows="10"
+                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} 
+                                 {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                 selectionMode="single" selection="#{userLazyView.selectedUser}" 
+                                 id="userTable" lazy="true">
+                        <p:ajax event="rowSelect" update=":form_public_calendar"
+                                listener="#{publicCalendarsBean.selectUser(userLazyView.selectedUser)}" 
+                                 />
+                        <p:column headerText="Name" sortBy="#{user.name}" filterBy="#{user.name}">
+                            <h:outputText value="#{user.name}" />
+                        </p:column>
+                        <p:column headerText="Surname" sortBy="#{user.surname}" filterBy="#{user.surname}">
+                            <h:outputText value="#{user.surname}" />
+                        </p:column>
+                        <p:column headerText="Username" sortBy="#{user.username}" filterBy="#{user.username}">
+                            <h:outputText value="#{user.username}" />
+                        </p:column>
+                    </p:dataTable>
+            
+                    <p:poll interval="300" listener="#{userLazyView.update()}" 
+                            update="form_users:userTable" />
+
+                  
+                </h:form>
+                
+                
+            </div>
+           
+        </f:view>
+
+    </h:body>
+</html>
+

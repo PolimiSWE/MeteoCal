@@ -21,7 +21,11 @@ public class UserLazyDataModel extends LazyDataModel<User> {
     private List<User> datasource;
      
     public UserLazyDataModel(List<User> datasource) {
-        this.datasource = datasource;
+        this.datasource = new ArrayList<>();
+        for(User u : datasource){
+            if(!u.getMyCalendar().getCalendarPrivacy().getPrivacy())
+                this.datasource.add(u);
+        }
     }
      
     @Override

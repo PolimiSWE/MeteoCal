@@ -47,6 +47,8 @@ public class CalendarBean implements Serializable,CalendarBeanInterface {
     InvitationLazyView invitationsView;
     @Inject
     EventBean eventData;
+    @Inject
+    PublicCalendarsBean pubCalData;
     
     private Calendar current;
     private boolean current_privacy;
@@ -93,6 +95,7 @@ public class CalendarBean implements Serializable,CalendarBeanInterface {
     
     @Override
     public void populateInvitations(){
+        this.commonData.populateInvitations();
         this.invitationsView.initInvitationDataModel(this.commonData.getAllInvites());
     }
     
@@ -104,6 +107,13 @@ public class CalendarBean implements Serializable,CalendarBeanInterface {
             } catch (IOException ex) {
                 Logger.getLogger(RegisterBean.class.getName()).log(Level.SEVERE, null, ex);
             }
+    }
+    
+    public void goToPublicCalendarsPage(){
+        if(this.pubCalData.getCurrent().getOwner()!=null)
+            this.dayHelperView.initDayHelperLazyDataModel(this.pubCalData.getCalHelper());
+        else
+            this.dayHelperView.initDayHelperLazyDataModel(new CalendarHelper(new Date(System.currentTimeMillis())));
     }
     
     
@@ -125,6 +135,7 @@ public class CalendarBean implements Serializable,CalendarBeanInterface {
         this.current = current;
     }
 
+    @Override
     public CalendarHelper getCalHelper() {
         return calHelper;
     }

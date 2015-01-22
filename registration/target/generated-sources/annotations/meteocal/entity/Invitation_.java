@@ -7,14 +7,12 @@ import meteocal.entity.Event;
 import meteocal.entity.EventStatus;
 import meteocal.entity.User;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2015-01-21T21:07:51")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2015-01-21T23:12:40")
 @StaticMetamodel(Invitation.class)
 public class Invitation_ { 
 
-    public static volatile SingularAttribute<Invitation, Boolean> notifyUser;
     public static volatile SingularAttribute<Invitation, EventStatus> eventStatus;
     public static volatile SingularAttribute<Invitation, Long> id;
-    public static volatile SingularAttribute<Invitation, String> notificationType;
     public static volatile SingularAttribute<Invitation, Event> event;
     public static volatile SingularAttribute<Invitation, User> user;
 
