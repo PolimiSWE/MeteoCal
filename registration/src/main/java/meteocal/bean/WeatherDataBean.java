@@ -106,7 +106,7 @@ public class WeatherDataBean implements Serializable{
         java.sql.Date dt = new java.sql.Date(this.dateChosen.getTime());
         java.sql.Time tt = this.timeChosen;
         this.weatherHelper.setCity(this.city);
-        this.weatherHelper.setWdList(wf.getWeatherDataListFromDB(dt, city));
+        this.weatherHelper.setWdList(wf.getWeatherDataListFromDB(city, dt));
         this.weatherHelper.checkWeatherMainFun(this.city, dt, tt);
         this.setWdList(this.weatherHelper.getWdList());
         this.saveWdList();

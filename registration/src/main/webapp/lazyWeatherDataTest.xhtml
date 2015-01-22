@@ -17,6 +17,9 @@
                 <p:column headerText="Icon">
                     <img src="images/icons/#{weatherData.icon}.png"/>
                 </p:column>
+                <p:column headerText="City" sortBy="#{weatherData.city}" filterBy="#{weatherData.city}">
+                    <h:outputText value="#{weatherData.city}" />
+                </p:column>
                 <p:column headerText="Date" sortBy="#{weatherData.date}" filterBy="#{weatherData.date}">
                     <h:outputText value="#{weatherData.date}" />
                 </p:column>
@@ -40,6 +43,9 @@
                         <f:facet name="header">
                         <img src="images/icons/#{weatherDataLazyView.selectedWeatherData.icon}.png"/> 
                         </f:facet>
+                        <br/>
+                        <h:outputText value="City" />
+                        <h:outputText value="#{weatherDataLazyView.selectedWeatherData.city}" />
                         
                         <h:outputText value="Date" />
                         <h:outputText value="#{weatherDataLazyView.selectedWeatherData.date}" />

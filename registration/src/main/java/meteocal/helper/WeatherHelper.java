@@ -12,7 +12,9 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -38,7 +40,6 @@ public class WeatherHelper {
     private final String API_BASE_URL = "http://api.openweathermap.org/data/2.5/";
     private String city;
     private String cnt;
-    private String forecastType;
     //current
     //api.openweathermap.org/data/2.5/weather?q=London,uk
     //3 hour in next 5 days
@@ -49,7 +50,13 @@ public class WeatherHelper {
 
     private Client client;
     private List<WeatherData> wdList;
-
+    
+    private static final Map<Integer, String> badWeatherCodes;
+    static {
+        Map<Integer, String> aMap = new HashMap<Integer, String>();
+        addBadWeatherCodes(aMap);
+        badWeatherCodes = Collections.unmodifiableMap(aMap);
+    }
     @PostConstruct
     public void init() {
         this.client = ClientBuilder.newClient();
@@ -113,6 +120,7 @@ public class WeatherHelper {
             sortWeatherList();
         } catch (Exception e) {
             e.printStackTrace();
+            this.wdList = new ArrayList<>(0);
         }
     }
 
@@ -149,7 +157,19 @@ public class WeatherHelper {
         }
 
     }
-
+    public List<WeatherData> getWDLforTheDay(List<WeatherData> wdl, Date date){
+        //take only weatherdata for given date "date"
+        List<WeatherData> wdlForTheDay = new ArrayList<>();
+        for (WeatherData wd : wdl) {
+            java.util.Date wddate = wd.getDate();
+            if (wddate.equals(date))//
+            {
+                wdlForTheDay.add(wd);
+            }
+        }
+        return wdlForTheDay;
+    }
+    
     public void sortWeatherList() {
         Comparator<WeatherData> customComparator = new Comparator<WeatherData>() {
 
@@ -360,9 +380,20 @@ public class WeatherHelper {
            else if(diff<=16)
                return 16;
            else 
-               return -1;
+               return -2;
     }
 
+     public int getDateDiff(java.sql.Date dt1, java.sql.Date dt2){
+        //get current date time with Calendar()
+	   Calendar cal = Calendar.getInstance();
+           
+           long d1=dt1.getTime();
+           long d2=dt2.getTime();
+
+           int diff = (int) (d1-d2)/(1000*60*60*24);
+           return diff;
+    }
+     
     public String getCity() {
         return city;
     }
@@ -440,6 +471,74 @@ public class WeatherHelper {
     		   "Testing only \n\n Sent from Java project");
 
     }
-    
+
+    private static void addBadWeatherCodes(Map<Integer, String> aMap) {
+        //http://openweathermap.org/weather-conditions
+        aMap.put(200, "thunderstorm with light rain");
+        aMap.put(201, "thunderstorm with rain");
+        aMap.put(202, "thunderstorm with heavy rain");
+        aMap.put(210, "light thunderstorm");
+        aMap.put(211, "thunderstorm");
+        aMap.put(212, "heavy thunderstorm");
+        aMap.put(221, "ragged thunderstorm");
+        aMap.put(230, "thunderstorm with light drizzle");
+        aMap.put(231, "thunderstorm with drizzle");
+        aMap.put(232, "thunderstorm with heavy drizzle");
+        aMap.put(300, "light intensity drizzle");
+        aMap.put(301, "drizzle");
+        aMap.put(302, "heavy intensity drizzle");
+        aMap.put(310, "light intensity drizzle rain");
+        aMap.put(311, "drizzle rain");
+        aMap.put(312, "heavy intensity drizzle rain");
+        aMap.put(313, "shower rain and drizzle");
+        aMap.put(314, "heavy shower rain and drizzle");
+        aMap.put(321, "shower drizzle");
+        aMap.put(500, "light rain");
+        aMap.put(501, "moderate rain");
+        aMap.put(502, "heavy intensity rain");
+        aMap.put(503, "very heavy rain");
+        aMap.put(504, "extreme rain");
+        aMap.put(511, "freezing rain");
+        aMap.put(520, "light intensity shower rain");
+        aMap.put(521, "shower rain");
+        aMap.put(522, "heavy intensity shower rain");
+        aMap.put(531, "ragged shower rain");
+        aMap.put(600, "light snow");
+        aMap.put(601, "snow");
+        aMap.put(602, "heavy snow");
+        aMap.put(611, "sleet");
+        aMap.put(612, "shower sleet");
+        aMap.put(615, "light rain and snow");
+        aMap.put(616, "rain and snow");
+        aMap.put(620, "light shower snow");
+        aMap.put(621, "shower snow");
+        aMap.put(622, "heavy shower snow");
+        aMap.put(701, "mist");
+        aMap.put(711, "smoke");
+        aMap.put(721, "haze");
+        aMap.put(731, "sand, dust whirls");
+        aMap.put(741, "fog");
+        aMap.put(751, "sand");
+        aMap.put(761, "dust");
+        aMap.put(762, "volcanic ash");
+        aMap.put(771, "squalls");
+        aMap.put(781, "tornado");
+        aMap.put(900, "tornado");
+        aMap.put(901, "tropical storm");
+        aMap.put(902, "hurricane");
+        aMap.put(903, "cold");
+        aMap.put(904, "hot");
+        aMap.put(905, "windy");
+        aMap.put(906, "hail");
+        aMap.put(957, "high wind, near gale");
+        aMap.put(958, "gale");
+        aMap.put(959, "severe gale");
+        aMap.put(960, "storm");
+        aMap.put(961, "violent storm");
+        aMap.put(962, "hurricane");
+    }
+    public boolean isBadWeatherCode(Integer code){
+        return badWeatherCodes.containsKey(code);
+    }
     
 }

@@ -13,6 +13,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 import meteocal.entity.Calendar;
 import meteocal.entity.Event;
@@ -184,11 +185,32 @@ public class EventFacade extends AbstractFacade<Event> {
 
     public List<Event> findDirtyEvents(Long id) {
         TypedQuery<Event> query = em.createQuery("SELECT evt FROM Event AS evt WHERE"
-                + " evt.includedInCalendar.id=:calendarIdParam AND evt.notifyOwner=:dirtyParam", Event.class);
+                + " evt.includedInCalendar.owner.id=:calendarIdParam AND evt.notifyOwner=:dirtyParam", Event.class);
         query.setParameter("calendarIdParam", id);
         query.setParameter("dirtyParam", true);
         return query.getResultList();
     }
 
-  
+    public List<Event> findEventsForTheDay(java.sql.Date dt){//dateOfEvent, city, begin_hour, notifyOwner
+        TypedQuery<Event> query = em.createQuery("SELECT evt FROM Event AS evt WHERE"
+                + " evt.dateOfEvent=:dateParam", Event.class);
+        query.setParameter("dateParam", dt, TemporalType.DATE);
+        List<Event> result = query.getResultList();
+        if(result!=null)
+            return result;
+        else
+            return new ArrayList<>();
+    }
+    //
+    public List<Event> findEventsForTheDayAndTheCity(String city, java.sql.Date dt){//dateOfEvent, city, begin_hour, notifyOwner
+        TypedQuery<Event> query = em.createQuery("SELECT evt FROM Event AS evt WHERE"
+                + " evt.dateOfEvent=:dateParam AND evt.city=:cityParam", Event.class);
+        query.setParameter("dateParam", dt, TemporalType.DATE);
+        query.setParameter("cityParam", city);
+        List<Event> result = query.getResultList();
+        if(result!=null)
+            return result;
+        else
+            return new ArrayList<>();
+    }
 }

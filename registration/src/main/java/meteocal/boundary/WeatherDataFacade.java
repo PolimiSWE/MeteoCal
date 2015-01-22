@@ -40,8 +40,9 @@ public class WeatherDataFacade extends AbstractFacade<WeatherData> {
     public WeatherDataFacade() {
         super(WeatherData.class);
     }
-    public List<WeatherData> getWeatherDataListFromDB(java.sql.Date dt, String city){
-        TypedQuery<WeatherData> query = em.createQuery("SELECT wd FROM WeatherData AS wd WHERE  wd.date = :dateParam and wd.city = :cityParam", WeatherData.class);
+    public List<WeatherData> getWeatherDataListFromDB(String city, java.sql.Date dt){
+        TypedQuery<WeatherData> query = em.createQuery("SELECT wd FROM WeatherData AS wd"
+                +" WHERE  wd.date = :dateParam and wd.city = :cityParam", WeatherData.class);
         query.setParameter("dateParam", dt, TemporalType.DATE);
         query.setParameter("cityParam", city);
         //query.setParameter("date", new java.util.Date(), TemporalType.DATE);
@@ -65,5 +66,18 @@ public class WeatherDataFacade extends AbstractFacade<WeatherData> {
         }
         em.flush();
     }
+    //deletes weatherdata for given city and date
+    /*delete from Organization o where o.name like :name);
+      query.setParameter("name", "Mono Project");
+      int deleted = query.executeUpdate();*/
+    public void deleteWdByCityAndDate(String city, java.sql.Date dt){
+        TypedQuery<WeatherData> query = em.createQuery("DELETE FROM WeatherData wd WHERE "
+                +"wd.date = :dateParam and wd.city = :cityParam", WeatherData.class);
+        query.setParameter("dateParam", dt, TemporalType.DATE);
+        query.setParameter("cityParam", city);
+        int deleted = query.executeUpdate();
+        em.flush();
+    }
+   
     
 }
