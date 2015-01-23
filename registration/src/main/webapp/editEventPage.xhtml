@@ -14,15 +14,15 @@
                 <p:commandButton value="Log Out" action="#{loginBean.logout()}"
                                              styleClass="navigation_button_class" />
                 <div class="navigation_divider"/>
-                <p:commandButton value="Change Password" action="changePasswordPage"
+                <p:commandButton value="Change Password" action="changePasswordPage?faces-redirect=true"
                                              styleClass="navigation_button_class" />
                 <div class="navigation_divider"/>
-                <p:commandButton value="Go to Public Calendars" action="publicCalendarsPage"
+                <p:commandButton value="Go to Public Calendars" action="publicCalendarsPage?faces-redirect=true"
                     styleClass="navigation_button_class" >
                     <f:ajax event="click" listener="#{calendarBean.goToPublicCalendarsPage()}" />       
                 </p:commandButton>
                 <div class="navigation_divider"/>
-                <p:commandButton value="Go to My Calendar" action="myCalendarPage"
+                <p:commandButton value="Go to My Calendar" action="myCalendarPage?faces-redirect=true"
                                              styleClass="navigation_button_class" />
                                          
             </h:form>
@@ -104,8 +104,9 @@
                              selectionMode="single" selection="#{eventLazyView.selectedEvent}" 
                              id="eventTable" lazy="true"
                              styleClass="event_list_table_class">
-                    <p:ajax event="rowSelect" listener="#{eventLazyView.onRowSelect}" 
-                             update=":edit_event_form"/>
+                    <p:ajax event="rowSelect" listener="#{eventLazyView.onRowSelect}"
+                            process="edit_event_form"
+                             update="edit_event_form"/>
                     <p:column headerText="Name" sortBy="#{event.name}" >
                         <h:outputText value="#{event.name}" />
                     </p:column>

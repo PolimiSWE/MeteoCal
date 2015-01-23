@@ -2,7 +2,6 @@ package meteocal.bean;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Random;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,6 +45,8 @@ public class ChangePasswordBean implements Serializable {
     CalendarBeanInterface calendarData;
     @Inject
     UserBeanInterface userData;
+    @Inject
+    LoginBean logInData;
 
     private String email;
     private boolean emailValid;
@@ -57,6 +58,7 @@ public class ChangePasswordBean implements Serializable {
     private String re_code;
     private String codeMsg;
     private boolean codeValid;
+    private boolean codeSent;
 
     private static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
     private String passwordMsg;
@@ -76,10 +78,11 @@ public class ChangePasswordBean implements Serializable {
         this.passwordValid = false;
         this.codeValid = false;
         this.usr = new User();
+        this.codeSent = false;
     }
     public void validateEmail(FacesContext context, UIComponent toValidate, Object value) {
        String tmpValue;
-       if(this.emailValid!=true){
+       
            if(value!=null)
                tmpValue = value.toString();
            else
@@ -112,8 +115,9 @@ public class ChangePasswordBean implements Serializable {
                                             "Invalid email!"));
                emailValid = false;
            }
-        }
+        
     }
+
     public void validatePassword(FacesContext context, UIComponent toValidate, Object value) {
        if(value!=null)
            this.password = value.toString();
@@ -151,10 +155,18 @@ public class ChangePasswordBean implements Serializable {
             this.re_code = "";
         }
         if (this.re_code.equals(this.code)) {
-            this.codeMsg = "Code Match";
+            FacesContext.getCurrentInstance()
+                            .addMessage(null, 
+                                    new FacesMessage(FacesMessage.SEVERITY_INFO,
+                                            "Code valid. Your password will be changed upon submit.",
+                                            "Code valid."));
             this.codeValid = true;
         } else {
-            this.codeMsg = "Code not valid!!! Please reenter the code.";
+            FacesContext.getCurrentInstance()
+                            .addMessage(null, 
+                                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                            "Error : 'Code not valid!'",
+                                            "Code not valid."));
             this.codeValid = false;
         }
     }
@@ -170,9 +182,15 @@ public class ChangePasswordBean implements Serializable {
             code = UUID.randomUUID().toString();
             try{
                 usr = um.getUserByEmail(this.email);
-                sendEmail(this.email, "MeteoCal--verify your identity", "Copy provided code back into the code field. Code=" + code);
+                sendEmail(this.email, "MeteoCal--verify your identity", 
+                        "Copy provided code back into the code field. Code= " + code);
+                this.codeSent = true;
             } catch(Exception e){
-                
+                FacesContext.getCurrentInstance()
+                            .addMessage(null, 
+                                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                            "Error : 'No such Email in the system!'",
+                                            "Invalid email"));
             }
         }
     }
@@ -187,7 +205,10 @@ public class ChangePasswordBean implements Serializable {
             this.re_pasword = "";
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             try {
-                context.redirect("myCalendarPage.xhtml");
+                this.logInData.setPassword(usr.getPassword());
+                this.logInData.setUsername(usr.getUsername());
+                this.init();
+                context.redirect("logInPage.xhtml");
             } catch (IOException ex) {
                 Logger.getLogger(ChangePasswordBean.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -204,6 +225,14 @@ public class ChangePasswordBean implements Serializable {
         }
     }
     // <editor-fold defaultstate="collapsed" desc="Getters and setters">
+
+    public boolean isCodeSent() {
+        return codeSent;
+    }
+
+    public void setCodeSent(boolean codeSent) {
+        this.codeSent = codeSent;
+    }
 
     public UserFacade getUm() {
         return um;

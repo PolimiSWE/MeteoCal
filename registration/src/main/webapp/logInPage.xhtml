@@ -31,8 +31,8 @@
                                  requiredMessage="Error! Please Enter Password.">
                         <p:ajax event="keyup" update=":form_log_in:logInButton"  />                      
                     </p:password>
-                    <p:link outcome="changePasswordPage" value="Forgot Password?"/>
-                    <p:link outcome="registerPage" value="Sign Up"/>
+                    <p:link outcome="changePasswordPage?faces-redirect=true" value="Forgot Password?"/>
+                    <p:link outcome="registerPage?faces-redirect=true" value="Sign Up"/>
                 </p:panelGrid>
                 <p:messages id="messages" autoUpdate="true" closable="true" />
                 <p:commandButton id="logInButton" 

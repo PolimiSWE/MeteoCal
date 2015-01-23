@@ -70,7 +70,7 @@ public class RegisterBean implements Serializable {
         this.passwordValid = false;
     }
     
-    public void register(){
+    public String register(){
         if(this.emailValid&&this.passwordValid&&this.usernameValid){
             this.userData.createNew();
             this.userData.setName(this.name);
@@ -81,13 +81,10 @@ public class RegisterBean implements Serializable {
             this.userData.saveUser();
             this.loginData.tryLogIn(this.username, this.password);
             this.userData.selectUser(this.username);
-            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext(); 
-            try {
-                context.redirect("myCalendarPage.xhtml");
-            } catch (IOException ex) {
-                Logger.getLogger(RegisterBean.class.getName()).log(Level.SEVERE, null, ex);
-            }
+           
+            return "myCalendarPage?faces-redirect=true";
         }
+            return "";
     }
     
     

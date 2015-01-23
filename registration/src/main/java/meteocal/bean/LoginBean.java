@@ -8,7 +8,6 @@ package meteocal.bean;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
@@ -82,7 +81,7 @@ public class LoginBean implements Serializable{
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
         request.getSession().invalidate();
-        return "/index?faces-redirect=true";
+        return "/logInPage?faces-redirect=true";
     }
     
     public Boolean tryLogIn(String usrnm, String pass){
