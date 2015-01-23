@@ -6,10 +6,12 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -45,9 +47,8 @@ public class ChangePasswordBean implements Serializable {
     @Inject
     UserBeanInterface userData;
 
-    private String name;
-    private String surname;
     private String email;
+    private boolean emailValid;
     private String username;
     private String password;
     private String re_pasword;
@@ -66,18 +67,60 @@ public class ChangePasswordBean implements Serializable {
     public void init() {
         // In @PostConstruct (will be invoked immediately after construction and dependency/property injection).
         this.email = "";
-        this.name = "";
         this.password = "";
         this.re_pasword = "";
-        this.surname = "";
         this.username = "";
         this.passwordMsg = "";
-        this.passwordValid = false;
         this.codeMsg = "";
+        this.emailValid = false;
+        this.passwordValid = false;
         this.codeValid = false;
         this.usr = new User();
     }
-
+    public void validateEmail(FacesContext context, UIComponent toValidate, Object value) {
+       String tmpValue;
+       if(this.emailValid!=true){
+           if(value!=null)
+               tmpValue = value.toString();
+           else
+               tmpValue = "";
+           Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(tmpValue);
+           if(matcher.find()){ 
+               this.email = tmpValue;
+               if(um.checkEmail(this.email)){
+                   FacesContext.getCurrentInstance()
+                            .addMessage(null, 
+                                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                            "Error! Email doesn't exist in our database.",
+                                            "Invalid email."));
+                   this.emailValid = false;
+               }
+               else{
+                   FacesContext.getCurrentInstance()
+                            .addMessage(null, 
+                                    new FacesMessage(FacesMessage.SEVERITY_INFO,
+                                            "Email found. Please proceed by typing in the rest of the data.",
+                                            "Email found."));
+                   emailValid = true;
+               }
+           }
+           else{
+               FacesContext.getCurrentInstance()
+                            .addMessage(null, 
+                                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                            "Error! Email not formed well.",
+                                            "Invalid email!"));
+               emailValid = false;
+           }
+        }
+    }
+    public void validatePassword(FacesContext context, UIComponent toValidate, Object value) {
+       if(value!=null)
+           this.password = value.toString();
+       else
+           this.password = "";
+    }
+    
     public void validateRePassword(FacesContext context, UIComponent toValidate, Object value) {
         if (value != null) {
             this.re_pasword = value.toString();
@@ -85,10 +128,18 @@ public class ChangePasswordBean implements Serializable {
             this.re_pasword = "";
         }
         if (this.re_pasword.equals(this.password)) {
-            this.passwordMsg = "Password Match";
+               FacesContext.getCurrentInstance()
+                            .addMessage(null, 
+                                    new FacesMessage(FacesMessage.SEVERITY_INFO,
+                                            "Passwords  matched. Please continue.",
+                                            "Password matched."));
             this.passwordValid = true;
         } else {
-            this.passwordMsg = "Password not Matched!!! Please reenter pasword.";
+               FacesContext.getCurrentInstance()
+                            .addMessage(null, 
+                                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                            "Passwords not Matched!!! Please reenter the repeated password.",
+                                            "Invalid repeated password!"));
             this.passwordValid = false;
         }
     }
@@ -115,7 +166,7 @@ public class ChangePasswordBean implements Serializable {
     }
 
     public void sendRandomCode() {
-        if (this.passwordValid) {
+        if (this.emailValid && this.passwordValid) {
             code = UUID.randomUUID().toString();
             try{
                 usr = um.getUserByEmail(this.email);
@@ -127,7 +178,7 @@ public class ChangePasswordBean implements Serializable {
     }
 
     public void changePassword() {
-        if (this.passwordValid && this.codeValid) {
+        if (this.emailValid && this.passwordValid && this.codeValid) {
             usr.setPassword(password);
             String email = usr.getEmail();
             um.save(usr);
@@ -136,13 +187,22 @@ public class ChangePasswordBean implements Serializable {
             this.re_pasword = "";
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             try {
-                context.redirect("userAdminPage.xhtml");
+                context.redirect("myCalendarPage.xhtml");
             } catch (IOException ex) {
                 Logger.getLogger(ChangePasswordBean.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
-
+    
+    public void checkAllDataOK(){
+        if(this.emailValid && this.passwordValid && this.codeValid){
+            FacesContext.getCurrentInstance()
+                        .addMessage(null, 
+                                new FacesMessage(FacesMessage.SEVERITY_INFO,
+                                        "All data valid. Please proceed.",
+                                        "All data valid!"));
+        }
+    }
     // <editor-fold defaultstate="collapsed" desc="Getters and setters">
 
     public UserFacade getUm() {
@@ -175,22 +235,6 @@ public class ChangePasswordBean implements Serializable {
 
     public void setUserData(UserBeanInterface userData) {
         this.userData = userData;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
     }
 
     public String getEmail() {
@@ -272,6 +316,15 @@ public class ChangePasswordBean implements Serializable {
     public void setPasswordMsg(String passwordMsg) {
         this.passwordMsg = passwordMsg;
     }
+    
+    public boolean isEmailValid() {
+        return emailValid;
+    }
+
+    public void setEmailValid(boolean emailValid) {
+        this.emailValid = emailValid;
+    }
     // </editor-fold> 
+
 
 }

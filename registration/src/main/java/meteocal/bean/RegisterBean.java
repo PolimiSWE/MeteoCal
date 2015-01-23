@@ -147,7 +147,7 @@ public class RegisterBean implements Serializable {
                FacesContext.getCurrentInstance()
                             .addMessage(null, 
                                     new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                                            "Error! Email not fomed well.",
+                                            "Error! Email not formed well.",
                                             "Invalid email!"));
                emailValid = false;
            }
@@ -163,16 +163,16 @@ public class RegisterBean implements Serializable {
            FacesContext.getCurrentInstance()
                         .addMessage(null, 
                                 new FacesMessage(FacesMessage.SEVERITY_INFO,
-                                        "Password MATCH.",
-                                        "Password MATCH."));
+                                        "Passwords MATCH.",
+                                        "Passwords MATCH."));
            this.passwordValid = true;
         }
         else{
            FacesContext.getCurrentInstance()
                         .addMessage(null, 
                                 new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                                        "Error! Passwords not matching.",
-                                        "Error! Passwords not matching."));
+                                        "Error! Passwords do not match.",
+                                        "Error! Passwords do not match."));
            this.passwordValid = false;
         }
     }
@@ -189,7 +189,7 @@ public class RegisterBean implements Serializable {
             FacesContext.getCurrentInstance()
                         .addMessage(null, 
                                 new FacesMessage(FacesMessage.SEVERITY_INFO,
-                                        "All data valid. Please proceede.",
+                                        "All data valid. Please proceed.",
                                         "All data valid!"));
         }
     }
