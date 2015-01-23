@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -20,7 +21,7 @@ import org.primefaces.event.SelectEvent;
  * @author Nemanja
  */
 @Named(value="invitationLazyView")
-@RequestScoped
+@SessionScoped
 public class InvitationLazyView implements Serializable {
     
     @EJB
@@ -32,7 +33,7 @@ public class InvitationLazyView implements Serializable {
      
     @PostConstruct
     public void init() {
-        lazyModel = new InvitationLazyDataModel(new ArrayList<Invitation>());
+        lazyModel = new InvitationLazyDataModel(new ArrayList<>());
     }
     
     public void initInvitationDataModel(List<Invitation> invites){

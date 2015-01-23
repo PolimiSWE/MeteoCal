@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import meteocal.entity.User;
 import meteocal.sorter.UserLazySorter;
 import org.primefaces.model.LazyDataModel;
@@ -23,9 +24,25 @@ public class UserLazyDataModel extends LazyDataModel<User> {
     public UserLazyDataModel(List<User> datasource) {
         this.datasource = new ArrayList<>();
         for(User u : datasource){
-            if(!u.getMyCalendar().getCalendarPrivacy().getPrivacy())
+            if(u.getMyCalendar().getCalendarPrivacy().getPrivacy())
                 this.datasource.add(u);
         }
+    }
+    
+    public void remove(User u){
+        int index = -1; 
+        int i=0;
+        for(User us: this.datasource){
+            if(Objects.equals(us.getId(), u.getId()))
+                index = i;
+            i++;
+        }    
+        if(index!=-1)
+            this.datasource.remove(index);
+    }
+    
+    public User getAt(int index){
+        return this.datasource.get(index);
     }
      
     @Override

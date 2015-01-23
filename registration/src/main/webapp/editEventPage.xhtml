@@ -9,88 +9,32 @@
         <link rel="stylesheet" href="${facesContext.externalContext.requestContextPath}/css/editEventPageStyle.css" type="text/css" />
     </h:head>
     <h:body>
-        <div style="width:54%; float: right;">
-            <div style="min-width:600px !important">
-            <h:form id="invitations_form">
-                <p:dataTable var="invitation" value="#{invitationLazyView.lazyModel}" paginator="true" rows="10" 
-                               resizableColumns="true" draggableColumns="true" 
-                               style="table-layout: auto !important; "
-                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                             rowsPerPageTemplate="5,10,15" selectionMode="single" selection="#{invitationLazyView.selectedInvitation}" id="invitationTable" lazy="true">
-                    <p:ajax event="rowSelect" listener="#{invitationLazyView.onRowSelect}" update=":invitations_form:invitationDetail" oncomplete="PF('invitationDialog').show()" />
-                    <p:column headerText="Invited by" sortBy="#{invitation.user}" filterBy="#{invitation.user}"
-                              style="background: rgba(185, 170, 120, .8) !important; color: #ffffff !important;">
-                        <h:outputText value="#{invitation.user}" />
-                    </p:column>
-                    <p:column headerText="Event name" sortBy="#{invitation.event.name}" filterBy="#{invitation.event.name}"
-                              style="background: rgba(100, 100, 40, .6) !important; color: #ffffff !important;">
-                        <h:outputText value="#{invitation.event.name}" />
-                    </p:column>
-                    <p:column headerText="Invitation status" sortBy="#{invitation.eventStatus}" filterBy="#{invitation.eventStatus}"
-                              style="background: rgba(185, 170, 120, .8) !important; color: #ffffff !important;">
-                        <h:outputText value="#{invitation.eventStatus}" />
-                        <p:commandButton id="acceptInvite#{item.id}" value="" icon="ui-icon-circle-check" >
-                            <f:ajax render="@form :edit_event_view :edit_event_form :edit_event_panel" 
-                                    execute="@form" listener="#{eventBean.removeInvited(item)}" />
-                        </p:commandButton>
-                        <p:commandButton id="declineInvite#{item.id}" value="" icon="ui-icon-circle-close" >
-                            <f:ajax render="@form :edit_event_view :edit_event_form :edit_event_panel" 
-                                    execute="@form" listener="#{eventBean.removeInvited(item)}" />
-                        </p:commandButton>
-                    </p:column>
-                </p:dataTable>
-                
-                <p:dialog header="Invitation Detail" widgetVar="invitationDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
-                <p:outputPanel id="invitationDetail" style="text-align:center;">
-                    <p:panelGrid  columns="2" rendered="#{not empty invitationLazyView.selectedInvitation}" columnClasses="label,value">
-                        <f:facet name="header">
-                            <p:graphicImage name="images/pic01.jpg"/> 
-                        </f:facet>
-
-                        <h:outputText value="Id:" />
-                        <h:outputText value="#{invitationLazyView.selectedInvitation.id}" />
-
-                        <h:outputText value="Invited by" />
-                        <h:outputText value="#{invitationLazyView.selectedInvitation.user}" />
-
-                        <h:outputText value="Invitation status" />
-                        <h:outputText value="#{invitationLazyView.selectedInvitation.eventStatus}" />
-
-                        <h:outputText value="Event" />
-                        <h:outputText value="#{invitationLazyView.selectedInvitation.event.name}" />
-                        
-                        <h:outputText value="Date" />
-                        <h:outputText value="#{invitationLazyView.selectedInvitation.event.dateOfEvent}" />
-                        
-                        <h:outputText value="Begin hour" />
-                        <h:outputText value="#{invitationLazyView.selectedInvitation.event.beginHour}" />
-                        
-                        <h:outputText value="Duration" />
-                        <h:outputText value="#{invitationLazyView.selectedInvitation.event.duration}" />
-                        
-                        <h:outputText value="City" />
-                        <h:outputText value="#{invitationLazyView.selectedInvitation.event.city}" />
-                        
-                        <h:outputText value="Address" />
-                        <h:outputText value="#{invitationLazyView.selectedInvitation.event.streetAndNumber}" />
-
-                        
-                    </p:panelGrid>
-                </p:outputPanel>
-            </p:dialog>
-        </h:form>
-        </div>
-            <h:form>
-                <p:commandButton id="goToMyCalendarButton" value="Go to My Calendar Page" action="myCalendarPage" />
-                <p:commandButton id="goToMyEventsButton" value="Go to My Events Page" action="myEventsPage" />
+        <f:view>
+            <h:form id="my_calendar_navigation">
+                <p:commandButton value="Log Out" action="#{loginBean.logout()}"
+                                             styleClass="navigation_button_class" />
+                <div class="navigation_divider"/>
+                <p:commandButton value="Change Password" action="changePasswordPage"
+                                             styleClass="navigation_button_class" />
+                <div class="navigation_divider"/>
+                <p:commandButton value="Go to Public Calendars" action="publicCalendarsPage"
+                    styleClass="navigation_button_class" >
+                    <f:ajax event="click" listener="#{calendarBean.goToPublicCalendarsPage()}" />       
+                </p:commandButton>
+                <div class="navigation_divider"/>
+                <p:commandButton value="Go to My Calendar" action="myCalendarPage"
+                                             styleClass="navigation_button_class" />
+                                         
             </h:form>
-        </div> 
-        <div style="width:15%; float: right;" > </div>
-        <div style="width:30%; float: left;" >
-            <h:form id="edit_event_form" style="background: rgba(100, 130, 30, .7) !important; color: #ffffff !important;">
-                <p:growl id="msgs" showDetail="true" />
+            
+            <h:form id="edit_event_form">
+                
 
-                <h:panelGrid columns="2" cellpadding="5">
+                <p:panelGrid columns="2"
+                             styleClass="edit_event_input_form_class">
+                    
+                    <p:outputLabel value="Event Id:" for="event_input_id" />
+                    <p:outputLabel id="event_input_id" value="#{eventBean.current.id}" />
                     
                     <p:outputLabel value="Event Name:" for="event_input_name" />
                     <p:inputText id="event_input_name" value="#{eventBean.current.name}" />
@@ -105,10 +49,14 @@
                     <p:calendar id="event_input_calendar" value="#{eventBean.current_input_dateOfEvent}" effect="fold" />
 
                     <p:outputLabel for="event_input_time" value="Time:" />
-                    <p:calendar id="event_input_time" value="#{eventBean.current_input_beginHour}" pattern="HH:mm:ss" timeOnly="true"  />
+                    <p:calendar id="event_input_time" 
+                                value="#{eventBean.current_input_beginHour}" 
+                                pattern="HH:mm:ss" timeOnly="true" 
+                                styleClass="edit_event_input_form_class"/>
 
                     <p:outputLabel for="event_input_duration" value="Duration of the Event:" />
-                    <h:panelGrid columns="1" style="margin-bottom: 10px">
+                    <h:panelGrid columns="1"
+                                 styleClass="edit_event_slider_class">
                         <p:inputText id="event_input_duration" value="#{eventBean.current.duration}" />
                         <p:slider for="event_input_duration" />
                     </h:panelGrid>
@@ -126,7 +74,7 @@
                     </h:selectOneRadio>
 
                     <p:outputLabel for="event_input_invited" value="Invited Users" />
-                    <h:panelGrid columns="3" cellpadding="5">
+                    <h:panelGrid columns="3" >
                         <p:selectCheckboxMenu id="event_input_invited" value="#{eventBean.current_invited_string}" label="Users"
                                               filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
                             <f:selectItems value="#{commonBean.allUsersString}" />
@@ -138,20 +86,40 @@
                                     var="user" chunkSize="5" mode="inline" scrollHeight="100">
                         <h:outputText value="#{user}" style="font-weight: bold"/>
                     </p:dataScroller>
+                    <h:panelGrid columns="1">
+                        <p:commandButton value="Save" actionListener="#{eventBean.save()}"
+                                         styleClass="edit_event_button">
+                            <f:ajax event="click" execute=":edit_event_form" render=":edit_event_form" />
+                        </p:commandButton>
+                        <p:commandButton value="Create New" actionListener="#{eventBean.createNew()}"  
+                                         styleClass="edit_event_button">
+                            <f:ajax event="click" execute=":edit_event_form" render=":edit_event_form" />
+                        </p:commandButton>
+                    </h:panelGrid>
 
-
-                </h:panelGrid>
-
-                <p:commandButton value="Save" actionListener="#{eventBean.save()}">
-                    <f:ajax event="click" execute=":edit_event_form" render=":edit_event_form" />
-                </p:commandButton>
-                <p:commandButton value="Create New" actionListener="#{eventBean.createNew()}"  >
-                    <f:ajax event="click" execute=":edit_event_form" render=":edit_event_form" />
-                </p:commandButton>
-
+                </p:panelGrid>
+                
+                <p:dataTable var="event" value="#{eventLazyView.lazyModel}" paginator="true" rows="5"
+                             paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"
+                             selectionMode="single" selection="#{eventLazyView.selectedEvent}" 
+                             id="eventTable" lazy="true"
+                             styleClass="event_list_table_class">
+                    <p:ajax event="rowSelect" listener="#{eventLazyView.onRowSelect}" 
+                             update=":edit_event_form"/>
+                    <p:column headerText="Name" sortBy="#{event.name}" >
+                        <h:outputText value="#{event.name}" />
+                    </p:column>
+                    <p:column headerText="Date" sortBy="#{event.dateOfEvent}" >
+                        <h:outputText value="#{event.dateOfEvent}" />
+                    </p:column>
+                    <p:column headerText="Begin hour" sortBy="#{event.beginHour}" >
+                        <h:outputText value="#{event.beginHour}" />
+                    </p:column>
+                </p:dataTable>
+                
             </h:form>
-        </div>
-           
+       
+        </f:view>
     </h:body>
 </html>
 

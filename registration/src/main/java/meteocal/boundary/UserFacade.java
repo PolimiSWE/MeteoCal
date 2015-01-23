@@ -43,7 +43,7 @@ public class UserFacade extends AbstractFacade<User> {
             tmp = em.find(User.class, (long)usr.getId());
             if(tmp!=null)
             {
-                em.merge(usr);
+                //em.merge(usr);
                 em.flush();
             }
         }

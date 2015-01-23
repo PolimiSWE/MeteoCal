@@ -35,4 +35,12 @@ public interface CommonBeanInterface {
     public List<Invitation> getPendingInvites();
 
     public List<Invitation> getAllInvites();
+
+    public void deleteEvent(Event evt);
+
+    public void declineInvite(Event evt, User usr);
+
+    public void acceptInvite(Invitation inv);
+
+    public void declineInvite(Invitation inv);
 }

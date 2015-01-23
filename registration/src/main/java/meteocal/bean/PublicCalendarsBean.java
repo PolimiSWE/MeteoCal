@@ -83,7 +83,7 @@ public class PublicCalendarsBean implements Serializable {
         this.currentCalendarAttendingEvents = new ArrayList<>();
         this.currentCalendarEvents = new ArrayList<>();
         this.currentCalendarInvitations = new ArrayList<>();
-        this.populateUsers();
+        //this.populateUsers();
     }
     
     public void oneDayLess(){
@@ -97,8 +97,7 @@ public class PublicCalendarsBean implements Serializable {
     }
     
     public void populateUsers(){
-        this.commonData.populateUsers();
-        this.usersView.initUserLazyView(this.commonData.getAllUsers());
+        this.usersView.init();
     }
     
     public void goToEditEventPage(){

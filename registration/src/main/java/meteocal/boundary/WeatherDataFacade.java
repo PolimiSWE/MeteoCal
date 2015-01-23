@@ -60,7 +60,7 @@ public class WeatherDataFacade extends AbstractFacade<WeatherData> {
                     em.persist(wd);
                 }
                 else{
-                    em.merge(wd);
+                    //em.merge(wd);
                 }
             }
         }

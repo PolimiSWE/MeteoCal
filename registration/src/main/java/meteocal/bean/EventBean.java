@@ -9,18 +9,12 @@ import meteocal.boundary.EventFacade;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import meteocal.entity.Event;
 import meteocal.entity.Invitation;
@@ -126,7 +120,7 @@ public class EventBean implements Serializable {
         this.current_privacy = current.getEventPrivacy().getPrivacy();
         this.current_type = current.getEventType().getType();
         this.current_input_beginHour = current.getBeginHour();
-        this.current_input_dateOfEvent = (Date) current.getDateOfEvent();
+        this.current_input_dateOfEvent = new Date(current.getDateOfEvent().getTime());
     }
     
     private void prepareCurrentInvited() {

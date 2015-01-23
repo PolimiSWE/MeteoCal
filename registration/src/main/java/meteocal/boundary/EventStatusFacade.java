@@ -31,8 +31,8 @@ public class EventStatusFacade extends AbstractFacade<EventStatus> {
     
     public void save(EventStatus es) {
         EventStatus tmp = em.find(EventStatus.class, (long)es.getId());
-        if(tmp != null) 
-            em.merge(es);
+        if(tmp != null) ;
+            //em.merge(es);
         else
         {
             tmp = new EventStatus(es);

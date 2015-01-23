@@ -21,6 +21,8 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import meteocal.entity.Calendar;
 import meteocal.entity.Event;
+import meteocal.entity.Invitation;
+import meteocal.entity.User;
 import meteocal.helper.CalendarHelper;
 import meteocal.helper.DayHelper;
 import meteocal.interfaces.CalendarBeanInterface;
@@ -69,6 +71,7 @@ public class CalendarBean implements Serializable,CalendarBeanInterface {
         }
         this.current_date = new Date(System.currentTimeMillis());
         this.calHelper = new CalendarHelper(this.current_date);
+        this.pubCalData.getCm();
     }
     
     public void save() {
@@ -81,6 +84,34 @@ public class CalendarBean implements Serializable,CalendarBeanInterface {
     
     public void delete(int calId) {
         cm.delete(calId);
+    }
+    
+    public void deleteEvent(Event evt, User usr){
+        User u = evt.getIncludedInCalendar().getOwner();
+        if(u.getId().equals(this.current.getOwner().getId())){
+             this.commonData.deleteEvent(evt);
+             this.commonData.populateEvents();
+             this.populateCalHelper();
+        }
+        else{
+            this.commonData.declineInvite(evt, usr);
+            this.commonData.populateInvitations();
+            this.populateCalHelper();
+        }
+    }
+    
+    public void acceptInvite(Invitation inv){
+        this.commonData.acceptInvite(inv);
+        this.commonData.populateInvitations();
+        this.invitationsView.update(this.current.getOwner().getId());
+        this.populateCalHelper();
+    }
+    
+    public void declineInvite(Invitation inv){
+        this.commonData.declineInvite(inv);
+        this.commonData.populateInvitations();
+        this.invitationsView.update(this.current.getOwner().getId());
+        this.populateCalHelper();
     }
     
     public void oneDayLess(){
@@ -109,11 +140,13 @@ public class CalendarBean implements Serializable,CalendarBeanInterface {
             }
     }
     
+    
     public void goToPublicCalendarsPage(){
         if(this.pubCalData.getCurrent().getOwner()!=null)
             this.dayHelperView.initDayHelperLazyDataModel(this.pubCalData.getCalHelper());
         else
             this.dayHelperView.initDayHelperLazyDataModel(new CalendarHelper(new Date(System.currentTimeMillis())));
+        this.pubCalData.populateUsers();
     }
     
     
@@ -152,9 +185,10 @@ public class CalendarBean implements Serializable,CalendarBeanInterface {
     @Override
     public void selectCalendar(Calendar cal) {
         this.current = cal;
+        this.current_privacy = cal.getCalendarPrivacy().getPrivacy();
     }
 
-    public boolean isCurrent_privacy() {
+    public boolean getCurrent_privacy() {
         return current_privacy;
     }
 

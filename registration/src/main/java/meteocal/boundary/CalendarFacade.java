@@ -43,7 +43,7 @@ public class CalendarFacade extends AbstractFacade<Calendar> {
             if(tmp!=null)
             {
                 tmp.setCalendarPrivacy(this.getPrivacyType(cal_privacy));
-                em.merge(cal);
+                //em.merge(cal);
                 em.flush();
             }
         }

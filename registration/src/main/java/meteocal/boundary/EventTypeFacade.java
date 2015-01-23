@@ -36,7 +36,7 @@ public class EventTypeFacade extends AbstractFacade<EventType> {
             tmp = em.find(EventType.class, (long)et.getId());
             if(tmp!=null)
             {
-                em.merge(et);
+                //em.merge(et);
                 em.flush();
             }
         }

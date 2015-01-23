@@ -23,7 +23,6 @@ import meteocal.entity.User;
 import meteocal.interfaces.CalendarBeanInterface;
 import meteocal.interfaces.CommonBeanInterface;
 import meteocal.interfaces.UserBeanInterface;
-import meteocal.lazyviewbeans.InvitationLazyView;
 
 /**
  *

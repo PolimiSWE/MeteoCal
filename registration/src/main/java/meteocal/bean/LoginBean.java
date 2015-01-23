@@ -56,6 +56,13 @@ public class LoginBean implements Serializable{
                 this.passwordEntered = false;
                 return "";
             }
+            if(this.username.isEmpty()){
+                FacesContext.getCurrentInstance()
+                        .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Usernane Not Entered!"));
+                this.passwordEntered = false;
+                return "";
+            }
+                
             if(this.tryLogIn(this.username, PasswordEncrypter.encryptPassword(this.password))){
                 this.userData.selectUser(username);
                 this.password ="";

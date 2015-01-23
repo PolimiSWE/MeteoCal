@@ -20,6 +20,7 @@ import meteocal.entity.Event;
 import meteocal.entity.EventStatus;
 import meteocal.entity.EventType;
 import meteocal.entity.Invitation;
+import meteocal.entity.Notification;
 import meteocal.entity.PrivacyType;
 import meteocal.entity.User;
 
@@ -44,7 +45,7 @@ public class EventFacade extends AbstractFacade<Event> {
             tmp = em.find(Event.class, (long)evt.getId());
             if(tmp!=null)
             {
-                em.merge(evt);
+                //em.merge(evt);
                 em.flush();
             }
         }
@@ -59,27 +60,48 @@ public class EventFacade extends AbstractFacade<Event> {
             boolean current_privacy, boolean current_type, Time current_input_beginHour,
             Date current_input_dateOfEvent) {
         Event tmp;
-        this.preparePrivacy(current, current_privacy);
-        this.prepareType(current, current_type);
-        this.prepareInvitations(current, current_invited);
-        this.prepareOwner(current, current_owner);
-        this.prepareBeginHour(current, current_input_beginHour);
-        this.prepareDateOfEvent(current, current_input_dateOfEvent);
+        
         if(current.getId() != null) 
         {
             tmp = em.find(Event.class, (long)current.getId());
             if(tmp!=null)
             {
-                em.merge(current);
+                this.preparePrivacy(tmp, current_privacy);
+                this.prepareType(tmp, current_type);
+                this.prepareInvitations(tmp, current_invited);
+                this.prepareOwner(tmp, current_owner);
+                this.prepareBeginHour(tmp, current_input_beginHour);
+                this.prepareDateOfEvent(tmp, current_input_dateOfEvent);
+                //em.merge(current);
                 em.flush();
             }
         }
         else
         {
+            this.preparePrivacy(current, current_privacy);
+            this.prepareType(current, current_type);
+            this.prepareInvitations(current, current_invited);
+            this.prepareOwner(current, current_owner);
+            this.prepareBeginHour(current, current_input_beginHour);
+            this.prepareDateOfEvent(current, current_input_dateOfEvent);
             em.persist(current);
             //em.merge(current.getIncludedInCalendar());
             em.flush();
         }
+    }
+    
+    public void prepareNotification(Event evt){
+        List<Invitation> invites = (List<Invitation>) evt.getInvitations();
+        Notification notf;
+        for(Invitation inv: invites){
+            if(inv.getEventStatus().getStatus()==1){
+                notf = new Notification();
+                notf.setDescription("Event details changed!");
+                notf.setOwner(inv.getUser());
+                em.persist(notf);
+            }
+        }
+        em.flush();
     }
     
     public void delete(int evtId) {

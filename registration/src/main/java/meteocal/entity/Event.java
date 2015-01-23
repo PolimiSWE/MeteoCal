@@ -315,19 +315,10 @@ public class Event implements Serializable,Comparable<Event> {
 
     @Override
     public String toString() {
-        String padding="";
-        Integer length = this.name.length() + this.beginHour.toString().length();
+        
         String output;
-        if(length<=33){
-            Integer padding_length = 33-length;
-            for(int i=0;i<padding_length;i++)
-                padding = padding + " ";
-            output = this.beginHour.toString() + padding + this.name;
-        }
-        else{
-            output = this.beginHour.toString() + padding + this.name;
-            output=output.substring(0, 29)+"...";
-        }
+        output = "Time: " + this.beginHour.toString() 
+                + ".  Name: " + this.name;
         return output;
         
     }
@@ -337,7 +328,7 @@ public class Event implements Serializable,Comparable<Event> {
         if(this.eventPrivacy.getPrivacy())
             output = this.toString();
         else
-            output = this.beginHour.toString() + "User busy.";
+            output = "Time: " + this.beginHour.toString() + ".  User busy.";
         return output;
     }
 

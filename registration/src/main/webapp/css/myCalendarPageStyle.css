@@ -28,7 +28,7 @@ html {
     color: #ffffff;
     width: 62% !important; 
     float: left; 
-    height: 350px !important;
+    height: 467px !important;
     margin: 5px !important; 
     padding: 5px !important;
     overflow-y: auto;
@@ -51,8 +51,12 @@ html {
     height: 275px;
 }
 
+#form_my_calendar{
+    width: 100% !important; 
+}
+
 #form_my_calendar:my_calendar_header{
-    width: 99% !important;
+    width: 62% !important;
     height: 5% !important;
     float: left; 
     margin: 5px !important; 
@@ -64,6 +68,10 @@ html {
 #event_dialog_event_details{
     width: 40%;
     float: left;
+}
+
+.div_body_container{
+    width: 99% !important;
 }
 
 .my_calendar_header_panel_class{
@@ -238,3 +246,17 @@ html {
     background-image: url('') !important;
     margin: 5px !important; 
 }
+
+.day_table_class td{
+    height: 50px;
+    overflow-y: scroll;
+}
+
+.notification_class{
+     margin: 5px !important;
+}
+
+.notification_column_class{
+    color: #FA2 !important;
+}
+                                

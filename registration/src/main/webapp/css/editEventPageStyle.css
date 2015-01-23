@@ -16,7 +16,139 @@ html {
   background-size: cover;
 }
 
-#invitations_form.ui-datatable{
-    background: rgba(54, 25, 25, .3);
-    color: #ffffff;    
+#my_calendar_navigation{
+    background-color: rgba(229, 178, 17, 0.33);
+    height: 50px;
+    margin: 5px !important; 
+    padding: 5px !important;
+    
+}
+
+
+.navigation_button_class{
+    -webkit-box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
+    -moz-box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
+    box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
+    color:rgba(196, 200, 46, 0.45) !important;
+    background-color:#615130 !important;
+    border-radius:5px !important;
+    -moz-border-radius:5px !important;
+    -webkit-border-radius:5px !important;
+    border:none !important;
+    font-family:'Helvetica Neue',Arial,sans-serif !important;
+    font-size:16px !important;
+    font-weight:700 !important;
+    height: 80% !important;
+    width: 24.1% !important;
+    padding:4px 16px;
+    text-shadow:#FE6 0 1px !important; 
+    background-image: url('') !important;
+    margin: 5px !important; 
+    float: left;
+}
+
+.navigation_divider{
+    width: 5% !important;
+    float: left;
+}
+
+.edit_event_input_form_class{
+    width: 40% !important;
+    height: 5% !important;
+    float: left; 
+    margin: 5px !important; 
+    padding: 5px !important;
+    background-color: rgba(52, 25, 25, 0.64);
+    border-collapse: separate;
+}
+
+.ui-selectcheckboxmenu-header .ui-inputfield{
+    padding: 0 0 0 0;
+}
+
+.edit_event_input_form_class .ui-panelgrid .ui-panelgrid-cell{
+    padding: 5px;
+    border-color: #121212;
+}
+
+.edit_event_input_form_class .ui-widget-content{
+    background: rgba(73, 79, 46, 0.61);
+    color: rgba(235, 239, 96, 0.87);
+}
+
+.edit_event_slider_class .ui-panelgrid .ui-panelgrid-cell{
+    border-width: 0px !important;
+    border-color: rgba(255,255,255,0.0);
+}
+
+.ui-widget-content{
+    border: 1px solid #6F7726;
+    color: #9DCF38;
+    background: rgba(63, 54, 54, 0.94);
+}
+
+.ui-slider .ui-slider-handle{
+   background: rgba(95, 137, 24, 0.85) -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0.8)), to(rgba(255,255,255,0)))
+}
+
+.ui-slider{
+   box-shadow: inset 2px 2px 2px rgba(0, 0, 0, 0.67);
+   width: 100%;
+}
+
+.ui-panelgrid .ui-widget .edit_event_input_form_class td{
+    width: 100%;
+}
+
+
+
+
+
+.event_list_table_class{
+    width: 55%;
+    float: right;
+     margin: 5px !important; 
+    padding: 5px !important;
+}
+
+.event_list_table_class .ui-widget-header{
+    background-color: rgba(52, 25, 25, 0.64);
+    background-image: url('') !important;
+    color: #9DCF38;
+}
+ 
+.event_list_table_class .ui-state-default{
+    background-color: rgba(52, 25, 25, 0.64) !important;
+}
+
+.ui-timepicker-div{
+    background-color: rgba(52, 25, 25, 0.64);
+}
+
+.ui-timepicker-div .ui-widget-content{
+    color: #9DCF38;
+    background: rgba(63, 54, 54, 0.94);
+    border: 1px solid #a8a8a8;
+}
+
+.edit_event_button{
+    -webkit-box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
+    -moz-box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
+    box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
+    color:rgba(196, 200, 46, 0.45) !important;
+    background-color:#615130 !important;
+    border-radius:5px !important;
+    -moz-border-radius:5px !important;
+    -webkit-border-radius:5px !important;
+    border:none !important;
+    font-family:'Helvetica Neue',Arial,sans-serif !important;
+    font-size:16px !important;
+    font-weight:700 !important;
+    height: 80% !important;
+    width: 100% !important;
+    padding:4px 16px;
+    text-shadow:#FE6 0 1px !important; 
+    background-image: url('') !important;
+    margin: 5px !important; 
+    float: left;
 }

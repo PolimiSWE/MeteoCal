@@ -23,32 +23,39 @@ html {
     padding: 5px !important;
 }
 
+
+
 #div_container_public_calendar{
-    background-color: rgba(154, 154, 154, .8);
+    background-color: rgba(103, 55, 112, 0.76);
     color: #ffffff;
-    width: 62% !important; 
+    width: 62%;
     float: left; 
-    height: 350px !important;
+    height: 467px !important;
     margin: 5px !important; 
     padding: 5px !important;
     overflow-y: auto;
 }
 
 #div_container_users{
-    background-color: rgba(154, 154, 154, .8);
+    background-color: rgba(129, 61, 110, 0.7);
     color: #ffffff;
     margin: 5px !important; 
     padding: 5px !important;
     width: 32% !important;
+    height: 370px;
     float: right;
 }
 
 #form_users{
-    background-color: rgba(154, 154, 154, .8);
+    background-color: rgba(152, 45, 144, 1);
     color: #ffffff;
     margin: 5px !important; 
     padding: 5px !important;
-    height: 275px;
+    
+}
+
+#form_public_calendar{
+    width: 100% !important; 
 }
 
 #form_public_calendar:public_calendar_header{
@@ -72,22 +79,22 @@ html {
     float: left; 
     margin: 5px !important; 
     padding: 5px !important;
-    background-color: rgba(54,54,54,0.2);
+    background-color: rgba(199, 36, 178, 0.5);
     border-collapse: separate;
 }
 
 .public_calendar_header_panel_class td {
     background-color: rgba(54,54,54,0.8);
-    color: #FA2;
+    color: #E68BE8;
 }
 
 
 .public_calendar_button_class {
     -webkit-box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
     -moz-box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
-    box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
-    color:#333 !important;
-    background-color:#FA2 !important;
+    box-shadow:rgba(255, 167, 220, 0.77) 0px 0px 5px 1px !important;
+    color:rgba(255, 255, 255, 0.59) !important;
+    background-color:#683971 !important;
     border-radius:5px !important;
     -moz-border-radius:5px !important;
     -webkit-border-radius:5px !important;
@@ -98,8 +105,9 @@ html {
     height: 100% !important;
     width: 100% !important;
     padding:4px 16px;
-    text-shadow:#FE6 0 1px !important; 
-    background-image: url('') !important;
+    text-shadow:#CD66FF 0 1px !important; 
+    background-image: none !important;
+    background: #683971 !important;
 }
 
 .ui-widget {
@@ -108,7 +116,7 @@ html {
 
 .ui-paginator {
     background-color: rgba(20,20,20,0.4);
-    color: #FA2;
+    color: #D58DE8;
     background-image: none;
 }
 
@@ -127,7 +135,7 @@ html {
 }
 
 .event_dialog_class {
-    width: 70% !important;
+    
     background-color: rgba(60,60,60,0.6);
 }
 
@@ -138,7 +146,7 @@ html {
 }
 
 .event_dialog_event_details_class{
-    width: 40%;
+    
     background-color: rgba(40,40,40,0.6);
     float: left;
 }
@@ -188,9 +196,10 @@ html {
     width: 24.1% !important;
     padding:4px 16px;
     text-shadow: #784275 0 0 3px !important 
-    background-image: url('') !important;
+    background-image: none !important;
     margin: 5px !important; 
     float: left;
+    background: #683971 !important;
 }
 
 .navigation_divider{
@@ -237,4 +246,14 @@ html {
     text-shadow:#FE6 0 1px !important; 
     background-image: url('') !important;
     margin: 5px !important; 
+}
+
+.ui-sortable-column{
+    color:#E68BE8 ;
+    background-color: rgba(20,20,20,0.6);
+}
+
+.day_table_class td{
+    height: 50px;
+    overflow-y: scroll;
 }

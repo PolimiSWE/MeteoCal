@@ -135,11 +135,11 @@ public class CommonBean implements Serializable,CommonBeanInterface {
                 this.otherEvents.add(inv.getEvent());
                     if (inv.getEventStatus().getStatus() == 0)
                         this.pendingInvites.add(inv);
-                    if (inv.getEventStatus().getStatus() == 1){
+                    if (inv.getEventStatus().getStatus() == 2){
                         this.declinedInvites.add(inv);
                         this.declinedEvents.add(inv.getEvent());
                     }
-                    if (inv.getEventStatus().getStatus() == 2){
+                    if (inv.getEventStatus().getStatus() == 1){
                         this.acceptedInvites.add(inv);
                         this.attendingEvents.add(inv.getEvent());
                     }
@@ -170,12 +170,33 @@ public class CommonBean implements Serializable,CommonBeanInterface {
                 events.add(e);
         }
         for(Event e : this.attendingEvents){
-            if(e.getDateOfEvent().compareTo(day)==0)
+            e_dateOfEvent = new java.sql.Date(e.getDateOfEvent().getTime());
+            e_DOF_string = e_dateOfEvent.toString();
+            if(day_string.equals(e_DOF_string))
                 events.add(e);
         }
         return events;
     }
     
+    @Override
+    public void deleteEvent(Event evt) {
+        this.eventFacade.remove(evt);
+    }
+
+    @Override
+    public void declineInvite(Event evt, User usr) {
+        this.invFacade.declineInvite(evt,usr);
+    }
+    
+    @Override
+    public void acceptInvite(Invitation inv) {
+        this.invFacade.acceptInvite(inv);
+    }
+
+    @Override
+    public void declineInvite(Invitation inv) {
+        this.invFacade.declineInvite(inv);
+    }
     
     // <editor-fold defaultstate="collapsed" desc="Getters and Setters">
     
@@ -367,5 +388,4 @@ public class CommonBean implements Serializable,CommonBeanInterface {
     }
     // </editor-fold>
 
-   
 }

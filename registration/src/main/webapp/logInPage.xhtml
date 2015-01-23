@@ -19,20 +19,24 @@
                 <p:panelGrid columns="2" styleClass="inner_container">
                     <p:outputLabel value="Username:" for="usernameInput" />
                     <p:inputText id="usernameInput" validator="#{loginBean.validateUsername}"
-                                 value="#{loginBean.username}" title="Username" >
+                                 value="#{loginBean.username}" title="Username"
+                                 required="true"
+                                 requiredMessage="Error! Please Enter Username.">
                         <p:ajax event="keyup" update=":form_log_in:logInButton"  />
                     </p:inputText>
                     <p:outputLabel value="Password:" for="passwordInput" />
                     <p:password id="passwordInput" validator="#{loginBean.validatePassword}"
-                                 value="#{loginBean.password}" title="Password" >
+                                 value="#{loginBean.password}" title="Password"
+                                 required="true"
+                                 requiredMessage="Error! Please Enter Password.">
                         <p:ajax event="keyup" update=":form_log_in:logInButton"  />                      
                     </p:password>
                     <p:link outcome="changePasswordPage" value="Forgot Password?"/>
                     <p:link outcome="registerPage" value="Sign Up"/>
                 </p:panelGrid>
-                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                <p:messages id="messages" autoUpdate="true" closable="true" />
                 <p:commandButton id="logInButton" 
-                                 disabled="#{not(loginBean.passwordEntered and loginBean.usernameEntered)}" 
+                                 
                                  styleClass="log_in_button"
                                      action="#{loginBean.login()}" value="Log In" />
             </div>

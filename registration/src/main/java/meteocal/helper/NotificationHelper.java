@@ -16,6 +16,7 @@ import meteocal.entity.User;
 public class NotificationHelper {
     
     private User destUser;
+    private Event causedEvent;
     private String description;
 
     public NotificationHelper() {
@@ -23,6 +24,7 @@ public class NotificationHelper {
     
     public NotificationHelper(Event evt){
         this.destUser = evt.getOwner();
+        this.causedEvent = evt;
         this.description = "Bad Weather Conditions, Please Consider Rescheduling the Event.";
     }
     
@@ -45,6 +47,14 @@ public class NotificationHelper {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Event getCausedEvent() {
+        return causedEvent;
+    }
+
+    public void setCausedEvent(Event causedEvent) {
+        this.causedEvent = causedEvent;
     }
 
    

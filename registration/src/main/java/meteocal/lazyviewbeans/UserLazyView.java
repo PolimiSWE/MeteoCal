@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -18,6 +18,7 @@ import meteocal.bean.PublicCalendarsBean;
 import meteocal.boundary.UserFacade;
 import meteocal.entity.User;
 import meteocal.interfaces.CommonBeanInterface;
+import meteocal.interfaces.UserBeanInterface;
 import meteocal.lazydatamodel.UserLazyDataModel;
 import org.primefaces.event.SelectEvent;
 
@@ -26,7 +27,7 @@ import org.primefaces.event.SelectEvent;
  * @author Milos
  */
 @Named(value="userLazyView")
-@RequestScoped
+@SessionScoped
 public class UserLazyView implements Serializable {
     
     @EJB
@@ -36,6 +37,8 @@ public class UserLazyView implements Serializable {
     CommonBeanInterface commonData;
     @Inject
     PublicCalendarsBean pubCalData;
+    @Inject 
+    UserBeanInterface userData;
     
     private UserLazyDataModel lazyModel;
      
@@ -43,12 +46,12 @@ public class UserLazyView implements Serializable {
      
     @PostConstruct
     public void init() {
-        lazyModel = new UserLazyDataModel(uf.findAll()); // treba da se promeni na new list 
-        //i da pokupi samo public sad kupi sve
+        lazyModel = new UserLazyDataModel(uf.findAll());
+        lazyModel.remove(this.userData.getUser());
         if(pubCalData.getCurrent().getOwner()!=null)
             this.selectedUser = pubCalData.getCurrent().getOwner();
-        else
-            this.selectedUser = commonData.getAllUsers().get(0);
+        else if(lazyModel.getRowCount()>0)
+            this.selectedUser = lazyModel.getAt(0);
     }
  
     public UserLazyDataModel getLazyModel() {
@@ -61,6 +64,7 @@ public class UserLazyView implements Serializable {
  
     public void setSelectedUser(User selectedUser) {
         this.selectedUser = selectedUser;
+        this.pubCalData.setCurrent(selectedUser.getMyCalendar());
     }
      
     public void initUserLazyView(List<User> users) {
