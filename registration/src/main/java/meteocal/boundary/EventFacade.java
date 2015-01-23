@@ -212,7 +212,15 @@ public class EventFacade extends AbstractFacade<Event> {
         query.setParameter("dirtyParam", true);
         return query.getResultList();
     }
-
+    
+    public List<Event> findDirtyEventsForTheDay(java.sql.Date dt) {
+        TypedQuery<Event> query = em.createQuery("SELECT evt FROM Event AS evt WHERE"
+                + " evt.dateOfEvent=:dateParam AND evt.notifyOwner=:dirtyParam", Event.class);
+        query.setParameter("dateParam", dt, TemporalType.DATE);
+        query.setParameter("dirtyParam", true);
+        return query.getResultList();
+    }
+    
     public List<Event> findEventsForTheDay(java.sql.Date dt){//dateOfEvent, city, begin_hour, notifyOwner
         TypedQuery<Event> query = em.createQuery("SELECT evt FROM Event AS evt WHERE"
                 + " evt.dateOfEvent=:dateParam", Event.class);

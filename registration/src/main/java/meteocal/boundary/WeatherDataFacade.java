@@ -66,10 +66,8 @@ public class WeatherDataFacade extends AbstractFacade<WeatherData> {
         }
         em.flush();
     }
+    
     //deletes weatherdata for given city and date
-    /*delete from Organization o where o.name like :name);
-      query.setParameter("name", "Mono Project");
-      int deleted = query.executeUpdate();*/
     public void deleteWdByCityAndDate(String city, java.sql.Date dt){
         TypedQuery<WeatherData> query = em.createQuery("DELETE FROM WeatherData wd WHERE "
                 +"wd.date = :dateParam and wd.city = :cityParam", WeatherData.class);
@@ -78,6 +76,13 @@ public class WeatherDataFacade extends AbstractFacade<WeatherData> {
         int deleted = query.executeUpdate();
         em.flush();
     }
-   
+   //deletes weatherdata for given date
+    public void deleteWdByDate(java.sql.Date dt){
+        TypedQuery<WeatherData> query = em.createQuery("DELETE FROM WeatherData wd WHERE "
+                +"wd.date = :dateParam", WeatherData.class);
+        query.setParameter("dateParam", dt, TemporalType.DATE);
+        int deleted = query.executeUpdate();
+        em.flush();
+    }
     
 }
