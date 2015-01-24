@@ -14,6 +14,7 @@ import javax.ejb.Startup;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import meteocal.boundary.PrivacyTypeFacade;
 import meteocal.entity.PrivacyType;
@@ -29,6 +30,9 @@ public class InitializatonWorker {
     
 @EJB
 PrivacyTypeFacade pf;
+
+@PersistenceContext(unitName = "authPU")
+EntityManager em;
     
 @PostConstruct
     public void init() {
@@ -37,6 +41,7 @@ PrivacyTypeFacade pf;
         if (!isDatabaseInitialized()) {
             this.executeSqlInit();
         }
+            em.getEntityManagerFactory().getCache().evictAll();
     }
     //@Schedule(minute = "*/1", hour = "*", persistent = false)
     //@SuppressWarnings("CallToPrintStackTrace")
@@ -51,16 +56,16 @@ PrivacyTypeFacade pf;
         InputStream in = this.getClass().getClassLoader().getResourceAsStream("META-INF/sql_init.sql");
         String sqlScript = processInputStream(in);
         try {
-            EntityManagerFactory emf = Persistence.createEntityManagerFactory("authPU");
-            EntityManager manager = emf.createEntityManager();
+            //EntityManagerFactory emf = Persistence.createEntityManagerFactory("authPU");
+            //EntityManager manager = emf.createEntityManager();
             String[] lines = sqlScript.split("\n");
             //Query q = manager.createNativeQuery(sqlScript);
             //q.executeUpdate();
             for(String cmd : lines){
-                Query q = manager.createNativeQuery(cmd);
+                Query q = em.createNativeQuery(cmd);
                 q.executeUpdate();
             }
-            manager.flush();
+            em.flush();
             //PrivacyType pt = manager.find(meteocal.entity.PrivacyType.class, 190000000);
             String nista = "";
         } catch (Exception e) {
