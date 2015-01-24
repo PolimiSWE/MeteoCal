@@ -6,6 +6,7 @@
 package meteocal.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -51,6 +52,7 @@ public class EventStatus implements Serializable,Comparable<EventStatus> {
     
     public EventStatus() {
         this.status = 0;
+        invitationList = new ArrayList<>();
     }
     
     
