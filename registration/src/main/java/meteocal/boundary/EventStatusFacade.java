@@ -67,10 +67,13 @@ public class EventStatusFacade extends AbstractFacade<EventStatus> {
     
     //Getters and Setters
     @Override
-    protected EntityManager getEntityManager() {
+    public EntityManager getEntityManager() {
         return em;
     }
-
+    public void setEntityManager(EntityManager em){
+        this.em = em;
+    }
+    
     public EventStatusFacade() {
         super(EventStatus.class);
     }

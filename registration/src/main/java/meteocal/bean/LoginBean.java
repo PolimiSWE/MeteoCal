@@ -84,7 +84,7 @@ public class LoginBean implements Serializable{
                     this.passwordEntered = false;
                     this.username ="";
                     this.usernameEntered = false;
-                    return "/myCalendarPage";
+                    return "users/myCalendarPage";
                 } catch (ServletException e) {
                     context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Login Failed","Login Failed"));
                     

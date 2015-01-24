@@ -20,7 +20,7 @@ import meteocal.entity.PrivacyType;
 public class PrivacyTypeFacade extends AbstractFacade<PrivacyType> {
 
     @PersistenceContext(unitName = "authPU")
-    private EntityManager em;
+    EntityManager em;
    
     public PrivacyType createNew()
     {
