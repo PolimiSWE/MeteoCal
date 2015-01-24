@@ -37,7 +37,7 @@ public class PrivacyTypeFacade extends AbstractFacade<PrivacyType> {
             tmp = em.find(PrivacyType.class, (long)pt.getId());
             if(tmp != null) 
             {
-               // em.merge(pt);
+                em.merge(pt);
                 em.flush();
             }
         }
