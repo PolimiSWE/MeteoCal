@@ -20,7 +20,9 @@ import meteocal.entity.Event;
 import meteocal.entity.Invitation;
 import meteocal.entity.User;
 import meteocal.interfaces.CalendarBeanInterface;
+import meteocal.interfaces.CommonBeanInterface;
 import meteocal.interfaces.UserBeanInterface;
+import meteocal.lazyviewbeans.UserPickListView;
 
 /**
  *
@@ -35,17 +37,24 @@ public class EventBean implements Serializable {
     
     @Inject
     CalendarBeanInterface  calendarData;
-    
+    @Inject
+    CommonBeanInterface commonData;
     @Inject
     UserBeanInterface userData;
+    
+    @Inject
+    UserPickListView userPickList;
+    
     
     private Event current;
     private boolean current_privacy;
     private boolean current_type;
     private Time current_input_beginHour;
-    private Date current_input_dateOfEvent;
+    private java.util.Date current_input_dateOfEvent;
     private List<User> current_invited;
     private String[] current_invited_string;
+    private java.util.Date currentBH_AsDateChosen;
+    private List<User> all_users;
 
     /**
      * Creates a new instance of EventBean
@@ -65,6 +74,9 @@ public class EventBean implements Serializable {
             current_input_beginHour = new Time(System.currentTimeMillis());
             current_input_dateOfEvent = new Date(System.currentTimeMillis());
         }
+        this.all_users = this.commonData.fetchAllUser(this.userData.getUser());
+        this.current_invited = new ArrayList<>();
+            
     }
     
     public void createNew(){
@@ -82,7 +94,7 @@ public class EventBean implements Serializable {
         current.setDateCreated(currentTime);
         this.prepareCurrentInvited();
         em.save(current,current_invited,this.userData.getUser(),current_privacy,current_type,
-                current_input_beginHour,current_input_dateOfEvent);
+                current_input_beginHour,new Date(this.current_input_dateOfEvent.getTime()));
         //this.calendarData.updateCalendarEvents();
         //return "user/eventTypeAdminPage?faces-redirect=true";
     }
@@ -133,6 +145,17 @@ public class EventBean implements Serializable {
         }
     }
     
+    public void divideUserLists(){
+        List<User> tmp = new ArrayList<>();
+        for(User u1: this.current_invited){
+            for(User u2: this.all_users){
+                if(u1.getId().equals(u2.getId()))
+                    tmp.add(u2);
+            }
+        }
+        for(User u: tmp)
+            this.all_users.remove(u);
+    }
    
     
     //Getters and Setters
@@ -153,6 +176,7 @@ public class EventBean implements Serializable {
         this.current = current;
         this.current_input_beginHour = current.getBeginHour();
         this.current_input_dateOfEvent = new Date(current.getDateOfEvent().getTime());
+            this.all_users = this.commonData.fetchAllUser(this.userData.getUser());
         this.current_invited = new ArrayList<>();
         this.current_invited_string = new String[current.getInvitations().size()];
         int i=0;
@@ -161,6 +185,8 @@ public class EventBean implements Serializable {
             this.current_invited_string[i] = inv.getUser().getUsername();
             i++;
         }
+            this.divideUserLists();
+            this.userPickList.init();
         this.current_privacy = current.getEventPrivacy().getPrivacy();
         this.current_type = current.getEventType().getType();
     }
@@ -188,9 +214,19 @@ public class EventBean implements Serializable {
     public void setCurrent_invited(List<User> current_invited) {
         this.current_invited = current_invited;
     }
+    
+    public boolean isInInvited(User usr){
+        boolean indicator = false;
+        for(User u: this.current_invited)
+            if(u.getId().equals(usr.getId()))
+                indicator = true;
+        return indicator;
+    }
 
     public java.util.Date getCurrent_input_beginHour() {
-        return current_input_beginHour;
+        java.util.Date timeAsDateChosen = new java.util.Date();
+        timeAsDateChosen.setTime(this.current_input_beginHour.getTime());
+        return timeAsDateChosen;
     }
 
     public void setCurrent_input_beginHour(java.util.Date current_beginHour) {
@@ -206,7 +242,7 @@ public class EventBean implements Serializable {
     }
 
     public java.util.Date getCurrent_input_dateOfEvent() {
-        return current_input_dateOfEvent;
+        return new java.util.Date(current_input_dateOfEvent.getTime());
     }
 
     public void setCurrent_input_dateOfEvent(java.util.Date current_dateOfEvent) {
@@ -227,6 +263,37 @@ public class EventBean implements Serializable {
     public void setCurrent_invited_string(String[] current_invited_string) {
         this.current_invited_string = current_invited_string;
     }
+
+    public CalendarBeanInterface getCalendarData() {
+        return calendarData;
+    }
+
+    public void setCalendarData(CalendarBeanInterface calendarData) {
+        this.calendarData = calendarData;
+    }
+
+
+    public void setCurrent_input_beginHour(Time current_input_beginHour) {
+        this.current_input_beginHour = current_input_beginHour;
+    }
+
+    public java.util.Date getCurrentBH_AsDateChosen() {
+        return currentBH_AsDateChosen;
+    }
+
+    public void setCurrentBH_AsDateChosen(java.util.Date currentBH_AsDateChosen) {
+        this.currentBH_AsDateChosen = currentBH_AsDateChosen;
+    }
+
+    public List<User> getAll_users() {
+        return all_users;
+    }
+
+    public void setAll_users(List<User> all_users) {
+        this.all_users = all_users;
+    }
+
+   
     
     
     

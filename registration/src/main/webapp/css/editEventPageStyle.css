@@ -24,6 +24,36 @@ html {
     
 }
 
+.pick_list_header{
+    height: 50px !important;
+}
+
+.pick_list_wraper {
+    height: 100%;
+}
+
+.pick_list_wraper tr{
+    margin: 5px;
+    padding: 5px;
+}
+
+.user_pick_list_class{
+    height: 80%;
+}
+
+.user_pick_list_class .edit_event_input_form_class .ui-widget-content{
+    float: left;
+   
+}
+
+.user_pick_list_class tr {
+    
+}
+
+.ui-picklist .ui-picklist-list{
+    height: 100%;
+}
+
 
 .navigation_button_class{
     -webkit-box-shadow:rgba(0,0,0,0.2) 0 1px 0 0 !important;
@@ -53,7 +83,7 @@ html {
 }
 
 .edit_event_input_form_class{
-    width: 40% !important;
+    width: 60% !important;
     height: 5% !important;
     float: left; 
     margin: 5px !important; 
@@ -102,10 +132,12 @@ html {
 
 
 
-
+.ui-widget{
+    font-size: 1em !important;
+}
 
 .event_list_table_class{
-    width: 55%;
+    width: 30%;
     float: right;
      margin: 5px !important; 
     padding: 5px !important;

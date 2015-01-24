@@ -43,4 +43,6 @@ public interface CommonBeanInterface {
     public void acceptInvite(Invitation inv);
 
     public void declineInvite(Invitation inv);
+    
+    public List<User> fetchAllUser(User usr);
 }

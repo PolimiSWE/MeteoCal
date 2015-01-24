@@ -156,6 +156,18 @@ public class CommonBean implements Serializable,CommonBeanInterface {
         }
     }
     
+    
+    @Override
+    public List<User> fetchAllUser(User usr){
+        List<User> output = this.allUsers;
+        User tmp = new User();
+        for(User u : output)
+            if(u.getId().equals(usr.getId()))
+                tmp = u;
+        output.remove(tmp);
+        return output;
+    }
+    
     @Override
     public List<Event> getEventsForDay(Date day){
         List<Event> events = new ArrayList<>();

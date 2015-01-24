@@ -1,6 +1,7 @@
 package meteocal.lazyviewbeans;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
@@ -22,7 +23,7 @@ import org.primefaces.event.SelectEvent;
  * @author Nemanja
  */
 @Named(value="eventLazyView")
-@SessionScoped
+@RequestScoped
 public class EventLazyView implements Serializable {
     
     @EJB
@@ -39,7 +40,12 @@ public class EventLazyView implements Serializable {
      
     @PostConstruct
     public void init() {
-        lazyModel = new EventLazyDataModel(ef.findAll(userData.getUser().getMyCalendar()));
+        try{
+            lazyModel = new EventLazyDataModel(ef.findAll(userData.getUser().getMyCalendar()));
+        }
+        catch(Exception e){
+            lazyModel = new EventLazyDataModel(new ArrayList<>());
+        }
     }
  
     public EventLazyDataModel getLazyModel() {
@@ -57,6 +63,6 @@ public class EventLazyView implements Serializable {
     
      
     public void onRowSelect(SelectEvent event) {
-       this.eventData.selectCurrent(this.selectedEvent);
+       this.eventData.setCurrent(this.selectedEvent);
     }
 }
