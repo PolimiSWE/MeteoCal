@@ -1,6 +1,5 @@
 package meteocal.backgroundworker;
 
-import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,9 +30,16 @@ public class BackgroundWorker {
     @EJB
     WeatherDataFacade wm;
 
+
+    //@PersistenceContext(unitName = "authPU")
+    //EntityManager manager;
+
+
     private WeatherHelper weatherHelper;
     private List<String> citiesList;
+    private List<String> citiesList2;
     private boolean startDailyProcedure;
+    private boolean startDailyProcedure2;
     private java.sql.Date dt1;
     private java.sql.Date dt2;
     private java.sql.Date dt3;
@@ -47,7 +53,9 @@ public class BackgroundWorker {
             this.weatherHelper = new WeatherHelper();
             this.weatherHelper.setCity("Milan");
             this.citiesList = new ArrayList<>();
+            this.citiesList2 = new ArrayList<>();
             this.startDailyProcedure = false;
+            this.startDailyProcedure2 = false;
             dt1 = new java.sql.Date(System.currentTimeMillis());
             dt1 = cutOffTheTime(dt1);
             dt2 = addDays(dt1, 1);
@@ -56,8 +64,6 @@ public class BackgroundWorker {
             dt5 = addDays(dt4, 1);
             dt6 = addDays(dt5, 1);
         }
-        //ScheduleExpression everyDay = new ScheduleExpression().second("*/5").minute("*").hour("*");
-        //timerService.createCalendarTimer(everyDay, new TimerConfig("", false));
     }
 
     public WeatherHelper getWeatherHelper() {
@@ -69,29 +75,17 @@ public class BackgroundWorker {
             return weatherHelper;
         }
     }
-
-    @Schedule(second = "*", minute = "*/5", hour = "*", persistent = false)
-    @SuppressWarnings("CallToPrintStackTrace")
-    public void checkWeatherAutoTimer() {
-        Calendar cal = Calendar.getInstance();
-        //gets current date from calendar
-        java.sql.Date dt = new java.sql.Date(cal.getTimeInMillis());
-        java.sql.Time tt = Time.valueOf("12:00:00");
-        weatherHelper.checkWeatherMainFun(weatherHelper.getCity(), dt, tt);
-    }
-
-    @Schedule(minute = "*/2", hour = "*", persistent = false)
-    @SuppressWarnings("CallToPrintStackTrace")
-    public void debugTimerMethod() {
-        setCityList();
-        deleteWDHistory(1);
-        clearNotifyOwnerHistory(3);
-        for (String ct : citiesList) {
-            checkWDforEvents(ct);
-        }
-        citiesList.clear();
-    }
-
+    //@Schedule(minute = "*/2", hour = "*", persistent = false)
+    //@SuppressWarnings("CallToPrintStackTrace")
+    /*public void debugTimerMethod() {
+     setCityList();
+     //deleteWDHistory(1);
+     //clearNotifyOwnerHistory(3);
+     for (String ct : citiesList) {
+     checkWDforEvents(ct);/////////////////////////////
+     }
+     citiesList.clear();
+     }*/
     //http://docs.oracle.com/javaee/6/tutorial/doc/bnboy.html
     @Schedule(hour = "0", persistent = false)
     @SuppressWarnings("CallToPrintStackTrace")
@@ -101,6 +95,7 @@ public class BackgroundWorker {
             deleteWDHistory(1);
             clearNotifyOwnerHistory(1);
             startDailyProcedure = true;
+            startDailyProcedure2 = true;
         }
     }
 
@@ -141,6 +136,8 @@ public class BackgroundWorker {
         hs.addAll(citiesList);
         citiesList.clear();
         citiesList.addAll(hs);
+        citiesList2.clear();
+        citiesList2.addAll(hs);
         //duplicates removed..
     }
 
@@ -149,16 +146,16 @@ public class BackgroundWorker {
     @SuppressWarnings("CallToPrintStackTrace")
     public void updateOneCityWeather() {
         ////////////////////////////////////////////////
-        //do the update checkWeather5days (WeatherData available on three hours) for each city on 3 minutes
+        //do the update checkWeather5days (WeatherData available on three hours) for each city on 10 minutes
         if (this.startDailyProcedure == true) {
             if (!this.citiesList.isEmpty()) {
                 String ct = citiesList.get(0);
                 doWDupdateForCity(ct);
                 checkWDforEvents(ct);
                 this.citiesList.remove(ct);
+            } else {
+                this.startDailyProcedure = false;
             }
-        } else {
-            this.startDailyProcedure = false;
         }
     }
 
@@ -240,6 +237,31 @@ public class BackgroundWorker {
         }
     }
 
+    @Schedule(minute = "*/10", hour = "3,4", persistent = false)
+    @SuppressWarnings("CallToPrintStackTrace")
+    public void checkWeatherAutoTimer() {
+        //do the update checkWeathe16days for each city on 10 minutes between 3 and 4 in the morning
+        if (this.startDailyProcedure2 == true) {
+            if (!this.citiesList2.isEmpty()) {
+                java.sql.Date dt = new java.sql.Date(System.currentTimeMillis());
+                dt = cutOffTheTime(dt);//today
+                dt = addDays(dt, 10);
+                java.sql.Time tt = Time.valueOf("12:00:00");
+                //call the function for one city
+                String ct = citiesList2.get(0);
+                this.weatherHelper.setCity(ct);
+                //we get weather data for specified date, for given city
+                this.weatherHelper.setWdList(wm.getWeatherDataListFromDB(ct, dt));
+                //main fun first checks if there are records in db, if not calls the api
+                this.weatherHelper.checkWeatherMainFun(ct, dt, tt);
+                this.wm.saveWdList(this.weatherHelper.getWdList());
+                this.citiesList2.remove(ct);
+            } else {
+                this.startDailyProcedure2 = false;
+            }
+        }
+    }
+
     public List<WeatherData> clearListForTheDay(List<WeatherData> wdl, java.sql.Date dt) {
         List<WeatherData> tmp = new ArrayList<>();
         for (WeatherData wd : wdl) {
@@ -250,20 +272,20 @@ public class BackgroundWorker {
         }
         return tmp;
     }
-    
-    public void clearNotifyOwnerHistory(int days){
+
+    public void clearNotifyOwnerHistory(int days) {
         java.sql.Date day = new java.sql.Date(System.currentTimeMillis());
         day = cutOffTheTime(day);//today
         for (int i = 1; i <= days; i++) {
             day = addDays(day, -1);//starts from yesterday
             List<Event> toPersist = em.findDirtyEventsForTheDay(day);
-            for(Event evt : toPersist){
+            for (Event evt : toPersist) {
                 evt.setNotifyOwner(false);
                 em.save(evt);
             }
         }
     }
-    
+
     public java.sql.Date cutOffTheTime(java.sql.Date dtOld) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(dtOld);
