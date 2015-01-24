@@ -6,6 +6,7 @@
 package meteocal.bean;
 
 import java.io.Serializable;
+import java.security.Principal;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -14,6 +15,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import meteocal.boundary.UserFacade;
 import meteocal.control.PasswordEncrypter;
@@ -32,6 +34,10 @@ public class LoginBean implements Serializable{
     
     @Inject
     UserBeanInterface userData;
+    
+    @Inject
+    Principal userPrincipal;
+    
     
 
     private String username;
@@ -63,12 +69,27 @@ public class LoginBean implements Serializable{
             }
                 
             if(this.tryLogIn(this.username, PasswordEncrypter.encryptPassword(this.password))){
-                this.userData.selectUser(username);
-                this.password ="";
-                this.passwordEntered = false;
-                this.username ="";
-                this.usernameEntered = false;
-                return "myCalendarPage"; 
+                               
+                FacesContext context = FacesContext.getCurrentInstance();
+                HttpServletRequest request = 
+                        (HttpServletRequest) context.getExternalContext().getRequest(); 
+                try {
+                    Principal tmpPrincipal = request.getUserPrincipal();
+                    if (tmpPrincipal != null) {
+                    request.logout();
+                    }
+                    request.login(this.username, this.password);
+                    this.userData.selectUser(this.userPrincipal.getName());
+                    this.password ="";
+                    this.passwordEntered = false;
+                    this.username ="";
+                    this.usernameEntered = false;
+                    return "/myCalendarPage";
+                } catch (ServletException e) {
+                    context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Login Failed","Login Failed"));
+                    
+                    return null;
+                } 
             }
             else{
                 FacesContext.getCurrentInstance()

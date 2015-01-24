@@ -5,16 +5,12 @@
  */
 package meteocal.boundary;
 
-import meteocal.boundary.UserManager;
-import meteocal.entity.Group;
 import meteocal.entity.User;
 import javax.persistence.EntityManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
 
 /**
  *
@@ -22,11 +18,11 @@ import static org.hamcrest.CoreMatchers.*;
  */
 public class UserManagerTest {
     
-    private UserManager cut;
+    private UserFacade cut;
     
     @Before
     public void setUp() {
-        cut = new UserManager();
+        cut = new UserFacade();
         cut.em = mock(EntityManager.class);
     }
     

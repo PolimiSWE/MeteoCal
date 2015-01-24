@@ -35,8 +35,8 @@
                     <p:link outcome="registerPage?faces-redirect=true" value="Sign Up"/>
                 </p:panelGrid>
                 <p:messages id="messages" autoUpdate="true" closable="true" />
-                <p:commandButton id="logInButton" 
-                                 
+                <p:commandButton id="logInButton"  ajax="true" update="@all"
+                               
                                  styleClass="log_in_button"
                                      action="#{loginBean.login()}" value="Log In" />
             </div>

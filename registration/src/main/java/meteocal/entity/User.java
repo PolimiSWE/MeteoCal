@@ -44,6 +44,10 @@ public class User implements Serializable,Comparable<User> {
     private String email;
     
     @NotNull(message = "May not be empty")
+    @Column(name = "groupName")
+    private String groupName;
+    
+    @NotNull(message = "May not be empty")
     @Column(name = "password")
     private String password;
     
@@ -93,6 +97,7 @@ public class User implements Serializable,Comparable<User> {
         this.name = "to be entered";
         this.surname = "to be entered";
         this.username = "to be entered";
+        this.groupName = Group.USERS;
         this.invitations = null;
         this.myCalendar = new Calendar(this);
     }
@@ -203,6 +208,14 @@ public class User implements Serializable,Comparable<User> {
         this.password = PasswordEncrypter.encryptPassword(password);
     }
 
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+    
     @Override
     public String toString() {
         return this.getName()+" "+this.getSurname()+" ("+this.getUsername()+")"; 

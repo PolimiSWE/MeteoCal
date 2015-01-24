@@ -5,7 +5,6 @@
  */
 package meteocal.boundary;
 
-import meteocal.boundary.UserManager;
 import meteocal.control.PasswordEncrypter;
 import meteocal.entity.User;
 import javax.ejb.EJB;
@@ -31,7 +30,7 @@ public class UserManagerIT {
     
 
     @EJB
-    UserManager cut;
+    UserFacade cut;
     
     @PersistenceContext
     EntityManager em;
@@ -42,7 +41,7 @@ public class UserManagerIT {
     @Deployment
     public static WebArchive createArchiveAndDeploy() {
         return ShrinkWrap.create(WebArchive.class)
-                .addClass(UserManager.class)
+                .addClass(UserFacade.class)
                 .addPackage(User.class.getPackage())
                 .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");

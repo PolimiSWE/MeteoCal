@@ -134,7 +134,7 @@ public class CalendarBean implements Serializable,CalendarBeanInterface {
         this.eventData.setCurrent(evt);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext(); 
             try {
-                context.redirect("editEventPage.xhtml");
+                context.redirect("/user/editEventPage.xhtml");
             } catch (IOException ex) {
                 Logger.getLogger(RegisterBean.class.getName()).log(Level.SEVERE, null, ex);
             }
