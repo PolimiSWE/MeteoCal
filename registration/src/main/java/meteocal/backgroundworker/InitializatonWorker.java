@@ -36,12 +36,15 @@ EntityManager em;
     
 @PostConstruct
     public void init() {
+        em.getEntityManagerFactory().getCache().evictAll();
+        em.flush();
         //see if some privacy type table is empty
         //if no do call the function init
         if (!isDatabaseInitialized()) {
             this.executeSqlInit();
         }
             em.getEntityManagerFactory().getCache().evictAll();
+            em.flush();
     }
     //@Schedule(minute = "*/1", hour = "*", persistent = false)
     //@SuppressWarnings("CallToPrintStackTrace")
