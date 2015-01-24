@@ -71,8 +71,8 @@ public class Event implements Serializable,Comparable<Event> {
     @Column(name = "duration")
     private Integer duration;            
     
-    @Column(name = "modified")
-    private Boolean modified;  
+    @Column(name = "passed")
+    private Boolean passed;  
     
     @NotNull(message = "May not be empty")
     @Column(name = "name")
@@ -221,12 +221,12 @@ public class Event implements Serializable,Comparable<Event> {
         this.invited = invited;
     }
 
-    public Boolean getModified() {
-        return modified;
+    public Boolean getPassed() {
+        return passed;
     }
 
-    public void setModified(Boolean modified) {
-        this.modified = modified;
+    public void setPassed(Boolean passed) {
+        this.passed = passed;
     }
 
     public String getName() {
