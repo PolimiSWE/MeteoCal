@@ -35,7 +35,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @author Nemanja
  */
 public class WeatherHelper {
-    
+
     private final String API_KEY = "9729dca762d8bae8edbd698333eb40d4";
     private final String API_BASE_URL = "http://api.openweathermap.org/data/2.5/";
     private String city;
@@ -46,17 +46,18 @@ public class WeatherHelper {
     //api.openweathermap.org/data/2.5/forecast?q=London,us
     //dayly, next 16 days
     //api.openweathermap.org/data/2.5/forecast/daily?q=London&cnt=16
-    
 
     private Client client;
     private List<WeatherData> wdList;
-    
+
     private static final Map<Integer, String> badWeatherCodes;
+
     static {
         Map<Integer, String> aMap = new HashMap<Integer, String>();
         addBadWeatherCodes(aMap);
         badWeatherCodes = Collections.unmodifiableMap(aMap);
     }
+
     @PostConstruct
     public void init() {
         this.client = ClientBuilder.newClient();
@@ -67,7 +68,7 @@ public class WeatherHelper {
         //timerService.createCalendarTimer(everyDay, new TimerConfig("", false));
     }
 
-    public void checkWeather16days(String city){
+    public void checkWeather16days(String city) {
         this.city = city;
         //api.openweathermap.org/data/2.5/forecast/daily?q=London&cnt=16
         String url = getAbsoluteUrl("forecast/daily");
@@ -157,7 +158,8 @@ public class WeatherHelper {
         }
 
     }
-    public List<WeatherData> getWDLforTheDay(List<WeatherData> wdl, Date date){
+
+    public List<WeatherData> getWDLforTheDay(List<WeatherData> wdl, Date date) {
         //take only weatherdata for given date "date"
         List<WeatherData> wdlForTheDay = new ArrayList<>();
         for (WeatherData wd : wdl) {
@@ -169,7 +171,16 @@ public class WeatherHelper {
         }
         return wdlForTheDay;
     }
-    
+
+    public Boolean dayHasGoodWeatherData(List<WeatherData> wdl) {
+        for (WeatherData wd : wdl) {
+            if (!isBadWeatherCode(wd.getCode())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void sortWeatherList() {
         Comparator<WeatherData> customComparator = new Comparator<WeatherData>() {
 
@@ -270,27 +281,24 @@ public class WeatherHelper {
         } catch (Exception e) {
             wd.setCity("Invalid");
         }
-        try{
+        try {
             wd.setDescription(jsonObject.getJSONArray("weather").getJSONObject(0).getString("description"));
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             wd.setDescription("No Description");
         }
-        
-        try{
+
+        try {
             wd.setIcon(jsonObject.getJSONArray("weather").getJSONObject(0).getString("icon"));
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             wd.setIcon("No Icon");
         }
-        
-        try{
+
+        try {
             wd.setCode(jsonObject.getJSONArray("weather").getJSONObject(0).getInt("id"));
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             wd.setCode(800);
         }
-        
+
         return wd;
     }
 
@@ -334,116 +342,56 @@ public class WeatherHelper {
             wd.setDate(java.sql.Date.valueOf("1970-1-1 22:22:22"));
             wd.setHour(Time.valueOf("22:22:22"));
         }
-        
+
         try {
             wd.setCity(this.getCity());
         } catch (Exception e) {
             wd.setCity("Invalid");
         }
-        
-        try{
+
+        try {
             wd.setDescription(jsonObject.getJSONArray("weather").getJSONObject(0).getString("description"));
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             wd.setDescription("No Description");
         }
-        
-        try{
+
+        try {
             wd.setIcon(jsonObject.getJSONArray("weather").getJSONObject(0).getString("icon"));
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             wd.setIcon("No Icon");
         }
-        
-        try{
+
+        try {
             wd.setCode(jsonObject.getJSONArray("weather").getJSONObject(0).getInt("id"));
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             wd.setCode(800);
         }
         // Return new object
         return wd;
     }
-    
-    public int getDateDiff(java.sql.Date dt1){
-        //get current date time with Calendar()
-	   Calendar cal = Calendar.getInstance();
-           
-           long d1=dt1.getTime();
-           long d2=cal.getTimeInMillis();
 
-           int diff = (int) (d1-d2)/(1000*60*60*24);//Math.abs(
-           if(diff<0)
-               return -1;
-           else if(diff<=5)
-               return 5;
-           else if(diff<=16)
-               return 16;
-           else 
-               return -2;
-    }
-
-     public int getDateDiff(java.sql.Date dt1, java.sql.Date dt2){
-        //get current date time with Calendar()
-	   Calendar cal = Calendar.getInstance();
-           
-           long d1=dt1.getTime();
-           long d2=dt2.getTime();
-
-           int diff = (int) (d1-d2)/(1000*60*60*24);
-           return diff;
-    }
-     
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getCnt() {
-        return cnt;
-    }
-
-    public void setCnt(String cnt) {
-        this.cnt = cnt;
-    }
-
-    public List<WeatherData> getWdList() {
-        return wdList;
-    }
-
-    public void setWdList(List<WeatherData> wdList) {
-        if(wdList!=null)
-            this.wdList = wdList;
-        else
-            this.wdList = new ArrayList<>();
-    }
-    
-    public void checkWeatherMainFun(String city, java.sql.Date dt, Time tt){
+    public void checkWeatherMainFun(String city, java.sql.Date dt, Time tt) {
         this.setCity(this.city);
         //if there is record WeatherData(City, date) in database 
-        if(wdList!=null)
-            if(wdList.isEmpty()){
+        if (wdList != null) {
+            if (wdList.isEmpty()) {
                 //call weather api
                 int diff = this.getDateDiff(dt);
-                if(diff == 5){
+                if (diff == 5) {
                     //if date is in next 5 days call checkweather5days
                     this.checkWeather5days(city);
                     this.wdList = this.getWdList();
-                }
-                else if(diff == 16){
+                } else if (diff == 16) {
                     //if date is in next 16 days call checkweather16days
                     this.checkWeather16days(city);
                     this.wdList = this.getWdList();
                 }
-            } 
-            else {//else leave it to scheduler (make scheduler that runs once a day)
+            } else {//else leave it to scheduler (make scheduler that runs once a day)
 
-            } 
+            }
+        }
     }
-    
+
     public void testFun() {
         //WeatherHelper helper = new WeatherHelper();
         this.checkWeather5days("London");
@@ -466,9 +414,9 @@ public class WeatherHelper {
         ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Mail.xml");
         MailSendingBean msb = (MailSendingBean) context.getBean("mailSendingBean");
         msb.sendMail("meteocaltester@gmail.com",
-    		   "nemtajo@yahoo.com",
-    		   "Subject-MeteoCal", 
-    		   "Testing only \n\n Sent from Java project");
+                "nemtajo@yahoo.com",
+                "Subject-MeteoCal",
+                "Testing only \n\n Sent from Java project");
 
     }
 
@@ -537,8 +485,81 @@ public class WeatherHelper {
         aMap.put(961, "violent storm");
         aMap.put(962, "hurricane");
     }
-    public boolean isBadWeatherCode(Integer code){
+
+    public boolean isBadWeatherCode(Integer code) {
         return badWeatherCodes.containsKey(code);
     }
-    
+
+    public java.sql.Date cutOffTheTime(java.sql.Date dtOld) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dtOld);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        dtOld.setTime(cal.getTimeInMillis());
+        return dtOld;
+    }
+
+    public java.sql.Date addDays(java.sql.Date dtOld, int days) {
+        return new java.sql.Date(dtOld.getTime() + (days) * 24 * 60 * 60 * 1000);
+    }
+
+    public int getDateDiff(java.sql.Date dt1) {
+        //get current date time with Calendar()
+        Calendar cal = Calendar.getInstance();
+
+        long d1 = dt1.getTime();
+        long d2 = cal.getTimeInMillis();
+
+        int diff = (int) (d1 - d2) / (1000 * 60 * 60 * 24);//Math.abs(
+        if (diff < 0) {
+            return -1;
+        } else if (diff <= 5) {
+            return 5;
+        } else if (diff <= 16) {
+            return 16;
+        } else {
+            return -2;
+        }
+    }
+
+    public int getDateDiff(java.sql.Date dt1, java.sql.Date dt2) {
+        //get current date time with Calendar()
+        Calendar cal = Calendar.getInstance();
+
+        long d1 = dt1.getTime();
+        long d2 = dt2.getTime();
+
+        int diff = (int) (d1 - d2) / (1000 * 60 * 60 * 24);
+        return diff;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCnt() {
+        return cnt;
+    }
+
+    public void setCnt(String cnt) {
+        this.cnt = cnt;
+    }
+
+    public List<WeatherData> getWdList() {
+        return wdList;
+    }
+
+    public void setWdList(List<WeatherData> wdList) {
+        if (wdList != null) {
+            this.wdList = wdList;
+        } else {
+            this.wdList = new ArrayList<>();
+        }
+    }
 }

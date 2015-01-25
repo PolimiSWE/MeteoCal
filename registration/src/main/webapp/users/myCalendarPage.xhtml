@@ -215,6 +215,7 @@
                                     <p:outputLabel value="Event date: #{in_notf.causedEvent.dateOfEvent.toString()}"/>
                                     <p:outputLabel value="Event time: #{in_notf.causedEvent.beginHour.toString()}"/>
                                     <p:outputLabel value="Description: #{in_notf.description}"/> 
+                                    <p:outputLabel value="Closest good weather date: #{weatherDataBean.getBestDate(in_notf.causedEvent.dateOfEvent,in_notf.causedEvent.city)}"/> 
                                     <p:commandButton value="OK" type="button"
                                              styleClass="event_dialog_button">
                                         <p:ajax event="click"

@@ -75,17 +75,18 @@ public class BackgroundWorker {
             return weatherHelper;
         }
     }
-    //@Schedule(minute = "*/2", hour = "*", persistent = false)
-    //@SuppressWarnings("CallToPrintStackTrace")
-    /*public void debugTimerMethod() {
+    @Schedule(minute = "*/2", hour = "5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23", persistent = false)
+    @SuppressWarnings("CallToPrintStackTrace")
+    public void debugTimerMethod() {
      setCityList();
-     //deleteWDHistory(1);
+     deleteWDHistory(1);
      //clearNotifyOwnerHistory(3);
      for (String ct : citiesList) {
      checkWDforEvents(ct);/////////////////////////////
      }
      citiesList.clear();
-     }*/
+     }
+    
     //http://docs.oracle.com/javaee/6/tutorial/doc/bnboy.html
     @Schedule(hour = "0", persistent = false)
     @SuppressWarnings("CallToPrintStackTrace")

@@ -16,6 +16,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import meteocal.boundary.WeatherDataFacade;
+import meteocal.entity.Event;
 import meteocal.entity.WeatherData;
 import meteocal.helper.WeatherHelper;
 
@@ -116,4 +117,16 @@ public class WeatherDataBean implements Serializable{
         this.wf.saveWdList(this.wdList);
     }
     
+    public java.sql.Date getBestDate(java.util.Date dtToConvert, String city){
+        java.sql.Date dtEvent = new java.sql.Date(dtToConvert.getTime());
+        dtEvent = this.weatherHelper.cutOffTheTime(dtEvent);
+        //java.sql.Time ttEvent = evt.getBeginHour();
+        for(int i=1; i<=16; i++){
+            java.sql.Date dtPossible = this.weatherHelper.addDays(dtEvent, i);
+            List<WeatherData> wdl = wf.getWeatherDataListFromDB(city, dtEvent);
+            if(this.weatherHelper.dayHasGoodWeatherData(wdl))
+                return dtPossible;
+        }
+        return null;//or dtEvent
+    }
 }
