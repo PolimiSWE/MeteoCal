@@ -11,10 +11,12 @@ import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import meteocal.control.PasswordEncrypter;
 import meteocal.entity.Calendar;
 import meteocal.entity.Group;
 import meteocal.entity.PrivacyType;
 import meteocal.entity.User;
+import static org.hamcrest.CoreMatchers.is;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -129,91 +131,69 @@ public class UserFacadeIT {
         assertEquals(usr2.getName(), usr3.getName());
     }
 
-    @Test
-    public void testRemove() {
+
+     @Test
+     public void testGetDB_Table() {
         User usr = new User();
-        usr.setEmail("ghjk@jeej.com");
+        usr.setEmail("vgturi@jeej.com");
         usr.setGroupName(Group.USERS);
         usr.setName("tester");
-        usr.setSurname("testing");
+        usr.setSurname("vgturi");
         usr.setUsername("ghjk");
         usr.setPassword("password");
+        Calendar cal = usr.getMyCalendar();
+        cal.setCalendarPrivacy(this.pttrue);
+        usr.setMyCalendar(cal);
         usf.save(usr);
-        int id = usr.getId().intValue();
-        User usr2 = usf.find(id);
-        usf.remove(usr2);
-        User usr3 = usf.find(id);
-        assertNull(usr3);
-    }
-        /*
-
-     @Test
-     public void testGetUser_int() throws Exception {
+         assertTrue(!usf.getDB_Table().isEmpty());
      }
 
      @Test
-     public void testGetDB_Table() throws Exception {
+     public void testCheckUsername() {
+        User usr = new User();
+        usr.setEmail("masala@jeej.com");
+        usr.setGroupName(Group.USERS);
+        usr.setName("tester");
+        usr.setSurname("vgturi");
+        usr.setUsername("masala");
+        usr.setPassword("password");
+        Calendar cal = usr.getMyCalendar();
+        cal.setCalendarPrivacy(this.ptfalse);
+        usr.setMyCalendar(cal);
+        usf.save(usr);
+        assertFalse(usf.checkUsername("masala"));
+     }
+         @Test
+     public void testCheckEmail() {
+        User usr = new User();
+        usr.setEmail("tyuio@jeej.com");
+        usr.setGroupName(Group.USERS);
+        usr.setName("tester");
+        usr.setSurname("vgturi");
+        usr.setUsername("tyuio");
+        usr.setPassword("password");
+        Calendar cal = usr.getMyCalendar();
+        cal.setCalendarPrivacy(this.ptfalse);
+        usr.setMyCalendar(cal);
+        usf.save(usr);
+        assertFalse(usf.checkEmail("tyuio@jeej.com"));
      }
 
-     @Test
-     public void testCheckUsername_User() throws Exception {
-     }
-
-     @Test
-     public void testCheckUsername_String() throws Exception {
-     }
-
-     @Test
-     public void testCheckEmail_User() throws Exception {
-     }
-
-     @Test
-     public void testCheckEmail_String() throws Exception {
-     }
-
-     @Test
-     public void testTryLogIn() throws Exception {
-     }
-
-     @Test
-     public void testGetUser_String() throws Exception {
-     }
-
-     @Test
-     public void testGetUserByEmail() throws Exception {
-     }
-
-     @Test
-     public void testUnregister() throws Exception {
-     }
-
-     @Test
-     public void testGetLoggedUser() throws Exception {
-     }
-     @Test
-     public void newUsersShouldBeValid() {
-     User newUser = new User();
-     newUser.setEmail("invalidemail");
-     try {
-     cut.save(newUser);
-     } catch (Exception e) {
-     assertTrue(e.getCause() instanceof ConstraintViolationException);
-     }
-     assertNull(em.find(User.class, "invalidemail"));
-     }
-    
      @Test
      public void passwordsShouldBeEncryptedOnDB() {
-     User newUser = new User();
-     String email = "marco@polimi.com";
-     String password = "password";
-     newUser.setEmail(email);
-     newUser.setName("Marco");
-     newUser.setPassword(password);
-     cut.save(newUser);
-     User foundUser = em.find(User.class, email);
-     assertNotNull(foundUser);
-     assertThat(foundUser.getPassword(),is(PasswordEncrypter.encryptPassword(password)));
+        User usr = new User();
+        usr.setEmail("tttttttt@jeej.com");
+        usr.setGroupName(Group.USERS);
+        usr.setName("tester");
+        usr.setSurname("vgturi");
+        usr.setUsername("tttttttt");
+        usr.setPassword("password");
+        Calendar cal = usr.getMyCalendar();
+        cal.setCalendarPrivacy(this.ptfalse);
+        usr.setMyCalendar(cal);
+        usf.save(usr);
+        User foundUser = usf.find(usr.getId());
+        assertNotNull(foundUser);
+        assertThat(foundUser.getPassword(),is(PasswordEncrypter.encryptPassword("password")));
      }
-     */
 }
