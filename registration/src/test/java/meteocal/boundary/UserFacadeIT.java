@@ -100,14 +100,29 @@ public class UserFacadeIT {
         usr.setSurname("testing");
         usr.setUsername("jesdfsdf");
         usr.setPassword("password");
+        Calendar cal = usr.getMyCalendar();
+        cal.setCalendarPrivacy(this.ptfalse);
+        usr.setMyCalendar(cal);
         usf.save(usr);
         User usr2 = usf.find(usr.getId());
         assertNotNull(usr2);
     }
 
+
     @Test
     public void testEdit() {
-        User usr2 = usf.find(user.getId());
+        User usr = new User();
+        usr.setEmail("adfadfsa@jeej.com");
+        usr.setGroupName(Group.USERS);
+        usr.setName("tester");
+        usr.setSurname("testing");
+        usr.setUsername("adfadfsa");
+        usr.setPassword("password");
+        Calendar cal = usr.getMyCalendar();
+        cal.setCalendarPrivacy(this.ptfalse);
+        usr.setMyCalendar(cal);
+        usf.save(usr);
+        User usr2 = usf.find(usr.getId());
         usr2.setName("opala");
         usf.save(usr2);
         User usr3 = usf.find(usr2.getId());
@@ -117,47 +132,20 @@ public class UserFacadeIT {
     @Test
     public void testRemove() {
         User usr = new User();
-        usr.setEmail("afasd@jeej.com");
+        usr.setEmail("ghjk@jeej.com");
         usr.setGroupName(Group.USERS);
         usr.setName("tester");
         usr.setSurname("testing");
-        usr.setUsername("afasd");
+        usr.setUsername("ghjk");
         usr.setPassword("password");
         usf.save(usr);
-        int id = user.getId().intValue();
+        int id = usr.getId().intValue();
         User usr2 = usf.find(id);
         usf.remove(usr2);
         User usr3 = usf.find(id);
         assertNull(usr3);
     }
-    /*
-     @Test
-     public void testFind() throws Exception {
-     }
-
-     @Test
-     public void testFindAll() throws Exception {
-     }
-
-     @Test
-     public void testFindRange() throws Exception {
-     }
-
-     @Test
-     public void testCount() throws Exception {
-     }
-
-     @Test
-     public void testCreateNew() throws Exception {
-     }
-
-     @Test
-     public void testSave() throws Exception {
-     }
-
-     @Test
-     public void testDelete() throws Exception {
-     }
+        /*
 
      @Test
      public void testGetUser_int() throws Exception {
