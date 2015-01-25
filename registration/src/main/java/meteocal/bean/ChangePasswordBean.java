@@ -224,6 +224,13 @@ public class ChangePasswordBean implements Serializable {
                                         "All data valid!"));
         }
     }
+    
+    public String goToCPPage(){
+        this.init();
+        return "changePasswordPage?faces-redirect=true";
+    }
+    
+    
     // <editor-fold defaultstate="collapsed" desc="Getters and setters">
 
     public boolean isCodeSent() {

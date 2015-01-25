@@ -8,8 +8,8 @@ package meteocal.boundary;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -66,13 +66,23 @@ public class EventFacade extends AbstractFacade<Event> {
             tmp = em.find(Event.class, (long)current.getId());
             if(tmp!=null)
             {
-                this.preparePrivacy(tmp, current_privacy);
-                this.prepareType(tmp, current_type);
-                this.prepareInvitations(tmp, current_invited);
-                this.prepareOwner(tmp, current_owner);
-                this.prepareBeginHour(tmp, current_input_beginHour);
-                this.prepareDateOfEvent(tmp, current_input_dateOfEvent);
-                //em.merge(current);
+                
+                List<Invitation> old_invites = (List<Invitation>) tmp.getInvitations();
+                //this.cleanUpInvites(old_invites);
+                this.preparePrivacy(current, current_privacy);
+                this.prepareType(current, current_type);
+                this.prepareInvitations(current, current_invited);
+                
+                this.prepareECNotification(current, old_invites);
+                
+                this.prepareOwner(current, current_owner);
+                this.prepareBeginHour(current, current_input_beginHour);
+                this.prepareDateOfEvent(current, current_input_dateOfEvent);
+                
+                em.merge(current);
+                em.flush();
+                
+                
                 em.flush();
             }
         }
@@ -85,23 +95,52 @@ public class EventFacade extends AbstractFacade<Event> {
             this.prepareBeginHour(current, current_input_beginHour);
             this.prepareDateOfEvent(current, current_input_dateOfEvent);
             em.persist(current);
-            //em.merge(current.getIncludedInCalendar());
             em.flush();
         }
     }
     
-    public void prepareNotification(Event evt){
-        List<Invitation> invites = (List<Invitation>) evt.getInvitations();
+    public void prepareECNotification(Event evt, List<Invitation> old_invites){
+        List<Invitation> new_invitations = (List<Invitation>) evt.getInvitations();
+        List<Invitation> CD_invites = new ArrayList<>(); // changed data notification
+        List<Invitation> UI_invites = new ArrayList<>(); // uninvited notification
         Notification notf;
-        for(Invitation inv: invites){
-            if(inv.getEventStatus().getStatus()==1){
+        for(Invitation inv: old_invites){
+            if(this.isInvited(inv, new_invitations))
+                CD_invites.add(inv);
+            else
+                UI_invites.add(inv);
+        }
+        for(Invitation inv: CD_invites){
+           
                 notf = new Notification();
-                notf.setDescription("Event details changed!");
+                notf.setDescription("Event:" + evt.parse() 
+                        + "Event details changed!"
+                        + "Please check the details IF available.");
                 notf.setOwner(inv.getUser());
                 em.persist(notf);
-            }
+            
         }
-        em.flush();
+        for(Invitation inv: UI_invites){
+           
+                notf = new Notification();
+                notf.setDescription("Event:" + evt.parse() 
+                        + "Event details changed!"
+                        + "You have been uninvited from the event.");
+                notf.setOwner(inv.getUser());
+                em.persist(notf);
+            
+        }
+      //  em.flush();
+    }
+    
+    public boolean isInvited(Invitation invite, List<Invitation> invites){
+        boolean indicator=false;
+        for(Invitation inv: invites)
+            if(Objects.equals(inv.getUser().getId(), invite.getUser().getId())) {
+                indicator = true;
+            } else {
+            }
+        return indicator;
     }
     
     public void delete(int evtId) {
@@ -109,6 +148,7 @@ public class EventFacade extends AbstractFacade<Event> {
         evt = em.find(Event.class, (long)evtId);
         if(evt != null)
         {
+            this.prepareEDNotifications(evt);
             em.remove(evt);
         }
         em.flush();
@@ -154,10 +194,10 @@ public class EventFacade extends AbstractFacade<Event> {
         EventStatus es = query.getResultList().get(0);
         Invitation inv;
         List<Invitation> invites = new ArrayList<>();
-        for (Iterator<User> iter = current_invited.iterator(); iter.hasNext(); ) {
+        for (User u: current_invited ) {
             inv = new Invitation();
             inv.setEvent(current);
-            inv.setUser(iter.next());
+            inv.setUser(u);
             inv.setEventStatus(es);
             invites.add(inv);
         }
@@ -243,4 +283,32 @@ public class EventFacade extends AbstractFacade<Event> {
         else
             return new ArrayList<>();
     }
+
+    private void prepareEDNotifications(Event evt) {
+        List<Invitation> invites = (List<Invitation>) evt.getInvitations();
+        Notification notf;
+        for(Invitation inv: invites)
+        {
+                notf = new Notification();
+                notf.setDescription("Event:" + evt.parse() 
+                        + "Event Deleted by Owner!"
+                       );
+                notf.setOwner(inv.getUser());
+                em.persist(notf);
+        }
+        em.flush();
+    }
+
+    private void cleanUpInvites(List<Invitation> old_invites) {
+       for(Invitation inv: old_invites)
+               em.remove(inv);
+       em.flush();
+    }
+
+    public void updateDirty(Event evt) {
+        evt.setNotifyOwner(false);
+        em.merge(evt);
+        em.flush();
+    }
+    
 }

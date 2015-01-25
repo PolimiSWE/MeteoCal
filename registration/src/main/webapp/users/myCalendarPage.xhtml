@@ -14,15 +14,16 @@
                 <p:commandButton value="Log Out" action="#{loginBean.logout()}"
                                              styleClass="navigation_button_class" />
                 <div class="navigation_divider"/>
-                <p:commandButton value="Change Password" action="changePasswordPage"
+                <p:commandButton value="Change Password" action="#{changePasswordBean.goToCPPage()}"
                                              styleClass="navigation_button_class" />
                 <div class="navigation_divider"/>
-                <p:commandButton value="Go to Public Calendars" action="/users/publicCalendarsPage"
+                <p:commandButton value="Go to Public Calendars" action="publicCalendarsPage?faces-redirect=true"
+                                 ajax="true" update="@all"
                     styleClass="navigation_button_class" >
                     <f:ajax event="click" listener="#{calendarBean.goToPublicCalendarsPage()}" />       
                 </p:commandButton>
                 <div class="navigation_divider"/>
-                <p:commandButton value="Go to My Events" action="/users/editEventPage"
+                <p:commandButton value="Go to My Events" action="editEventPage?faces-redirect=true"
                     styleClass="navigation_button_class" >
                            
                 </p:commandButton>
@@ -192,11 +193,17 @@
                                 <p:panelGrid columns="1" styleClass="notification_class"
                                              columnClasses="notification_column_class">
                                     <p:outputLabel value="Event owner: #{ex_notf.owner.toString()}"/>
-                                    <p:outputLabel value="Description: #{ex_notf.description}"/>                    
+                                    <p:outputLabel value="Description: #{ex_notf.description}"/>
+                                    <p:commandButton value="OK" type="button"
+                                             styleClass="event_dialog_button">
+                                        <p:ajax event="click"
+                                                listener="#{notificationBean.clearNotf(ex_notf.id)}"
+                                                update=":form_my_calendar"/>
+                                    </p:commandButton>
                                 </p:panelGrid>
 
                             </p:dataScroller>
-                            <p:poll interval="60" listener="#{userBean.updateNotifications()}" 
+                            <p:poll interval="20" listener="#{userBean.updateNotifications()}" 
                                         update="form_my_calendar:external_notifications
                                                 form_my_calendar:internal_notifications" />
                             <p:dataScroller value="#{notificationBean.internalNOTF}" id="internal_notifications"
@@ -207,7 +214,13 @@
                                     <p:outputLabel value="Event: #{in_notf.causedEvent.name}"/>
                                     <p:outputLabel value="Event date: #{in_notf.causedEvent.dateOfEvent.toString()}"/>
                                     <p:outputLabel value="Event time: #{in_notf.causedEvent.beginHour.toString()}"/>
-                                    <p:outputLabel value="Description: #{in_notf.description}"/>                    
+                                    <p:outputLabel value="Description: #{in_notf.description}"/> 
+                                    <p:commandButton value="OK" type="button"
+                                             styleClass="event_dialog_button">
+                                        <p:ajax event="click"
+                                                listener="#{notificationBean.clearInternalNotf(in_notf.causedEvent.id)}"
+                                                update=":form_my_calendar"/>
+                                    </p:commandButton>
                                 </p:panelGrid>
                                    
                             </p:dataScroller>
@@ -254,23 +267,29 @@
                                 <h:outputText value="#{dayHelperLazyView.selectedEvent.eventType}" />
 
                                 <p:commandButton value="Edit" type="button"
-                                rendered="#{dayHelperLazyView.selectedEvent.includedInCalendar.owner.toString() eq 
-                                            userBean.current.toString()}"
+                                                 rendered="#{not dayHelperLazyView.selectedEvent.isPassed()}"                 
+                                disabled="#{not(dayHelperLazyView.selectedEvent.includedInCalendar.owner.toString() eq 
+                                            userBean.current.toString())}"
+                                            update="@all"
                                                  onclick="PF('eventDialog').hide();" 
                                                  styleClass="event_dialog_button">
                                     <p:ajax listener="#{calendarBean.goToEditEventPage(dayHelperLazyView.selectedEvent)}" />
                                 </p:commandButton>
                                 <p:commandButton value="Delete" type="button" 
+                                                 rendered="#{not dayHelperLazyView.selectedEvent.isPassed()}"
                                                  onclick="PF('eventDialog').hide();" 
-                                    styleClass="event_dialog_button">
+                                                 styleClass="event_dialog_button">
                                     <p:ajax listener="#{calendarBean.deleteEvent(dayHelperLazyView.selectedEvent,userBean.current)}"
-                                                    update="form_my_calendar" />                 
+                                                    update="form_my_calendar
+                                                    :form_my_calendar:invitationTable" />                 
                                 </p:commandButton>
-
+                                <p:outputLabel value="Event Passed" 
+                                          rendered="#{dayHelperLazyView.selectedEvent.isPassed()}" />
                             </p:panelGrid>
+                            
                             <p:dataTable var="weatherData" value="#{weatherDataLazyView.lazyModel}"
                                          paginatorPosition="top"
-                                         paginator="true" rows="3" styleClass="event_dialog_weather_data_class"
+                                         paginator="true" rows="4" styleClass="event_dialog_weather_data_class"
                                          paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"
                                          id="weatherDataTable" lazy="true">
                                 <p:ajax event="page" update=":form_my_calendar:weatherDataTable" />
@@ -314,10 +333,10 @@
                             <h:outputText value="#{invitationLazyView.selectedInvitation.id}" />
 
                             <h:outputText value="Invited by" />
-                            <h:outputText value="#{invitationLazyView.selectedInvitation.user}" />
+                            <h:outputText value="#{invitationLazyView.selectedInvitation.user.toString()}" />
 
                             <h:outputText value="Invitation status" />
-                            <h:outputText value="#{invitationLazyView.selectedInvitation.eventStatus}" />
+                            <h:outputText value="#{invitationLazyView.selectedInvitation.eventStatus.toString()}" />
 
                             <h:outputText value="Event" />
                             <h:outputText value="#{invitationLazyView.selectedInvitation.event.name}" />
@@ -337,19 +356,30 @@
                             <h:outputText value="Address" />
                             <h:outputText value="#{invitationLazyView.selectedInvitation.event.streetAndNumber}" />
 
-                            <p:commandButton value="Accept" type="button"                                                  
+                            <p:commandButton value="Accept" type="button"
+                                             rendered="#{not invitationLazyView.selectedInvitation.event.isPassed()}"
+                                             disabled="#{not((invitationLazyView.selectedInvitation.eventStatus eq 'Pending' )
+                                                         or
+                                                          (invitationLazyView.selectedInvitation.eventStatus eq 'Declined' ) )}"
                                              onclick="PF('invitationDialog').hide();" 
                                              styleClass="invitation_dialog_button">
                                 <p:ajax listener="#{calendarBean.acceptInvite(invitationLazyView.selectedInvitation)}" 
                                         update=":form_my_calendar"/>
                             </p:commandButton>
-                            <p:commandButton value="Decline" type="button" 
+                            <p:commandButton value="Decline" type="button"
+                                             rendered="#{not invitationLazyView.selectedInvitation.event.isPassed()}"
+                                             disabled="#{not((invitationLazyView.selectedInvitation.eventStatus=='Pending')
+                                                        or
+                                                        (invitationLazyView.selectedInvitation.eventStatus=='Accepted'))}"
                                              onclick="PF('invitationDialog').hide();" 
                                 styleClass="invitation_dialog_button">
                                 <p:ajax listener="#{calendarBean.declineInvite(invitationLazyView.selectedInvitation)}"
                                         update=":form_my_calendar"/>             
                             </p:commandButton>
                         </p:panelGrid>
+                        <p:outputLabel value="Event Passed" 
+                                      rendered="#{invitationLazyView.selectedInvitation.event.isPassed()}"
+                                />
                     </p:outputPanel>
                 </p:dialog>
             </h:form>

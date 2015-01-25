@@ -110,9 +110,16 @@ public class PublicCalendarsBean implements Serializable {
             }
     }
     
+    public void update(){
+        this.populateUsers();
+        this.populateEvents();
+        this.populateInvitations();
+        this.populateCalHelper();
+    }
+    
     public void goToMyCalendarPage(){
+        this.calendarData.update();
         this.dayHelperView.initDayHelperLazyDataModel(this.calendarData.getCalHelper());
-        this.calendarData.populateInvitations();
     }
     
     public void populateCalHelper(){

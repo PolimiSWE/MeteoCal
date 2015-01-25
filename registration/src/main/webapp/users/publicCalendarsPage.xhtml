@@ -15,14 +15,16 @@
                                              styleClass="navigation_button_class" />
                 <div class="navigation_divider"/>
                 <p:commandButton value="Change Password" action="changePasswordPage?faces-redirect=true"
+                                 ajax="true" update="@all"
                                              styleClass="navigation_button_class" />
                 <div class="navigation_divider"/>
                 <p:commandButton value="Go to My Calendar" action="myCalendarPage?faces-redirect=true"
                     styleClass="navigation_button_class" >
-                    <f:ajax event="click" listener="#{calendarBean.goToPublicCalendarsPage()}" />  
+                    <f:ajax event="click" listener="#{calendarBean.goToMyCalendarPage()}" />  
                 </p:commandButton>
                 <div class="navigation_divider"/>
                 <p:commandButton value="Go to My Events" action="editEventPage?faces-redirect=true"
+                                 ajax="true" update="@all"
                                              styleClass="navigation_button_class" />
                                          
             </h:form>

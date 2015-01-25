@@ -49,7 +49,7 @@ public class UserPickListView implements Serializable {
         return users;
     }
  
-    public void setThemes(DualListModel<User> users) {
+    public void setUsers(DualListModel<User> users) {
         this.users = users;
     }
      

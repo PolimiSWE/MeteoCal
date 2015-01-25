@@ -87,7 +87,7 @@ public class CalendarBean implements Serializable,CalendarBeanInterface {
     }
     
     public void deleteEvent(Event evt, User usr){
-        User u = evt.getIncludedInCalendar().getOwner();
+        User u = evt.getIncludedInCalendar().getOwner(); // add notf deleted
         if(u.getId().equals(this.current.getOwner().getId())){
              this.commonData.deleteEvent(evt);
              this.commonData.populateEvents();
@@ -134,19 +134,37 @@ public class CalendarBean implements Serializable,CalendarBeanInterface {
         this.eventData.setCurrent(evt);
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext(); 
             try {
-                context.redirect("/user/editEventPage.xhtml");
+                context.redirect("editEventPage.xhtml");
             } catch (IOException ex) {
                 Logger.getLogger(RegisterBean.class.getName()).log(Level.SEVERE, null, ex);
             }
     }
     
+    @Override
+    public void update() {
+        this.commonData.update();
+        this.populateInvitations();
+        this.populateCalHelper();
+        this.dayHelperView.initDayHelperLazyDataModel(calHelper);
+    }
     
     public void goToPublicCalendarsPage(){
-        if(this.pubCalData.getCurrent().getOwner()!=null)
+        if(this.pubCalData.getCurrent().getOwner()!=null){
+            this.pubCalData.update();
             this.dayHelperView.initDayHelperLazyDataModel(this.pubCalData.getCalHelper());
+            this.pubCalData.usersView.init();
+        }
         else
             this.dayHelperView.initDayHelperLazyDataModel(new CalendarHelper(new Date(System.currentTimeMillis())));
         this.pubCalData.populateUsers();
+    }
+    
+    public void goToMyCalendarPage(){
+        this.commonData.update();
+        this.populateInvitations();
+        this.populateCalHelper();
+        this.dayHelperView.initDayHelperLazyDataModel(this.calHelper);
+        this.invitationsView.initInvitationDataModel(this.commonData.getAllInvites());
     }
     
     
@@ -204,5 +222,18 @@ public class CalendarBean implements Serializable,CalendarBeanInterface {
         }
         this.calHelper.setCurrentWeek(daysOfweek);
         this.dayHelperView.initDayHelperLazyDataModel(calHelper);
+    }
+
+    
+    public boolean isDateInThePast(Object day){
+        java.util.Date now = new Date(System.currentTimeMillis());
+        java.util.Date evt_date = new Date(((java.util.Date) day).getTime());
+        return now.compareTo(evt_date)<0;    
+    }
+    
+    public boolean isTimeToSoon(Object time){
+        java.util.Date now = new java.util.Date(System.currentTimeMillis());
+        java.util.Date evt_time = new Date(((Date) time).getTime());
+        return now.compareTo(evt_time)<0;
     }
 }

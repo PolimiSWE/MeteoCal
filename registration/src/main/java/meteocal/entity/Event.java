@@ -130,6 +130,14 @@ public class Event implements Serializable,Comparable<Event> {
         this.streetAndNumber = "Enter Address";
     }
     
+    public boolean isPassed(){
+        Date now = new Date(System.currentTimeMillis());
+        if(dateOfEvent!=null)
+            return now.compareTo(dateOfEvent)>0;
+        else
+            return true;
+    }
+    
     
     
     //Getters and Setters 
@@ -335,6 +343,12 @@ public class Event implements Serializable,Comparable<Event> {
     @Override
     public int compareTo(Event o) {
        return this.getName().compareTo(o.getName());
+    }
+
+    public String parse() {
+        return "Event details:  'Event name: " + this.name
+                + "', 'Event date:" + this.dateOfEvent.toString()
+                + "', 'Event time:" + this.beginHour.toString() + "'." ;
     }
     
 }

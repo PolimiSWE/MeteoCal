@@ -18,4 +18,6 @@ public interface CalendarBeanInterface {
     public void populateCalHelper();
     public void populateInvitations();
     public CalendarHelper getCalHelper();
+
+    public void update();
 }

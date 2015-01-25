@@ -77,6 +77,7 @@ public class CommonBean implements Serializable,CommonBeanInterface {
     
     private List<User> allUsers;
     private List<String> allUsersString;
+    private List<User> allUsersDB;
     // </editor-fold>
     
     
@@ -102,7 +103,8 @@ public class CommonBean implements Serializable,CommonBeanInterface {
     public void Init() {
         
         this.populateCalendars();
-        this.populateUsers();    
+        this.populateUsers();
+        this.allUsersDB = this.userFacade.findAll();
     }
     
      @Override
@@ -159,7 +161,7 @@ public class CommonBean implements Serializable,CommonBeanInterface {
     
     @Override
     public List<User> fetchAllUser(User usr){
-        List<User> output = this.allUsers;
+        List<User> output = this.userFacade.findAll();
         User tmp = new User();
         for(User u : output)
             if(u.getId().equals(usr.getId()))
@@ -399,5 +401,19 @@ public class CommonBean implements Serializable,CommonBeanInterface {
         this.pendingInvites = pendingInvites;
     }
     // </editor-fold>
+
+    @Override
+    public void update() {
+        this.populateEvents();
+        this.populateInvitations();
+        this.allUsersDB = this.userFacade.findAll();
+    }
+
+    public Object getUserByString(String arg2) {
+        for(User u: this.allUsersDB)
+            if(u.toString().equals(arg2))
+                return u;
+        return null;
+    }
 
 }

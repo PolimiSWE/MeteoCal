@@ -37,5 +37,14 @@ public class NotificationFacade extends AbstractFacade<Notification> {
     public NotificationFacade() {
         super(Notification.class);
     }
+
+   
+
+    public void removeByID(long notf_id) {
+       Notification notf = em.find(Notification.class, notf_id);
+       if(notf!=null)
+            em.remove(notf);
+       em.flush();
+    }
     
 }
