@@ -18,48 +18,36 @@ import meteocal.entity.EventType;
  */
 @Stateless
 public class EventTypeFacade extends AbstractFacade<EventType> {
-    
+
     @PersistenceContext(unitName = "authPU")
     private EntityManager em;
 
-    public EventType createNew(){
+    public EventType createNew() {
         EventType tmp = new EventType();
         em.persist(tmp);
         em.flush();
         return tmp;
     }
-    
+
     public void save(EventType et) {
         EventType tmp;
-        if(et.getId() != null) 
-        {
-            tmp = em.find(EventType.class, (long)et.getId());
-            if(tmp!=null)
-            {
+        if (et.getId() != null) {
+            tmp = em.find(EventType.class, (long) et.getId());
+            if (tmp != null) {
                 em.merge(et);
                 em.flush();
-            } else {
-                List<EventType> etList = getDB_Table();
-                boolean etype = et.getType();
-                boolean found = false;
-                for (EventType ett : etList) {
-                    if (ett.getType() == etype) {
-                        found = true;
-                    }
-                }
-                if (!found) {
-                    em.persist(et);
-                    em.flush();
-                }
             }
+        } else {
+            em.persist(et);
+            em.flush();
         }
+
     }
-    
+
     public void delete(int etId) {
         EventType et;
-        et = em.find(EventType.class, (long)etId);
-        if(et != null)
-        {
+        et = em.find(EventType.class, (long) etId);
+        if (et != null) {
             em.remove(et);
         }
         em.flush();
@@ -67,18 +55,19 @@ public class EventTypeFacade extends AbstractFacade<EventType> {
 
     public EventType getEventType(int etId) {
         EventType et;
-        et = em.find(EventType.class, (long)etId);
-        if(et != null)
+        et = em.find(EventType.class, (long) etId);
+        if (et != null) {
             return et;
-        else
+        } else {
             return new EventType();
+        }
     }
 
     public List<EventType> getDB_Table() {
         TypedQuery<EventType> query = em.createQuery("SELECT et FROM EventType AS et", EventType.class);
         return query.getResultList();
     }
-    
+
     @Override
     protected EntityManager getEntityManager() {
         return em;
@@ -88,4 +77,19 @@ public class EventTypeFacade extends AbstractFacade<EventType> {
         super(EventType.class);
     }
     
+    @Override
+    public List<EventType> findAll() {
+        TypedQuery<EventType> query = em.createQuery("SELECT et FROM EventType AS et", EventType.class);
+        return query.getResultList();
+    }
+
+    public EventType find(int id) {
+        EventType et;
+        et = em.find(EventType.class, (long) id);
+        if (et != null) {
+            return et;
+        }
+        else
+            return null;
+    }
 }

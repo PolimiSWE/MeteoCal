@@ -61,41 +61,41 @@ public class PrivacyTypeFacadeIT {
     @Test
     public void testCreate() {
         PrivacyType pt = new PrivacyType();
-        pt.setId(intToLong(190000000));
         ptf.save(pt);
         try {
-            assertNotNull(ptf.find(intToLong(190000000)));
+            assertNotNull(ptf.find(pt.getId()));
         } catch (Exception e) {
             Logger.getLogger(PrivacyTypeFacadeIT.class.getName()).log(Level.SEVERE, null, e);
+            fail();
         }
     }
 
     @Test
     public void testUpdate() {
         PrivacyType pt = new PrivacyType();
-        pt.setId(intToLong(190000000));
         pt.setPrivacy(false);
         ptf.save(pt);
-        PrivacyType pt2 = ptf.find(intToLong(190000000));
+        PrivacyType pt2 = ptf.find(pt.getId());
         pt2.setPrivacy(true);
         ptf.save(pt2);
         try {
-            assertTrue(ptf.find(intToLong(190000000)).getPrivacy());
+            assertTrue(ptf.find(pt.getId()).getPrivacy());
         } catch (Exception e) {
             Logger.getLogger(PrivacyTypeFacadeIT.class.getName()).log(Level.SEVERE, null, e);
+            fail();
         }
     }
     
     @Test
     public void testDelete(){
         PrivacyType pt = new PrivacyType();
-        pt.setId(intToLong(190000000));
         ptf.save(pt);
-        ptf.delete(190000000);
+        ptf.delete(pt.getId().intValue());
         try {
-            assertNull(ptf.find(intToLong(190000000)));
+            assertNull(ptf.find(pt.getId()));
         } catch (Exception e) {
             Logger.getLogger(PrivacyTypeFacadeIT.class.getName()).log(Level.SEVERE, null, e);
+            fail();
         }
     }
 

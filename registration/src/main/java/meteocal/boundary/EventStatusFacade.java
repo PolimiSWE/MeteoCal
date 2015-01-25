@@ -40,8 +40,7 @@ public class EventStatusFacade extends AbstractFacade<EventStatus> {
             }
             em.flush();
         } catch (Exception e) {
-            tmp = new EventStatus(es);
-            em.persist(tmp);
+            em.persist(es);
             em.flush();
         }
     }

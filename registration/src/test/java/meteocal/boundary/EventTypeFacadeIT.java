@@ -6,6 +6,7 @@
 package meteocal.boundary;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -58,59 +59,64 @@ public class EventTypeFacadeIT {
     @Test
     public void testCreate() {
         EventType et = new EventType();
-        et.setId(intToLong(160000000));
         etf.save(et);
         try {
-            assertNotNull(etf.find(intToLong(160000000)));
+            assertNotNull(etf.find(et.getId()));
         } catch (Exception e) {
             Logger.getLogger(EventTypeFacadeIT.class.getName()).log(Level.SEVERE, null, e);
+            fail();
         }
     }
 
     @Test
     public void testUpdate(){
         EventType et = new EventType();
-        et.setId(intToLong(160000000));
+        et.setEventList(new ArrayList<>());
         et.setType(false);
         etf.save(et);
-        EventType et2 = etf.find(intToLong(160000000));
+        EventType et2 = etf.find(et.getId());
         et2.setType(true);
         etf.save(et2);
         try {
-            assertTrue(etf.find(intToLong(160000000)).getType());
+            assertTrue(etf.find(et2.getId()).getType());
         } catch (Exception e) {
             Logger.getLogger(EventTypeFacadeIT.class.getName()).log(Level.SEVERE, null, e);
+            fail();
         }
     }
 
     @Test
     public void testDelete() {
         EventType et = new EventType();
-        et.setId(intToLong(160000000));
+        et.setEventList(new ArrayList<>());
         et.setType(false);
         etf.save(et);
-        etf.delete(160000000);
+        int id = et.getId().intValue();
+        etf.delete(id);
         try {
-            assertNull(etf.find(intToLong(160000000)));
+            EventType et2 = etf.find(id);
+            assertNull(et2);
         } catch (Exception e) {
             Logger.getLogger(EventTypeFacadeIT.class.getName()).log(Level.SEVERE, null, e);
+            fail();
         }
     }
 
     @Test
     public void testGetDB_Table() {
         EventType et1 = new EventType();
-        et1.setId(intToLong(160000000));
+        et1.setEventList(new ArrayList<>());
         et1.setType(false);
         etf.save(et1);
         EventType et2 = new EventType();
-        et2.setId(intToLong(160000001));
+        et2.setEventList(new ArrayList<>());
         et2.setType(true);
         etf.save(et2);
         try {
             assertEquals(2, etf.getDB_Table().size());
         } catch (Exception e) {
             Logger.getLogger(EventTypeFacadeIT.class.getName()).log(Level.SEVERE, null, e);
+            fail();
         }
     }
     

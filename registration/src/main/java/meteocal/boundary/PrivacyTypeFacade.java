@@ -36,20 +36,10 @@ public class PrivacyTypeFacade extends AbstractFacade<PrivacyType> {
             if (tmp != null) {
                 em.merge(pt);
                 em.flush();
-            } else {
-                List<PrivacyType> ptList = getDB_Table();
-                boolean ptprivacy = pt.getPrivacy();
-                boolean found = false;
-                for (PrivacyType ptt : ptList) {
-                    if (ptt.getPrivacy() == ptprivacy) {
-                        found = true;
-                    }
-                }
-                if (!found) {
-                    em.persist(pt);
-                    em.flush();
-                }
-            }
+            } 
+        } else {
+            em.persist(pt);
+            em.flush();
         }
     }
 

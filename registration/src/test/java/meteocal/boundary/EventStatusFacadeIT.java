@@ -60,53 +60,51 @@ public class EventStatusFacadeIT {
     @Test
     public void testCreate() {
         EventStatus es = new EventStatus();
-        es.setId(intToLong(150000000));
         esf.save(es);
         try {
-            assertNotNull(esf.find(intToLong(150000000)));
+            assertNotNull(esf.find(es.getId()));
         } catch (Exception e) {
             Logger.getLogger(EventStatusFacadeIT.class.getName()).log(Level.SEVERE, null, e);
+            fail();
         }
     }
 
     @Test
     public void testUpdate() {
         EventStatus es = new EventStatus();
-        es.setId(intToLong(150000000));
         es.setStatus(0);
         esf.save(es);
-        EventStatus es2 = esf.find(intToLong(150000000));
+        EventStatus es2 = esf.find(es.getId());
         es2.setStatus(1);
         esf.save(es2);
         try {
-            assertTrue(esf.find(intToLong(150000000)).getStatus().equals(1));
+            assertTrue(esf.find(es2.getId()).getStatus().equals(1));
         } catch (Exception e) {
             Logger.getLogger(EventStatusFacadeIT.class.getName()).log(Level.SEVERE, null, e);
+            fail();
         }
     }
 
     @Test
     public void testDelete() {
         EventStatus es = new EventStatus();
-        es.setId(intToLong(150000000));
         es.setStatus(0);
         esf.save(es);
-        esf.delete(150000000);
+        esf.delete(es.getId().intValue());
         try {
-            assertNull(esf.find(intToLong(150000000)));
+            assertNull(esf.find(es.getId()));
         } catch (Exception e) {
             Logger.getLogger(EventStatusFacadeIT.class.getName()).log(Level.SEVERE, null, e);
+            fail();
         }
     }
     
     @Test
     public void testGetDBTable(){
         EventStatus es1 = new EventStatus();
-        es1.setId(intToLong(150000000));
         es1.setStatus(0);
         esf.save(es1);
         EventStatus es2 = new EventStatus();
-        es2.setId(intToLong(150000001));
         es2.setStatus(0);
         esf.save(es2);
         try {

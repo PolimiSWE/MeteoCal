@@ -16,7 +16,7 @@ import meteocal.entity.PrivacyType;
 
 /**
  *
- * @author miglie
+ * @author milos
  */
 @Stateless
 public class UserFacade extends AbstractFacade<User> {
