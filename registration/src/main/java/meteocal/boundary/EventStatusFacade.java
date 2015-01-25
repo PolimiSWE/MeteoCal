@@ -33,7 +33,11 @@ public class EventStatusFacade extends AbstractFacade<EventStatus> {
         EventStatus tmp;
         try {
             tmp = em.find(EventStatus.class, (long) es.getId());
-            em.merge(es);
+            if (tmp == null) {
+                em.persist(es);
+            } else {
+                em.merge(es);
+            }
             em.flush();
         } catch (Exception e) {
             tmp = new EventStatus(es);
@@ -49,6 +53,22 @@ public class EventStatusFacade extends AbstractFacade<EventStatus> {
             em.remove(es);
         }
         em.flush();
+    }
+
+    @Override
+    public List<EventStatus> findAll() {
+        TypedQuery<EventStatus> query = em.createQuery("SELECT es FROM EventStatus AS es", EventStatus.class);
+        return query.getResultList();
+    }
+
+    public EventStatus find(int id) {
+        EventStatus es;
+        es = em.find(EventStatus.class, (long) id);
+        if (es != null) {
+            return es;
+        }
+        else
+            return null;
     }
 
     public EventStatus getEventType(int esId) {

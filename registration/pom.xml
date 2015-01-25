@@ -42,11 +42,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jboss.arquillian.junit</groupId>
-            <artifactId>arquillian-junit-container</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.jboss.arquillian.container</groupId>
             <artifactId>arquillian-glassfish-embedded-3.1</artifactId>
             <version>1.0.0.CR4</version>
@@ -58,17 +53,24 @@
             <version>4.1</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.jboss.arquillian.junit</groupId>
+            <artifactId>arquillian-junit-container</artifactId>
+            <scope>test</scope>
+            <version>1.1.5.Final</version>
+        </dependency>
         <!-- Java Mail API -->
         <dependency>
-             <groupId>javax.mail</groupId>
-             <artifactId>mail</artifactId>
-             <version>1.4.3</version>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.3</version>
         </dependency>
         <!-- Spring framework -->
         <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring</artifactId>
-                <version>2.5.6</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring</artifactId>
+            <version>2.5.6</version>
         </dependency>
     </dependencies>
     <dependencyManagement>

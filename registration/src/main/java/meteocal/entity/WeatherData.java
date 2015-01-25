@@ -44,7 +44,7 @@ public class WeatherData implements Serializable {
     private Date date;
     
     @NotNull(message = "May not be empty")
-    @Column(name = "hour")
+    @Column(name = "w_hour")
     private Time hour;
    
     @Column(name = "preasure")
