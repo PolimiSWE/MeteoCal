@@ -64,13 +64,20 @@ public class UserFacade extends AbstractFacade<User> {
         em.flush();
     }
 
-    public User getUser(int usrId) {
+    @Override
+    public List<User> findAll() {
+        TypedQuery<User> query = em.createQuery("SELECT usr FROM User AS usr", User.class);
+        return query.getResultList();
+    }
+
+    public User find(int id) {
         User usr;
-        usr = em.find(User.class, (long)usrId);
-        if(usr != null)
+        usr = em.find(User.class, (long) id);
+        if (usr != null) {
             return usr;
+        }
         else
-            return new User();
+            return null;
     }
 
     public List<User> getDB_Table() {
