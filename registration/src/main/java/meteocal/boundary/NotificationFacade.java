@@ -29,7 +29,7 @@ public class NotificationFacade extends AbstractFacade<Notification> {
     
     public List<Notification> findAll(User u){
         TypedQuery<Notification> query = em.createQuery("SELECT notf FROM Notification AS notf "
-                + "WHERE notf.owner=:ownerParam", Notification.class);
+                + "WHERE notf.owner.id=:ownerParam", Notification.class);
         query.setParameter("ownerParam", u.getId());
         return query.getResultList();
     }

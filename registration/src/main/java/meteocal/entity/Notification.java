@@ -88,5 +88,6 @@ public class Notification implements Serializable {
     public String toString() {
         return "meteocal.entity.Notification[ id=" + id + " ]";
     }
+
     
 }

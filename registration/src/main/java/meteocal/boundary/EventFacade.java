@@ -45,13 +45,13 @@ public class EventFacade extends AbstractFacade<Event> {
             tmp = em.find(Event.class, (long)evt.getId());
             if(tmp!=null)
             {
-                //em.merge(evt);
+                em.merge(evt);
                 em.flush();
             }
         }
         else
         {
-            em.persist(evt.getIncludedInCalendar());
+            em.persist(evt);
             em.flush();
         }
     }
