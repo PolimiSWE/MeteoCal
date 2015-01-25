@@ -21,24 +21,34 @@ public class PrivacyTypeFacade extends AbstractFacade<PrivacyType> {
 
     @PersistenceContext(unitName = "authPU")
     EntityManager em;
-   
-    public PrivacyType createNew()
-    {
-       PrivacyType tmp = new PrivacyType();
-       em.persist(tmp);
-       em.flush();
-       return tmp;
+
+    public PrivacyType createNew() {
+        PrivacyType tmp = new PrivacyType();
+        em.persist(tmp);
+        em.flush();
+        return tmp;
     }
-    
+
     public void save(PrivacyType pt) {
         PrivacyType tmp;
-        if(pt.getId() != null)
-        {
-            tmp = em.find(PrivacyType.class, (long)pt.getId());
-            if(tmp != null) 
-            {
+        if (pt.getId() != null) {
+            tmp = em.find(PrivacyType.class, (long) pt.getId());
+            if (tmp != null) {
                 em.merge(pt);
                 em.flush();
+            } else {
+                List<PrivacyType> ptList = getDB_Table();
+                boolean ptprivacy = pt.getPrivacy();
+                boolean found = false;
+                for (PrivacyType ptt : ptList) {
+                    if (ptt.getPrivacy() == ptprivacy) {
+                        found = true;
+                    }
+                }
+                if (!found) {
+                    em.persist(pt);
+                    em.flush();
+                }
             }
         }
     }
@@ -59,9 +69,8 @@ public class PrivacyTypeFacade extends AbstractFacade<PrivacyType> {
 
     public void delete(int ptId) {
         PrivacyType pt;
-        pt = em.find(PrivacyType.class, (long)ptId);
-        if(pt != null)
-        {
+        pt = em.find(PrivacyType.class, (long) ptId);
+        if (pt != null) {
             em.remove(pt);
         }
         em.flush();
@@ -69,11 +78,12 @@ public class PrivacyTypeFacade extends AbstractFacade<PrivacyType> {
 
     public PrivacyType getPrivacyType(int ptId) {
         PrivacyType pt;
-        pt = em.find(PrivacyType.class, (long)ptId);
-        if(pt != null)
+        pt = em.find(PrivacyType.class, (long) ptId);
+        if (pt != null) {
             return pt;
-        else
+        } else {
             return new PrivacyType();
+        }
     }
 
 }
