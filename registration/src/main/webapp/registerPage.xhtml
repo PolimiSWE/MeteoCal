@@ -61,17 +61,17 @@
                     </p:inputText>
                     
                     <p:outputLabel value="Password:" for="passwordInput" />
-                    <p:inputText id="passwordInput" required="true"
+                    <p:password id="passwordInput" required="true"
                                  requiredMessage="Error : 'Password not entered. Password is required for reqistration!'"
                                  value="#{registerBean.password}" title="Password" >
                         <p:ajax event="blur" process=":register_form:passwordInput" 
                                 update=":register_form:messages
                                         :register_form:rePasswordInput"
                                         listener="#{registerBean.checkAllDataOK()}"  />
-                    </p:inputText>
+                    </p:password>
                     
                     <p:outputLabel value="Retype Password:" for="rePasswordInput" />
-                    <p:inputText id="rePasswordInput" validator="#{registerBean.validateRePassword}"
+                    <p:password id="rePasswordInput" validator="#{registerBean.validateRePassword}"
                                  disabled="#{empty registerBean.password}" required="true"
                                  requiredMessage="Error : 'Password not entered. Password is required for reqistration!'"
                                  value="#{registerBean.re_pasword}" title="Retype Password:" >
@@ -79,7 +79,7 @@
                                 update=":register_form:messages
                                         :register_form:registerButton"
                                         listener="#{registerBean.checkAllDataOK()}"        />
-                    </p:inputText>
+                    </p:password>
    
                 </p:panelGrid>
                 <p:link outcome="logInPage?faces-redirect=true" value="Log In"/>

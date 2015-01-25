@@ -15,6 +15,10 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
 import meteocal.entity.Event;
 import meteocal.entity.Invitation;
@@ -22,6 +26,7 @@ import meteocal.entity.User;
 import meteocal.interfaces.CalendarBeanInterface;
 import meteocal.interfaces.CommonBeanInterface;
 import meteocal.interfaces.UserBeanInterface;
+import meteocal.lazyviewbeans.EventLazyView;
 import meteocal.lazyviewbeans.UserPickListView;
 
 /**
@@ -41,7 +46,8 @@ public class EventBean implements Serializable {
     CommonBeanInterface commonData;
     @Inject
     UserBeanInterface userData;
-    
+    @Inject
+    EventLazyView eventListData;
     @Inject
     UserPickListView userPickList;
     
@@ -52,14 +58,15 @@ public class EventBean implements Serializable {
     private Time current_input_beginHour;
     private java.util.Date current_input_dateOfEvent;
     private List<User> current_invited;
-    private String[] current_invited_string;
     private java.util.Date currentBH_AsDateChosen;
     private List<User> all_users;
+    private boolean validTime;
 
     /**
      * Creates a new instance of EventBean
      */
     public EventBean() {
+        validTime = true;
     }
 
     @PostConstruct
@@ -87,16 +94,35 @@ public class EventBean implements Serializable {
         current_type = false;
         current_input_beginHour = new Time(System.currentTimeMillis());
         current_input_dateOfEvent = new Date(System.currentTimeMillis());
+        this.all_users = commonData.fetchAllUser(this.userData.getUser());
+        this.userPickList.init();
     }
     
     public void save() {
-        Date currentTime = new Date(System.currentTimeMillis());
-        current.setDateCreated(currentTime);
-        this.prepareCurrentInvited();
-        em.save(current,current_invited,this.userData.getUser(),current_privacy,current_type,
-                current_input_beginHour,new Date(this.current_input_dateOfEvent.getTime()));
-        //this.calendarData.updateCalendarEvents();
-        //return "user/eventTypeAdminPage?faces-redirect=true";
+        if(this.current_input_dateOfEvent.after(new Date(System.currentTimeMillis()))){
+            if(this.current_input_beginHour.after(new java.util.Date(System.currentTimeMillis()))){
+                Date currentTime = new Date(System.currentTimeMillis());
+                current.setDateCreated(currentTime);
+                this.current_input_beginHour = new Time(this.currentBH_AsDateChosen.getTime());
+                this.prepareCurrentInvited();
+                em.save(current,current_invited,this.userData.getUser(),current_privacy,current_type,
+                    current_input_beginHour,new Date(this.current_input_dateOfEvent.getTime()));
+                this.eventListData.init();
+            }
+            else{
+                FacesContext.getCurrentInstance()
+                        .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                "Error!", "Current Time of Event in the past. Please choose valid time!"));
+                this.validTime = false;
+            }
+            
+        }
+        else{
+            FacesContext.getCurrentInstance()
+                        .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                "Error!", "Current Date of Event in the past. Please choose valid date!"));
+                this.validTime = false;
+        }
     }
 
     public void edit(int evtId) { 
@@ -111,6 +137,7 @@ public class EventBean implements Serializable {
         current_privacy = false;
         current_type = false;
         current_input_beginHour = new Time(System.currentTimeMillis());
+        currentBH_AsDateChosen = new Date(System.currentTimeMillis());
         current_input_dateOfEvent = new Date(System.currentTimeMillis());
         //return "privacyTypeAdminPage?faces-redirect=true";
     }
@@ -124,25 +151,10 @@ public class EventBean implements Serializable {
     public void removeInvited(User usr){
         if(current_invited != null)
             current_invited.remove(usr);
-    }
-   
-    public void selectCurrent(Event current) {
-        this.current = current;
-        this.current_invited = (List<User>) current.getInvited();
-        this.current_privacy = current.getEventPrivacy().getPrivacy();
-        this.current_type = current.getEventType().getType();
-        this.current_input_beginHour = current.getBeginHour();
-        this.current_input_dateOfEvent = new Date(current.getDateOfEvent().getTime());
-    }
+    }   
     
     private void prepareCurrentInvited() {
-        this.current_invited = new ArrayList<>();
-        if(this.current_invited_string!=null){
-            int arrayLength = this.current_invited_string.length;
-            for(int i=0; i<arrayLength; i++){
-                this.current_invited.add(this.userData.getUserByUsername(this.current_invited_string[i]));
-            } 
-        }
+        this.current_invited = this.userPickList.getUsers().getTarget();        
     }
     
     public void divideUserLists(){
@@ -175,18 +187,14 @@ public class EventBean implements Serializable {
     public void setCurrent(Event current) {
         this.current = current;
         this.current_input_beginHour = current.getBeginHour();
+        this.currentBH_AsDateChosen = new java.util.Date(this.current_input_beginHour.getTime());
         this.current_input_dateOfEvent = new Date(current.getDateOfEvent().getTime());
-            this.all_users = this.commonData.fetchAllUser(this.userData.getUser());
+        this.all_users = this.commonData.fetchAllUser(this.userData.getUser());
         this.current_invited = new ArrayList<>();
-        this.current_invited_string = new String[current.getInvitations().size()];
-        int i=0;
-        for(Invitation inv : current.getInvitations()){
+        for(Invitation inv : current.getInvitations())
             this.current_invited.add(inv.getUser());
-            this.current_invited_string[i] = inv.getUser().getUsername();
-            i++;
-        }
-            this.divideUserLists();
-            this.userPickList.init();
+        this.divideUserLists();
+        this.userPickList.init();
         this.current_privacy = current.getEventPrivacy().getPrivacy();
         this.current_type = current.getEventType().getType();
     }
@@ -215,13 +223,6 @@ public class EventBean implements Serializable {
         this.current_invited = current_invited;
     }
     
-    public boolean isInInvited(User usr){
-        boolean indicator = false;
-        for(User u: this.current_invited)
-            if(u.getId().equals(usr.getId()))
-                indicator = true;
-        return indicator;
-    }
 
     public java.util.Date getCurrent_input_beginHour() {
         java.util.Date timeAsDateChosen = new java.util.Date();
@@ -244,11 +245,40 @@ public class EventBean implements Serializable {
     public java.util.Date getCurrent_input_dateOfEvent() {
         return new java.util.Date(current_input_dateOfEvent.getTime());
     }
+    
+    public void validateTime(ValueChangeEvent event) {
+        if(event.getNewValue()!=null)
+        {
+            this.currentBH_AsDateChosen = (java.util.Date) event.getNewValue();
+            this.validTime = true;
+            if(currentBH_AsDateChosen.compareTo(new java.util.Date(System.currentTimeMillis()))<0){
+                FacesContext.getCurrentInstance()
+                        .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                "Error!", "Current Time of Event in the past. Please choose valid time!"));
+                this.validTime = false;
+                
+            }
+        }
+    }
+    
+    public void validateDate(ValueChangeEvent event) {
+        if(event.getNewValue()!=null)
+        {
+            this.current_input_dateOfEvent = new Date(((java.util.Date)event.getNewValue()).getTime());
+            current.setDateOfEvent(this.current_input_dateOfEvent);
+            if(current.isPassed()){
+                FacesContext.getCurrentInstance()
+                        .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                "Error!", "Current Date of Event in the past. Please choose valid date!"));
+            }
+        }
+    }
 
     public void setCurrent_input_dateOfEvent(java.util.Date current_dateOfEvent) {
         try{
             this.current_input_dateOfEvent = new Date(current_dateOfEvent.getTime());
             current.setDateOfEvent(this.current_input_dateOfEvent);
+            
         }
         catch(Exception e){
             Date tmp = Date.valueOf("2020-12-12");
@@ -256,13 +286,6 @@ public class EventBean implements Serializable {
         }
     }
 
-    public String[] getCurrent_invited_string() {
-        return current_invited_string;
-    }
-
-    public void setCurrent_invited_string(String[] current_invited_string) {
-        this.current_invited_string = current_invited_string;
-    }
 
     public CalendarBeanInterface getCalendarData() {
         return calendarData;
@@ -283,7 +306,20 @@ public class EventBean implements Serializable {
 
     public void setCurrentBH_AsDateChosen(java.util.Date currentBH_AsDateChosen) {
         this.currentBH_AsDateChosen = currentBH_AsDateChosen;
+        this.validTime = true;
+        if(currentBH_AsDateChosen==null)    
+            this.validTime = false;
     }
+
+    public boolean isValidTime() {
+        return validTime;
+    }
+
+    public void setValidTime(boolean validTime) {
+        this.validTime = validTime;
+    }
+    
+    
 
     public List<User> getAll_users() {
         return all_users;

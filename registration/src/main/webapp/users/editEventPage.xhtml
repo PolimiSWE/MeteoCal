@@ -12,18 +12,24 @@
         <f:view>
             <h:form id="my_calendar_navigation">
                 <p:commandButton value="Log Out" action="#{loginBean.logout()}"
+                                 ajax="true" update="@all"
                                              styleClass="navigation_button_class" />
                 <div class="navigation_divider"/>
                 <p:commandButton value="Change Password" action="changePasswordPage?faces-redirect=true"
+                                 ajax="true" update="@all"
                                              styleClass="navigation_button_class" />
                 <div class="navigation_divider"/>
                 <p:commandButton value="Go to Public Calendars" action="publicCalendarsPage?faces-redirect=true"
+                                 ajax="true" update="@all"
                     styleClass="navigation_button_class" >
                     <f:ajax event="click" listener="#{calendarBean.goToPublicCalendarsPage()}" />       
                 </p:commandButton>
                 <div class="navigation_divider"/>
                 <p:commandButton value="Go to My Calendar" action="myCalendarPage?faces-redirect=true"
-                                             styleClass="navigation_button_class" />
+                                 ajax="true" update="@all"
+                    styleClass="navigation_button_class" >
+                    <f:ajax event="click" listener="#{calendarBean.goToMyCalendarPage()}" />
+                </p:commandButton>
                                          
             </h:form>
             
@@ -46,13 +52,21 @@
                         <p:inputText id="event_input_streetAndNumber" value="#{eventBean.current.streetAndNumber}" />
 
                         <p:outputLabel for="event_input_calendar" value="Date of the Event:" />
-                        <p:calendar id="event_input_calendar" value="#{eventBean.current_input_dateOfEvent}" effect="fold" />
+                        <p:calendar id="event_input_calendar" 
+                                    
+                                    value="#{eventBean.current_input_dateOfEvent}" effect="fold" >
+                            
+                        </p:calendar>
+                            
 
                         <p:outputLabel for="event_input_time" value="Time:" />
                         <p:calendar id="event_input_time" 
-                                    value="#{eventBean.current_input_beginHour}" 
+                                    
+                                    value="#{eventBean.currentBH_AsDateChosen}" 
                                     pattern="HH:mm:ss" timeOnly="true" 
-                                    styleClass="edit_event_input_form_class"/>
+                                    styleClass="edit_event_input_form_class">
+                           
+                        </p:calendar>
 
                         <p:outputLabel for="event_input_duration" value="Duration of the Event:" />
                         <h:panelGrid columns="1" id="duration_slider"
@@ -76,11 +90,11 @@
                     
                         
                         
-                        <p:pickList id="users_pick_list" value="#{userPickListView.users}" 
+                    <p:pickList id="users_pick_list" value="#{userPickListView.users}" 
                                     var="user" effect="bounce"
                                     itemValue="#{user}" itemLabel="#{user.username}" 
                                     styleClass="user_pick_list_class"
-                                    
+                                    converter="userPickListConverter"
                                     showSourceFilter="true" 
                                     showTargetFilter="true" 
                                     filterMatchMode="contains" >
@@ -99,20 +113,22 @@
                     
                     
                         <p:commandButton value="Save" action="#{eventBean.save()}"
+                                         ajax="true" update="@all"
+                                         disabled="#{eventLazyView.selectedEvent.isPassed()}"
                                          styleClass="edit_event_button">
-                            <p:ajax event="click"  update=":edit_event_form:event_input_id"
-                                    onsuccess="alert('hello Save')"/>
+                            
+                                   
                         </p:commandButton>
-                        <p:commandButton value="Create New" actionListener="#{eventBean.createNew()}"  
+                        <p:commandButton value="Create New" actionListener="#{eventBean.createNew()}" 
+                                         ajax="true" update="@all"
                                          styleClass="edit_event_button">
-                            <p:ajax event="click"  update=":edit_event_form:event_input_id"
-                                    onsuccess="alert('hello Create New')"/>
+                            
                         </p:commandButton>
                     
 
                 </p:panelGrid>
                 
-                <p:growl id="msg" showDetail="true" escape="false" />
+                <p:growl id="msg" showDetail="true" showSummary="true" escape="false" />
                 
             </h:form>
        
@@ -132,8 +148,9 @@
                              :edit_event_form:duration_slider
                              :edit_event_form:eventTypeRadio
                              :edit_event_form:eventPrivacyRadio
+                             :edit_event_form
                              :edit_event_form:users_pick_list"
-                             onsuccess="alert('hello')"/>
+                             />
                     <p:column headerText="Name" sortBy="#{event.name}" >
                         <h:outputText value="#{event.name}" />
                     </p:column>
@@ -144,6 +161,7 @@
                         <h:outputText value="#{event.beginHour}" />
                     </p:column>
                 </p:dataTable>
+                
             </h:form>
             
         </f:view>

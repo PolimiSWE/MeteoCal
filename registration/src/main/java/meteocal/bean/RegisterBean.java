@@ -5,22 +5,22 @@
  */
 package meteocal.bean;
 
-import java.io.IOException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.security.Principal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import meteocal.boundary.UserFacade;
+import meteocal.control.PasswordEncrypter;
 import meteocal.interfaces.UserBeanInterface;
 
 /**
@@ -39,6 +39,7 @@ public class RegisterBean implements Serializable {
     @Inject
     LoginBean loginData;
     
+    
     private String name;
     private String surname;
     private String email;
@@ -50,6 +51,7 @@ public class RegisterBean implements Serializable {
     private boolean passwordValid;
     
     private static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+    
    
     
     
@@ -79,12 +81,34 @@ public class RegisterBean implements Serializable {
             this.userData.setEmail(this.email);
             this.userData.setPassword(password);
             this.userData.saveUser();
-            this.loginData.tryLogIn(this.username, this.password);
-            this.userData.selectUser(this.username);
-           
-            return "myCalendarPage?faces-redirect=true";
+            if(this.loginData.tryLogIn(this.username, PasswordEncrypter.encryptPassword(this.password))){
+                               
+                FacesContext context = FacesContext.getCurrentInstance();
+                HttpServletRequest request = 
+                        (HttpServletRequest) context.getExternalContext().getRequest(); 
+                try {
+                    Principal tmpPrincipal = request.getUserPrincipal();
+                    if (tmpPrincipal != null) {
+                    request.logout();
+                    }
+                    request.login(this.username, this.password);
+                    tmpPrincipal = request.getUserPrincipal();
+                    this.userData.selectUser(tmpPrincipal.getName());
+                    this.init();
+                    return "users/myCalendarPage?faces-redirect=true";
+                } catch (ServletException e) {
+                    context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Login Failed","Login Failed"));
+                    
+                    return null;
+                } 
+            }
+            else{
+                FacesContext.getCurrentInstance()
+                        .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Invalid Credentials!"));
+                return "";
+            }
         }
-            return "";
+        return "";
     }
     
     

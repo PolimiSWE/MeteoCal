@@ -151,6 +151,12 @@ html {
     float: left;
 }
 
+.event_passed{
+    width: 40%;
+    background-color: rgba(40,40,40,0.6);
+    float: left;
+}
+
 .event_dialog_event_details_class td{
     width: 50% !important;
     color: #FA2;

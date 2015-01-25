@@ -8,12 +8,14 @@ package meteocal.bean;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 import meteocal.boundary.EventFacade;
 import meteocal.boundary.InvitationFacade;
+import meteocal.boundary.NotificationFacade;
 import meteocal.entity.Event;
 import meteocal.entity.Notification;
 import meteocal.entity.User;
@@ -28,9 +30,10 @@ import meteocal.helper.NotificationHelper;
 public class NotificationBean implements Serializable {
     
     @EJB
-    InvitationFacade  invf;
+    NotificationFacade  notff;
     @EJB
     EventFacade evtf;
+   
  
     
     private List<NotificationHelper> internalNOTF;
@@ -76,7 +79,19 @@ public class NotificationBean implements Serializable {
         this.externalNOTF = externalNOTF;
     }
     
- 
+    public void clearNotf(long notf_id){
+        notff.removeByID(notf_id);
+    }
+    
+    public void clearInternalNotf(long notf_evt_id){
+        NotificationHelper tmp = new NotificationHelper();
+        for(NotificationHelper nh:this.internalNOTF)
+            if( Objects.equals((long) nh.getCausedEvent().getId(),notf_evt_id))
+                tmp = nh;
+        this.internalNOTF.remove(tmp);
+        Event evt = tmp.getCausedEvent();
+        this.evtf.updateDirty(evt);
+    }
     
     
     

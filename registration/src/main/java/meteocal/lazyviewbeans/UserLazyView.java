@@ -64,7 +64,8 @@ public class UserLazyView implements Serializable {
  
     public void setSelectedUser(User selectedUser) {
         this.selectedUser = selectedUser;
-        this.pubCalData.setCurrent(selectedUser.getMyCalendar());
+        if(selectedUser!=null)
+            this.pubCalData.setCurrent(selectedUser.getMyCalendar());
     }
      
     public void initUserLazyView(List<User> users) {
