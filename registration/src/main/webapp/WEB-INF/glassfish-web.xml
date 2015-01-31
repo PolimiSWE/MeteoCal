@@ -9,43 +9,7 @@
   </jsp-config>
   <security-role-mapping>
     <role-name>USERS</role-name>
-    <principal-name>chola1990</principal-name>
     <group-name>USERS</group-name>
-    <principal-name>nemtajo</principal-name>
-    <group-name>USERS</group-name>
-    
-    <principal-name>username1</principal-name>
-    <group-name>USERS</group-name>
-    
-    <principal-name>username2</principal-name>
-    <group-name>USERS</group-name>
-    
-    <principal-name>username3</principal-name>
-    <group-name>USERS</group-name>
-    
-    <principal-name>username4</principal-name>
-    <group-name>USERS</group-name>
-   
-    <principal-name>username5</principal-name>
-    <group-name>USERS</group-name>
-    
-    <principal-name>username6</principal-name>
-    <group-name>USERS</group-name>
-    
-    <principal-name>username7</principal-name>
-    <group-name>USERS</group-name>
-    
-    <principal-name>username8</principal-name>
-    <group-name>USERS</group-name>
-    
-    <principal-name>username10</principal-name>
-    <group-name>USERS</group-name>
-    <principal-name>username12</principal-name>
-    <group-name>USERS</group-name>
-    
-    
-    
   </security-role-mapping>
   <context-root>MeteoCal</context-root>
-  
 </glassfish-web-app>
