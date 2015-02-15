@@ -131,11 +131,25 @@ public class Event implements Serializable,Comparable<Event> {
     }
     
     public boolean isPassed(){
-        Date now = new Date(System.currentTimeMillis());
-        if(dateOfEvent!=null)
-            return now.compareTo(dateOfEvent)>0;
-        else
-            return true;
+         boolean in_future = false;
+        int diff = (int) (this.dateOfEvent.getTime() - System.currentTimeMillis()) / (1000 * 60 * 60 * 24);
+        if(diff == 0 ) {
+            Time now = new Time(System.currentTimeMillis());
+            java.util.Calendar cal = java.util.Calendar.getInstance();
+            cal.setTime(this.beginHour);
+            cal.set(java.util.Calendar.DAY_OF_MONTH, 1);
+            cal.set(java.util.Calendar.MONTH, 0);
+            cal.set(java.util.Calendar.YEAR, 1970);
+            this.beginHour.setTime(cal.getTimeInMillis()+this.dateOfEvent.getTime()+1000 * 60 * 60);
+            Time setTime = new Time(this.beginHour.getTime());
+            if(setTime.after(now)){
+                in_future = true;
+            }
+        }
+        else if(diff>0){
+                in_future = true;
+        }
+        return !in_future;
     }
     
     

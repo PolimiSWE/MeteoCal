@@ -80,6 +80,7 @@ public class EventBean implements Serializable {
             current_type = false;
             current_input_beginHour = new Time(System.currentTimeMillis());
             current_input_dateOfEvent = new Date(System.currentTimeMillis());
+            currentBH_AsDateChosen = new Date(System.currentTimeMillis());
         }
         this.all_users = this.commonData.fetchAllUser(this.userData.getUser());
         this.current_invited = new ArrayList<>();
@@ -99,29 +100,43 @@ public class EventBean implements Serializable {
     }
     
     public void save() {
-        if(this.current_input_dateOfEvent.after(new Date(System.currentTimeMillis()))){
-            if(this.current_input_beginHour.after(new java.util.Date(System.currentTimeMillis()))){
-                Date currentTime = new Date(System.currentTimeMillis());
-                current.setDateCreated(currentTime);
-                this.current_input_beginHour = new Time(this.currentBH_AsDateChosen.getTime());
-                this.prepareCurrentInvited();
-                em.save(current,current_invited,this.userData.getUser(),current_privacy,current_type,
-                    current_input_beginHour,new Date(this.current_input_dateOfEvent.getTime()));
-                this.eventListData.init();
+        boolean in_future = false;
+        int diff = (int) (this.current_input_dateOfEvent.getTime() - System.currentTimeMillis()) / (1000 * 60 * 60 * 24);
+        if(diff == 0 ) {
+            Time now = new Time(System.currentTimeMillis());
+            this.currentBH_AsDateChosen.setTime(this.currentBH_AsDateChosen.getTime()+this.current_input_dateOfEvent.getTime()+1000 * 60 * 60);
+            Time setTime = new Time(this.currentBH_AsDateChosen.getTime());
+            if(setTime.after(now)){
+                in_future = true;
             }
             else{
                 FacesContext.getCurrentInstance()
-                        .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                                "Error!", "Current Time of Event in the past. Please choose valid time!"));
+                            .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                    "Error!", 
+                                    "Current Date of Event in the past. Please choose valid date!" +
+                                      setTime.toString() + "     " +
+                                      now.toString()));
                 this.validTime = false;
             }
-            
+        }
+        else if(diff>0){
+                in_future = true;
+        }      
+        if(in_future)
+        {       
+            Date currentTime = new Date(System.currentTimeMillis());
+            current.setDateCreated(currentTime);
+            this.current_input_beginHour = new Time(this.currentBH_AsDateChosen.getTime());
+            this.prepareCurrentInvited();
+            em.save(current,current_invited,this.userData.getUser(),current_privacy,current_type,
+                current_input_beginHour,new Date(this.current_input_dateOfEvent.getTime()));
+            this.eventListData.init();
         }
         else{
             FacesContext.getCurrentInstance()
-                        .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                                "Error!", "Current Date of Event in the past. Please choose valid date!"));
-                this.validTime = false;
+                    .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "Error!", "Current Time of Event in the past. Please choose valid time!"));
+            this.validTime = false;
         }
     }
 
