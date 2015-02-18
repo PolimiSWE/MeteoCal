@@ -82,6 +82,11 @@ public class BackgroundWorker {
      deleteWDHistory(1);
      //clearNotifyOwnerHistory(3);
      for (String ct : citiesList) {
+            startDailyProcedure = true;
+            startDailyProcedure2 = true;
+            checkWeatherAutoTimer();
+            doWDupdateForCity(ct);
+        
      checkWDforEvents(ct);/////////////////////////////
      }
      citiesList.clear();

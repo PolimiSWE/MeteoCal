@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>MeteoCal Log In</title>
+        <link rel="stylesheet"
+              href="${facesContext.externalContext.requestContextPath}/css/logInPageStyle.css" type="text/css" />
+    </h:head>
+    <h:body>
+        <h:form id="form_log_in" >
+            <div class="outter_container">
+                <p:panel styleClass="log_in_header">
+                    <p:outputLabel value="MeteoCal" 
+                                   style="font-size: 1.7em;"
+                                   styleClass="log_in_meteocal"/>
+                </p:panel>
+                <p:panelGrid columns="2" styleClass="inner_container">
+                    <p:outputLabel value="Username:" for="usernameInput" />
+                    <p:inputText id="usernameInput" validator="#{loginBean.validateUsername}"
+                                 value="#{loginBean.username}" title="Username"
+                                 required="true"
+                                 requiredMessage="Error! Please Enter Username.">
+                        <p:ajax event="keyup" update=":form_log_in:logInButton"  />
+                    </p:inputText>
+                    <p:outputLabel value="Password:" for="passwordInput" />
+                    <p:password id="passwordInput" validator="#{loginBean.validatePassword}"
+                                 value="#{loginBean.password}" title="Password"
+                                 required="true"
+                                 requiredMessage="Error! Please Enter Password.">
+                        <p:ajax event="keyup" update=":form_log_in:logInButton"  />                      
+                    </p:password>
+                    <p:link outcome="changePasswordPage?faces-redirect=true" value="Forgot Password?"/>
+                    <p:link outcome="registerPage?faces-redirect=true" value="Sign Up"/>
+                </p:panelGrid>
+                <p:messages id="messages" autoUpdate="true" closable="true" />
+                <p:commandButton id="logInButton"  ajax="true" update="@all"
+                               
+                                 styleClass="log_in_button"
+                                     action="#{loginBean.login()}" value="Log In" />
+            </div>
+            
+        </h:form>
+    </h:body>
+</html>
+

@@ -58,6 +58,13 @@ public class WeatherHelper {
         badWeatherCodes = Collections.unmodifiableMap(aMap);
     }
 
+    public WeatherHelper() {
+        this.client = ClientBuilder.newClient();
+        this.city = "Milan";
+        this.cnt = "16";
+        wdList = new ArrayList<>();
+    }
+    
     @PostConstruct
     public void init() {
         this.client = ClientBuilder.newClient();

@@ -36,7 +36,7 @@ EntityManager em;
     
 @PostConstruct
     public void init() {
-        em.getEntityManagerFactory().getCache().evictAll();
+        //em.getEntityManagerFactory().getCache().evictAll();
         em.flush();
         //see if some privacy type table is empty
         //if no do call the function init
